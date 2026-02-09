@@ -1,0 +1,1188 @@
+\documentclass[12pt]{article}
+
+% Idioma
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+% Matemática
+\usepackage{amsmath, amssymb, amsthm}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{babel}
+\usepackage{float}      % para poder usar [H] si querés fijar la figura
+\usepackage{subcaption} % para subfiguras lado a lado
+
+
+% ---------- Entornos de teoremas ----------
+\theoremstyle{plain} % estilo "teorema" (itálica)
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{corollary}[theorem]{Corolario}
+
+\theoremstyle{definition} % estilo "definición" (normal)
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{example}[theorem]{Ejemplo}
+
+\theoremstyle{remark} % estilo "observación" (normal + título distinto)
+\newtheorem{remark}[theorem]{Observación}
+
+% ---------- Notación útil de grafos ----------
+\newcommand{\adj}{\sim}
+\newcommand{\V}{V}
+\newcommand{\E}{E}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\degG}{\operatorname{deg}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\chiG}{\chi}
+\newcommand{\segto}{\operatorname{seg}_{\to}}
+\newcommand{\segfrom}{\operatorname{seg}_{\leftarrow}}
+\newcommand{\segg}{\operatorname{seg}_{12}}
+\newcommand{\segthree}{\operatorname{seg}_{3}}
+\newcommand{\segthirteen}{\operatorname{seg}_{13}}
+\newcommand{\segonetwothree}{\operatorname{seg}_{123}}
+
+\title{Tesis}
+\author{German y Eric}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Preliminares}
+
+
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo y \(k\in\mathbb{N}\).
+\(G\) es \emph{\(k\)-segregable\(_\to\)} si existen
+
+\begin{itemize}
+  \item un ordenamiento de los vértices \(v_1 \prec v_2 \prec \cdots \prec v_n\), y
+  \item una partición de \(V\) en \(k\) clases \(V = V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k\),
+\end{itemize}
+
+Tales que para cada tripla \((r,s,t)\) con \(r<s<t\),
+\[
+\bigl(c(v_r)=c(v_s)\ \wedge\ v_r \adj v_s\bigr)\ \Rightarrow\ v_s \not\adj v_t.
+\]
+
+\end{definition}
+
+\begin{definition}
+Se define \(\segto(G)\) como el mínimo \(k\) tal que \(G\) es \(k\)-segregable\(_\to\).
+\end{definition}
+
+\begin{theorem}\label{thm:segto1-bip}
+Sea \(G=(V,E)\) un grafo. Entonces \(G\) es \(1\)-segregable\(_\to\) (equivalentemente, \(\segto(G)=1\))
+si y solo si \(G\) es bipartito.
+\end{theorem}
+
+\begin{proof}
+\noindent(\(\Rightarrow\)) sea \(G\) bipartito, entonces existe una partición
+\(V=A\,\dot\cup\,B\) tal que \(A\) y \(B\) son independientes.
+Se toma la partición en una sola clase \(V_1:=V\) y se fija un orden por bloques en el que
+primero aparecen todos los vértices de \(A\) y luego todos los de \(B\) (dentro de cada bloque,
+orden arbitrario).
+
+Se verifica \textup{(Seg\(_\to\))}: sea \(r<s<t\) tal que \(v_r\sim v_s\),
+como no hay aristas dentro de \(A\) por ser independiente, se tiene \(v_s\notin A\), por lo tanto \(v_s\in B\)
+además, como \(t>s\) y el orden pone a \(B\) al final, también \(v_t\in B\)
+y dado que \(B\) es independiente, se concluye \(v_s\not\sim v_t\), luego \(G\) es \(1\)-segregable\(_\to\).
+
+\medskip
+\noindent(\(\Leftarrow\)) Sea \(G\) grafo \(1\)-segregable\(_\to\), entonces existe un orden
+\(v_1\prec\cdots\prec v_n\) tal que para toda tripla \(r<s<t\) de indices,
+\[
+(v_r\sim v_s)\ \Rightarrow\ (v_s\not\sim v_t).
+\]
+En particular, si un vértice tiene algún vecino a la izquierda, entonces no puede tener vecinos a la derecha.
+
+Se definen los conjuntos:
+\[
+L:=\{v_s:\ N(v_s)\subseteq\{v_1,\dots,v_{s-1}\}\},
+\qquad
+D:=\{v_s:\ N(v_s)\subseteq\{v_{s+1},\dots,v_n\}\}.
+\]
+
+
+Se verifica que \(L\) es independiente: si \(x\prec y\) con \(x,y\in L\) y \(x\sim y\), entonces \(x\) tendría
+un vecino a la derecha (\(y\)), contradicción con la definición de \(L\).
+Luego no puede haber aristas dentro de \(L\).
+
+Del mismo modo, \(D\) es independiente: si \(x\prec y\) con \(x,y\in D\) y \(x\sim y\), entonces \(y\) tendría
+un vecino a la izquierda (\(x\)), contradicción con la definición de \(D\).
+Luego no puede haber aristas dentro de \(D\).
+
+Por la observación inicial, todo vértice no aislado pertenece a \(L\) o a \(D\).
+Los vértices aislados no afectan la independencia, y pueden asignarse al final a cualquiera de los dos conjuntos.
+Así se obtiene una partición de \(V\) en dos conjuntos independientes, y por lo tanto \(G\) es bipartito.
+
+
+\end{proof}
+
+
+
+Un posible algoritmo de backtracking para decidir si \(\segto(G)\le 2\) consiste en construir
+incrementalmente un orden \(v_1\prec\cdots\prec v_n\) y una partición \(V=V_1\,\dot\cup\,V_2\).
+En cada paso se elige un vértice no ubicado, se lo agrega al final del orden parcial y se le asigna
+una de las dos clases.
+
+Tras cada asignación se verifica la condición \textup{(Seg\(_{\to}\))} en lo ya construido:
+si el nuevo vértice queda en la posición \(t\), se chequea que no existan \(r<s<t\) tales que
+\(v_r\) y \(v_s\) estén en la misma clase, \(v_r\sim v_s\) y \(v_s\sim v_t\).
+Si se detecta una violación, se descarta la rama y se retrocede; si no, se continúa.
+
+\begin{center}
+\begin{tabbing}
+\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\kill
+
+\textsc{esSeg}(\texttt{adj}) \\
+\> $N \leftarrow |\texttt{adj}|$ \\
+\> \texttt{used[0..N-1]} $\leftarrow$ \textbf{false} \\
+\> \texttt{order[0..N-1]} $\leftarrow$ \textbf{vacío} \\
+\> \texttt{col[0..N-1]} $\leftarrow$ \textbf{vacío} \\[2mm]
+
+\> \textsc{SonAdyacentes}$(u,v)$: \\
+\>\> \textbf{para cada} $x$ \textbf{en} \texttt{adj[u]} \textbf{hacer} \\
+\>\>\> \textbf{si} $x=v$ \textbf{entonces devolver} \textbf{true} \\
+\>\> \textbf{devolver} \textbf{false} \\[2mm]
+
+\> \textsc{EsValida}$(i)$: \\
+\>\> $t \leftarrow \texttt{order}[i]$ \\
+\>\> \textbf{para} $s=0$ \textbf{hasta} $i-1$ \textbf{hacer} \\
+\>\>\> $v_s \leftarrow \texttt{order}[s]$ \\
+\>\>\> \textbf{si} \textsc{SonAdyacentes}$(v_s,t)$ \textbf{entonces} \\
+\>\>\>\> \textbf{para} $r=0$ \textbf{hasta} $s-1$ \textbf{hacer} \\
+\>\>\>\>\> $v_r \leftarrow \texttt{order}[r]$ \\
+\>\>\>\>\> \textbf{si} $\texttt{col}[r]=\texttt{col}[s]$ \textbf{y} \textsc{SonAdyacentes}$(v_r,v_s)$ \textbf{entonces} \\
+\>\>\>\>\>\> \textbf{devolver} \textbf{false} \\
+\>\> \textbf{devolver} \textbf{true} \\[2mm]
+
+\> \textsc{BT}$(k)$: \\
+\>\> \textbf{si} $k=N$ \textbf{entonces devolver} \textbf{true} \\
+\>\> \textbf{para} $v=0$ \textbf{hasta} $N-1$ \textbf{hacer} \\
+\>\>\> \textbf{si} \texttt{used[v]} $=$ \textbf{false} \textbf{entonces} \\
+\>\>\>\> \textbf{para cada} $c \in \{1,2\}$ \textbf{hacer} \\
+\>\>\>\>\> \texttt{order[k]} $\leftarrow v$ \\
+\>\>\>\>\> \texttt{col[k]} $\leftarrow c$ \\
+\>\>\>\>\> \texttt{used[v]} $\leftarrow$ \textbf{true} \\
+\>\>\>\>\> \textbf{si} \textsc{EsValida}$(k)$ \textbf{y} \textsc{BT}$(k+1)$ \textbf{entonces devolver} \textbf{true} \\
+\>\>\>\>\> \texttt{used[v]} $\leftarrow$ \textbf{false} \\
+\>\>\>\>\> \texttt{col[k]} $\leftarrow$ \textbf{vacío} \\
+\>\>\>\>\> \texttt{order[k]} $\leftarrow$ \textbf{vacío} \\
+\>\> \textbf{devolver} \textbf{false} \\[2mm]
+
+\> \textbf{devolver} \textsc{BT}$(0)$
+
+\end{tabbing}
+\end{center}
+
+El procedimiento utilizado fue probar grafos conocidos y asi poder conjeturar lo siguiente:
+
+\begin{theorem}\label{thm:segto-chi}
+
+\[
+\segto(G)=\chi(G)-1.
+\]
+\end{theorem}
+
+\begin{proof}
+Su demostración es mostrando ambas desigualdades.
+
+\medskip
+
+\begin{lemma}\label{lem:segto-le}
+\(\segto(G)\le \chi(G)-1\).
+\end{lemma}
+
+
+\begin{proof}
+Sea \(m=\chi(G)\) y sea \(c:V\to\{1,\dots,m\}\) una \(m\)-coloración propia de \(G\).
+Para cada \(i\in\{1,\dots,m\}\) se define la \emph{clase de color}
+\[
+C_i := \{\,v\in V : c(v)=i\,\}.
+\]
+A partir de las m clases del coloreo, se construye una partición \(V = V_1 \dot\cup \cdots \dot\cup V_{m-1}\) dada por
+\[
+V_1 := C_1 \cup C_m,
+\qquad
+V_i := C_i \ \ \text{para todo } i=2,\dots,m-1.
+\]
+Como \(C_1,\dots,C_m\) forman una partición de \(V\), se sigue que \(V_1,\dots,V_{m-1}\) también forman una partición de \(V\).
+
+
+\medskip
+Además, se define un orden \(\prec\) sobre \(V\) \emph{por bloques} imponiendo que
+\[
+C_1 \prec C_2 \prec \cdots \prec C_{m-1} \prec C_m,
+\]
+es decir, para todo \(i<j\), para todo \(u\in C_i\) y todo \(v\in C_j\), se cumple \(u\prec v\)
+
+y dentro de cada clase \(C_i\) se toma un orden arbitrario.
+(la idea intuitiva de este ordenamiento es juntar dos colores en una sola clase, y poner 
+un color de esa clase al principio del orden y otro al final de manera que de la unica forma
+que el antecedente de la definicion de verdadero sea en esa clase que es la mas a la derecha)
+
+Ahora falta ver que esta particion y ordenamiento efectivamente cumplen con la definición de \(\segto(G)\). De esa forma
+G sería (m-1)-\(\segto(G)\).
+
+Sea \((r,s,t)\) una terna de índices del orden fijado, con \(r<s<t\), y sean
+\(v_r,v_s,v_t\) los vértices que ocupan dichas posiciones.
+
+Si \(v_r \not\sim v_s\), entonces el antecedente de la implicación de la definición es falso,
+y en consecuencia la condición se satisface trivialmente.
+
+En lo que sigue se supone \(v_r \sim v_s\). Se procede por casos.
+
+Sea \((r,s,t)\) una terna de índices del orden fijado, con \(r<s<t\), y sean
+\(v_r,v_s,v_t\) los vértices ubicados en dichas posiciones.
+
+Si \(v_r \not\sim v_s\), entonces el antecedente de la implicación en la definición es falso,
+y la condición se satisface trivialmente. Asimismo, si \(v_r\) y \(v_s\) no pertenecen a la misma
+clase de la partición, el antecedente también es falso, y nuevamente no hay nada que probar.
+
+En lo que sigue se supone que \(v_r \sim v_s\) y que \(v_r\) y \(v_s\) pertenecen a la misma clase,
+que necesariamente es \(V_1\) ya que cualquier otra clase, es un conjunto independiente. Por construcción,
+\[
+V_1 \;=\; C_1 \,\dot\cup\, C_m,
+\]
+y el orden dentro de \(V_1\) se fijó de modo que todos los vértices de \(C_1\) aparecen antes que
+los de \(C_m\). En consecuencia, de \(v_r,v_s\in V_1\) y \(r<s\) se deduce necesariamente que
+\[
+v_r\in C_1
+\quad\text{y}\quad
+v_s\in C_m.
+\]
+
+Se verifica ahora la condición exigida por la definición: no puede existir \(t>s\) tal que
+\(v_s \sim v_t\). Si se supone por absurdo que existe \(t>s\) con \(v_s \sim v_t\),
+entonces, por la forma en que se definió el orden, todo vértice ubicado a la derecha de un vértice
+de \(C_m\) debe pertenecer también a \(C_m\), en particular \(v_t\in C_m\).
+Pero \(C_m\) es un conjunto independiente, lo cual contradice \(v_s\sim v_t\).
+El absurdo proviene de suponer que \(v_s\) tiene un vecino a la derecha de \(v_s\).
+Por lo tanto, para todo \(t>s\) se tiene \(v_s \not\sim v_t\), y la condición queda verificada.
+
+\end{proof}
+
+\medskip
+
+\begin{lemma}\label{lem:le-segto}
+Se cumple \(\chi(G)-1 \le \segto(G)\).
+\end{lemma}
+
+\begin{proof}
+ Sea \(G\) tal que admite un orden \(v_1 \prec \cdots \prec v_n\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\qquad\text{con } k=\segto(G),
+\]
+que satisface la condición \textup{(Seg)}.
+
+Se define un coloreo \(c:V\to\{0,1,\dots,k\}\) del siguiente modo. Para cada \(s\in\{1,\dots,n\}\),
+se fija
+\[
+c(v_s)=
+\begin{cases}
+0, & \text{si existe } r<s \text{ tal que } v_r \in V_i,\ v_s\in V_i
+      \text{ y } v_r \sim v_s,\\[2mm]
+i, & \text{en caso contrario, donde \(i\in\{1,\dots,k\}\) es tal que } v_s\in V_i.
+\end{cases}
+\]
+
+Se afirma que si \(c(v_s)=0\), entonces \(v_s\) no tiene vecinos a la derecha en el orden.
+En efecto, por definición de \(c\) existe \(r<s\) tal que \(v_r\) pertenece a la misma clase que \(v_s\)
+y \(v_r \sim v_s\). Aplicando \textup{(Seg)} a toda terna \(r<s<t\), se obtiene que para todo \(t>s\)
+se cumple \(v_s \not\sim v_t\).
+
+Se verifica ahora que \(c\) es un coloreo propio.
+
+\smallskip
+\noindent\textbf{(a) Dos vértices de color \(0\) no pueden ser adyacentes.}
+Si \(v_i\sim v_j\) con \(i<j\) y \(c(v_i)=c(v_j)=0\), entonces \(v_i\) tendría un vecino
+a la derecha (a saber, \(v_j\)), contradicción.
+
+\smallskip
+\noindent\textbf{(b) Dos vértices con el mismo color \(i\in\{1,\dots,k\}\) no pueden ser adyacentes.}
+Si \(c(v_a)=c(v_b)=i\) con \(a<b\), entonces \(v_a,v_b\in V_i\). Si además ocurriera \(v_a\sim v_b\),
+por la definición de \(c\) el vértice \(v_b\) debería satisfacer \(c(v_b)=0\), contradicción.
+
+Por (a) y (b), no existe arista cuyos extremos tengan el mismo color; por lo tanto,
+\(c\) es un coloreo propio que utiliza a lo sumo \(k+1\) colores. En consecuencia,
+\[
+\chi(G)\le k+1=\segto(G)+1,
+\]
+como se quería demostrar.
+\end{proof}
+
+
+\medskip
+Combinando los Lemas \ref{lem:segto-le} y \ref{lem:le-segto} se obtiene la igualdad.
+\end{proof}
+
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo. Se define \(\segfrom(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
+existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\]
+que satisfacen la siguiente condición: para toda terna de índices \(r<s<t\),
+si \(v_s\) y \(v_t\) pertenecen a una misma clase \(V_i\) y además \(v_s \sim v_t\), entonces
+\(v_r \not\sim v_s\).
+\end{definition}
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo. Se define \(\segg(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
+existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\]
+que satisfacen simultáneamente las condiciones \textup{(Seg\(_\to\))} y \textup{(Seg\(_\leftarrow\))}.
+\end{definition}
+
+\begin{theorem}\label{thm:seg12-chi}
+Para todo grafo \(G\),
+\[
+\segg(G)=\chi(G)-1.
+\]
+\end{theorem}
+
+\begin{proof}
+La demostración se divide en dos desigualdades.
+
+\medskip
+\begin{lemma}\label{lem:seg12-ge-segto}
+Para todo grafo \(G\), se cumple \(\segg(G)\ge \chi(G)-1\).
+\end{lemma}
+
+\begin{proof}
+Al imponer condiciones adicionales a una definición, el mínimo entero que las satisface no puede disminuir.
+En particular, toda realización que satisface simultáneamente \textup{(Seg\(_{\to}\))} y
+\textup{(Seg\(_{\leftarrow}\))} satisface, en particular, \textup{(Seg\(_{\to}\))}.
+Por lo tanto,
+\[
+\segg(G)\ge \segto(G).
+\]
+Usando el Teorema \ref{thm:segto-chi}, se concluye que
+\[
+\segg(G)\ge \segto(G)=\chi(G)-1.
+\]
+\end{proof}
+
+\medskip
+\begin{lemma}\label{lem:seg12-le}
+Para todo grafo \(G\), se cumple \(\segg(G)\le \chi(G)-1\).
+\end{lemma}
+
+\begin{proof}
+Para probar \(\segg(G)\le \chi(G)-1\) se reutiliza la misma construcción del
+Lema \ref{lem:segto-le}. Sea \(m=\chi(G)\) y sea \(c:V\to\{1,\dots,m\}\) una \(m\)-coloración propia.
+Para cada \(i\in\{1,\dots,m\}\) se considera la clase de color
+\[
+C_i:=\{v\in V: c(v)=i\}.
+\]
+Se define la partición \(V=V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_{m-1}\) por
+\[
+V_1:=C_1\cup C_m,
+\qquad
+V_i:=C_i \ \ \text{para } i=2,\dots,m-1,
+\]
+y se fija un orden \(\prec\) por bloques imponiendo
+\[
+C_1 \prec C_2 \prec \cdots \prec C_{m-1} \prec C_m,
+\]
+tomando además un orden arbitrario dentro de cada bloque \(C_i\).
+
+Por el Lema \ref{lem:segto-le}, esta partición y este orden satisfacen \textup{(Seg\(_{\to}\))}.
+Resta verificar que también satisfacen \textup{(Seg\(_{\leftarrow}\))}.
+
+Sea entonces \(r<s<t\) una terna de índices del orden fijado. Supóngase que \(v_s\) y \(v_t\)
+pertenecen a una misma clase \(V_i\) y que \(v_s\sim v_t\). Se probará que necesariamente
+\(v_r\not\sim v_s\).
+
+Primero se observa que no puede ocurrir \(i\in\{2,\dots,m-1\}\): en tal caso \(V_i=C_i\), y como
+\(C_i\) es una clase de una coloración propia, es un conjunto independiente. Esto contradice
+la hipótesis \(v_s\sim v_t\). Por lo tanto, se concluye que
+\[
+i=1 \quad\text{y en particular}\quad v_s,v_t\in V_1=C_1\cup C_m.
+\]
+
+Se determina ahora en qué subclase cae cada vértice. Dado que \(s<t\) y el orden por bloques ubica
+todos los vértices de \(C_1\) antes que todos los vértices de \(C_m\), el único modo de tener
+\(v_s\sim v_t\) con \(v_s,v_t\in C_1\cup C_m\) es que
+\[
+v_s\in C_1
+\quad\text{y}\quad
+v_t\in C_m,
+\]
+ya que \(C_1\) y \(C_m\) son independientes y por lo tanto no pueden contener una arista interna.
+
+Finalmente, como \(C_1\) es el primer bloque del orden, no existe ningún vértice estrictamente a la izquierda
+de un vértice de \(C_1\). En particular, si \(v_s\in C_1\) entonces no existe \(r<s\) tal que
+\(v_r\sim v_s\). Por consiguiente, para la terna considerada se cumple \(v_r\not\sim v_s\), y queda verificada
+\textup{(Seg\(_{\leftarrow}\))}.
+
+Como la partición y el orden satisfacen simultáneamente \textup{(Seg\(_{\to}\))} y \textup{(Seg\(_{\leftarrow}\))},
+se obtiene que \(\segg(G)\le m-1\). En conclusión,
+\[
+\segg(G)\le m-1=\chi(G)-1,
+\]
+como se quería demostrar.
+\end{proof}
+
+
+\medskip
+Combinando los Lemas \ref{lem:seg12-ge-segto} y \ref{lem:seg12-le} se obtiene la igualdad.
+\end{proof}
+holi
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo. Se define \(\segthree(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
+existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\]
+que satisfacen la siguiente condición: para toda terna de índices \(r<s<t\), si \(v_r\) y \(v_t\)
+pertenecen a una misma clase \(V_i\), entonces no ocurre simultáneamente que
+\(v_r\sim v_s\) y \(v_s\sim v_t\). En forma equivalente,
+\[
+\bigl(v_r\in V_i \ \wedge\ v_t\in V_i\bigr)
+\ \Rightarrow\
+\neg\bigl( (v_r\sim v_s)\wedge(v_s\sim v_t) \bigr).
+\]
+\end{definition}
+
+\begin{theorem}\label{thm:seg3-chi}
+Para todo grafo \(G\),
+\[
+\segthree(G)=\left\lceil \frac{\chi(G)}{2}\right\rceil.
+\]
+\end{theorem}
+
+\begin{proof}
+\begin{lemma}\label{lem:seg3-le}
+Para todo grafo \(G\), se cumple
+\[
+\segthree(G)\le \left\lceil \frac{\chi(G)}{2}\right\rceil.
+\]
+\end{lemma}
+
+
+\begin{proof}
+Se fija un \(k\)-coloreo propio, es decir, una partición
+\[
+V \;=\; C_1 \,\dot\cup\, C_2 \,\dot\cup\, \cdots \,\dot\cup\, C_k,
+\]
+tal que cada \(C_i\) es independiente.
+
+Se construirá un orden \(v_1\prec \cdots \prec v_n\) de los vértices y una partición de \(V\) en
+\(\left\lceil k/2\right\rceil\) clases que satisfacen la condición de la definición: para todo \(r<s<t\),
+si \(v_r\) y \(v_t\) pertenecen a una misma clase, entonces no puede ocurrir simultáneamente que
+\(v_r\sim v_s\) y \(v_s\sim v_t\).
+
+\medskip
+\noindent\textbf{Caso 1: \(k\) par.}
+Sea \(k=2q\) para algun q natural, como \(\left\lceil k/2\right\rceil=q\), alcanza con exhibir un orden y una
+\(q\)-partición que cumplan.
+
+Se define la partición en \(q\) clases uniendo colores de a dos:
+\[
+V_1:=C_1\cup C_2,\quad
+V_2:=C_3\cup C_4,\quad
+\dots,\quad
+V_q:=C_{2q-1}\cup C_{2q}.
+\]
+Se define el orden \(v_1\prec\cdots\prec v_n\) por bloques: primero todos los vértices de \(V_1\),
+luego todos los de \(V_2\), y así sucesivamente hasta \(V_q\) y, dentro de cada bloque \(V_j\),
+primero se ubican todos los vértices de \(C_{2j-1}\) y después todos los de \(C_{2j}\) y dentro
+de cada C, se ubican de cualquier manera.
+
+\emph{Verificación de la condición.}
+Sea \(r<s<t\) tal que \(v_r,v_t\in V_j\). Como el orden es por bloques, necesariamente
+\(v_s\in V_j\), por la forma de ordenar dentro de \(V_j\), ocurren dos posibilidades:
+\begin{itemize}
+\item Si \(v_s\in C_{2j-1}\), entonces también \(v_r\in C_{2j-1}\), como \(C_{2j-1}\) es independiente,
+se tiene \(v_r\not\sim v_s\).
+\item Si \(v_s\in C_{2j}\), entonces también \(v_t\in C_{2j}\), como \(C_{2j}\) es independiente,
+se tiene \(v_s\not\sim v_t\).
+\end{itemize}
+En ambos casos es imposible que se cumplan simultáneamente \(v_r\sim v_s\) y \(v_s\sim v_t\).
+
+\medskip
+\noindent\textbf{Caso 2: \(k\) impar.}
+Sea \(k=2q+1\). Como \(\left\lceil k/2\right\rceil=q+1\), alcanza con exhibir un orden y una
+\((q+1)\)-partición que cumplan.
+
+Se emparejan los primeros \(2q\) colores como antes:
+\[
+V_1:=C_1\cup C_2,\quad
+V_2:=C_3\cup C_4,\quad
+\dots,\quad
+V_q:=C_{2q-1}\cup C_{2q},
+\]
+y el color restante forma la última clase:
+\[
+V_{q+1}:=C_{2q+1}.
+\]
+El orden se define por bloques \(V_1\prec\cdots\prec V_{q+1}\) como en el caso par dentro de cada clase
+\(V_j\) se ubican primero los vértices de \(C_{2j-1}\) y luego los de \(C_{2j}\), y dentro de \(V_{q+1}\)
+se ordena de manera arbitraria.
+
+La verificación en este caso es igual al caso par, si \(v_r\) y \(v_t\) estan ambos en \(V_{q+1}\), como 
+es un conjunto independiente, y como el orden es por bloques \(V_{q+1}\), no puede haber aristas entre ninguno de los 3 vertices.
+
+\medskip
+En ambos casos queda construido un orden y una partición de \(V\) en \(\left\lceil k/2\right\rceil\) clases
+que satisfacen la condición. Por lo tanto,
+\[
+\segthree(G)\le \left\lceil \frac{k}{2}\right\rceil
+\;=\;
+\left\lceil \frac{\chi(G)}{2}\right\rceil,
+\]
+como se quería demostrar.
+\end{proof}
+
+
+\begin{lemma}\label{lem:le-seg3}
+Para todo grafo \(G\), se cumple
+\[
+\left\lceil \frac{\chi(G)}{2}\right\rceil \le \segthree(G).
+\]
+\end{lemma}
+
+\begin{proof}
+Sea \(G\) un grafo con \(\segthree(G)=k\), probaremos que \(G\) admite un \(2k\)-coloreo.
+
+Por definición de \(\segthree(G)\), existe un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k
+\]
+que satisfacen la condición correspondiente.
+
+Se observa primero que, para cada clase \(V_c\), el subgrafo inducido \(G[V_c]\) es bipartito.
+Para ello, se fija una clase \(V_c\) y un vértice \(v\in V_c\). Se definen los conjuntos
+\[
+D(v)\;:=\;\{\,u\in V_c : u\sim v \text{ y } v\prec u\,\},
+\qquad
+I(v)\;:=\;\{\,u\in V_c : u\sim v \text{ y } u\prec v\,\}.
+\]
+En otras palabras, \(D(v)\) es el conjunto de vecinos de \(v\) dentro de \(V_c\) que están a la derecha de \(v\),
+e \(I(v)\) es el conjunto de vecinos de \(v\) dentro de \(V_c\) que están a la izquierda de \(v\).
+
+\begin{remark}
+Los conjuntos \(D(v)\) e \(I(v)\) son independientes,
+dado que si existieran \(a,b\in D(v)\) con \(a\prec b\) y \(a\sim b\), entonces \(v-a-b\) sería un \(P_3\)
+tal que \(v\) y \(b\) pertenecen a la misma clase \(V_c\), lo cual contradice la condición de \(\segthree\) y
+un argumento análogo muestra que \(I(v)\) también es independiente.
+\end{remark}
+
+Además, \(D(v)\cap I(v)=\varnothing\), ya que para todo vértice \(u\) se tiene o bien \(u\prec v\) o bien \(v\prec u\),
+en consecuencia, se obtiene una bipartición de \(G[V_c]\) separando vértices a izquierda y derecha (los vértices aislados
+en \(G[V_c]\) pueden asignarse a cualquiera de las dos partes sin afectar la bipartición).
+
+Como esto vale para cada clase \(V_1,\dots,V_k\), para cada \(i\in\{1,\dots,k\}\) se fija una bipartición
+\[
+V_i \;=\; I_i \,\dot\cup\, D_i,
+\]
+donde \(I_i\) y \(D_i\) son conjuntos independientes. Entonces los \(2k\) conjuntos
+\[
+I_1,\,D_1,\,I_2,\,D_2,\,\dots,\,I_k,\,D_k
+\]
+son todos independientes, y determinan un \(2k\)-coloreo de \(G\). Por lo tanto,
+\[
+\chi(G)\le 2k.
+\]
+En particular, \(k\ge \chi(G)/2\), y como \(k\in\mathbb{N}\), se concluye que
+\[
+k \;\ge\; \left\lceil \frac{\chi(G)}{2}\right\rceil.
+\]
+
+\end{proof}
+
+Combinando los Lemas \ref{lem:seg3-le} y \ref{lem:le-seg3} se obtiene la igualdad.
+\end{proof}
+
+
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo simple. Se define \(\segthirteen(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
+existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\]
+que satisfacen simultáneamente las condiciones \textup{(Seg\(_{\to}\))} y \textup{(Seg\(_3\))}.
+\end{definition}
+
+\begin{theorem}\label{thm:seg13-eq}
+Para todo grafo \(G\),
+\[
+\segthirteen(G)=\chi(G)-1.
+\]
+\end{theorem}
+
+\begin{proof}
+La demostración se divide en dos desigualdades.
+
+\medskip
+\begin{lemma}\label{lem:seg13-ge-chi-1}
+\[
+\segthirteen(G)\ge \chi(G)-1.
+\]
+\end{lemma}
+
+\begin{proof}
+Como \(\segthirteen\) exige simultáneamente \textup{(Seg\(_{\to}\))} y \textup{(Seg\(_3\))}, toda partición y orden
+que satisface la definición de \(\segthirteen\) satisface en particular \textup{(Seg\(_{\to}\))}.
+Por lo tanto, vale el Lema 1.9
+\[
+\segthirteen(G)\ge \segto(G).
+\]
+Usando el Teorema \ref{thm:segto-chi}, se obtiene \(\segto(G)=\chi(G)-1\), y se concluye que
+\[
+\segthirteen(G)\ge \chi(G)-1.
+\]
+\end{proof}
+
+\medskip
+\begin{lemma}\label{lem:seg13-le-chi-1}
+
+\[
+\segthirteen(G)\le \chi(G)-1.
+\]
+\end{lemma}
+holiii
+\begin{proof}
+Sea \(k=\chi(G)\), existe un \(k\)-coloreo propio de \(G\), es decir una partición
+\[
+V \;=\; C_1 \,\dot\cup\, C_2 \,\dot\cup\, \cdots \,\dot\cup\, C_k.
+\]
+Se construye una partición de \(V\) en \(k-1\) clases a partir del coloreo definiendo
+\[
+V_i := C_i \quad \text{para todo } i=1,\dots,k-2,
+\qquad\text{y}\qquad
+V_{k-1} := C_{k-1}\cup C_k.
+\]
+
+
+El orden \(\prec\) se define por bloques imponiendo
+\[
+V_1 \prec V_2 \prec \cdots \prec V_{k-2} \prec V_{k-1},
+\]
+es decir, para todo \(i<j\), para todo \(u\in V_i\) y todo \(v\in V_j\), se cumple \(u\prec v\).
+Además, dentro del último bloque \(V_{k-1}=C_{k-1}\cup C_k\) se fija el orden
+\[
+C_{k-1} \prec C_k,
+\]
+esto es, primero se ubican todos los vértices de \(C_{k-1}\) y luego todos los de \(C_k\).
+Por último, dentro de cada conjunto \(C_i\) se toma un orden arbitrario.
+
+Resta verificar que la partición y el orden definidos satisfacen simultáneamente
+\textup{(Seg\(_{\to}\))} y \textup{(Seg\(_3\))}.
+
+\medskip
+\noindent\textbf{Verificación de \textup{(Seg\(_{\to}\))}.}
+Sea \(r<s<t\), para que el antecedente de \textup{(Seg\(_{\to}\))} no sea falso, debe ocurrir que
+\(v_r\) y \(v_s\) pertenezcan a una misma clase \(V_i\) y además \(v_r\sim v_s\).
+Por construcción, para \(i\in\{1,\dots,k-2\}\) se tiene \(V_i=C_i\), y como cada \(C_i\) es independiente,
+no puede ocurrir \(v_r\sim v_s\) dentro de esas clases. Por lo tanto, necesariamente
+\[
+v_r,v_s\in V_{k-1}=C_{k-1}\cup C_k.
+\]
+Como \(C_{k-1}\) y \(C_k\) son independientes, de \(v_r\sim v_s\) se deduce que \(v_r\) y \(v_s\) pertenecen
+a colores distintos. Además, el orden dentro de \(V_{k-1}\) se fijó como \(C_{k-1}\prec C_k\), y como \(r<s\),
+necesariamente
+\[
+v_r\in C_{k-1}
+\quad\text{y}\quad
+v_s\in C_k.
+\]
+Se concluye que no existe \(t>s\) tal que \(v_s\sim v_t\) pues todo vértice a la derecha de \(v_s\)
+pertenece a \(C_k\) (pues \(C_k\) aparece al final del bloque \(V_{k-1}\) y además \(V_{k-1}\) es el último bloque).
+Como \(C_k\) es independiente, \(v_s\) no puede ser adyacente a ningún vértice de \(C_k\), en particular,
+para todo \(t>s\) se tiene \(v_s\not\sim v_t\), esto verifica \textup{(Seg\(_{\to}\))}.
+
+\medskip
+\noindent\textbf{Verificación de \textup{(Seg\(_3\))}.}
+Sea \(r<s<t\) tal que \(v_r\) y \(v_t\) pertenecen a una misma clase \(V_i\).
+Como el orden es por bloques, de \(v_r,v_t\in V_i\) se deduce necesariamente que también \(v_s\in V_i\).
+
+Si \(i\in\{1,\dots,k-2\}\), entonces \(V_i=C_i\) es independiente. Por lo tanto, no hay aristas entre
+\(v_r,v_s,v_t\), y en particular es imposible que ocurran simultáneamente \(v_r\sim v_s\) y \(v_s\sim v_t\).
+
+Si \(i=k-1\), luego \(v_r,v_s,v_t\in V_{k-1}=C_{k-1}\cup C_k\),
+si \(v_r\) y \(v_t\) pertenecen al mismo color (ambos en \(C_{k-1}\) o ambos en \(C_k\)), entonces,
+por el mismo argumento de bloques, también \(v_s\) pertenece a ese color, y como dicho color es independiente,
+no puede haber aristas entre ellos.
+
+Finalmente, si \(v_r\) y \(v_t\) pertenecen a colores distintos, entonces, por el orden interno
+\(C_{k-1}\prec C_k\) y la condición \(r<t\), necesariamente
+\[
+v_r\in C_{k-1}
+\quad\text{y}\quad
+v_t\in C_k.
+\]
+En este caso, el vértice \(v_s\) pertenece o bien a \(C_{k-1}\) o bien a \(C_k\), si \(v_s\in C_{k-1}\),
+entonces \(v_r\sim v_s\) es imposible porque \(C_{k-1}\) es independiente, si \(v_s\in C_k\), entonces
+\(v_s\sim v_t\) es imposible porque \(C_k\) es independiente. En ambos casos no pueden ocurrir simultáneamente
+\(v_r\sim v_s\) y \(v_s\sim v_t\), y \textup{(Seg\(_3\))} queda verificada.
+
+Como ambas condiciones se satisfacen, se concluye que la construcción es una realización de
+\(\segthirteen(G)\) con \(k-1\) clases, y por lo tanto \(\segthirteen(G)\le k-1\).
+
+
+\end{proof}
+
+
+\medskip
+Combinando los Lemas \ref{lem:seg13-ge-chi-1} y \ref{lem:seg13-le-chi-1} se obtiene la igualdad.
+\end{proof}
+
+
+
+\begin{definition}
+Sea \(G=(V,E)\) un grafo. Se define \(\segonetwothree(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
+existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
+\[
+V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
+\]
+que satisfacen simultáneamente las condiciones \textup{(Seg\(_{\to}\))}, \textup{(Seg\(_{\leftarrow}\))} y \textup{(Seg\(_3\))}.
+\end{definition}
+
+\begin{lemma}\label{lem:seg123-le-chi}
+Para todo grafo \(G\), se cumple
+\[
+\segonetwothree(G)\le \chi(G).
+\]
+\end{lemma}
+
+\begin{proof}
+Sea \(k=\chi(G)\) y fíjese un \(k\)-coloreo propio de \(G\), con clases de color
+\[
+V \;=\; C_1 \,\dot\cup\, C_2 \,\dot\cup\, \cdots \,\dot\cup\, C_k,
+\]
+donde cada \(C_i\) es independiente.
+
+Se toma la partición de \(V\) en \(k\) clases dada por
+\[
+V_i:=C_i \quad \text{para todo } i=1,\dots,k,
+\]
+y se fija un orden \(\prec\) por bloques imponiendo
+\[
+C_1 \prec C_2 \prec \cdots \prec C_k,
+\]
+tomando además un orden arbitrario dentro de cada bloque.
+
+Como cada clase \(V_i=C_i\) es independiente, no existen aristas entre dos vértices de una misma clase.
+En consecuencia, los antecedentes de \textup{(Seg\(_{\to}\))}, \textup{(Seg\(_{\leftarrow}\))} y \textup{(Seg\(_3\))}
+son falsos para toda tripla \(r<s<t\), y por lo tanto las tres condiciones se satisfacen trivialmente.
+
+Se concluye que \(G\) admite una realización de \(\segonetwothree\) con \(k\) clases, es decir,
+\(\segonetwothree(G)\le k=\chi(G)\).
+\end{proof}
+
+
+\begin{lemma}\label{lem:seg123-ge-chi}
+
+\[
+\segonetwothree(G)\ge \chi(G)-1.
+\]
+\end{lemma}
+
+\begin{proof}
+Como \(\segonetwothree\) exige simultáneamente \textup{(Seg\(_{\to}\))}, \textup{(Seg\(_{\leftarrow}\))} y
+\textup{(Seg\(_3\))}, toda realización que satisface \(\segonetwothree\) satisface en particular
+\textup{(Seg\(_{\to}\))}. Por lo tanto,
+\[
+\segonetwothree(G)\ge \segto(G).
+\]
+Usando el Teorema \ref{thm:segto-chi}, se tiene \(\segto(G)=\chi(G)-1\), y se concluye que
+\[
+\segonetwothree(G)\ge \chi(G)-1.
+\]
+\end{proof}
+
+Pero, para este caso de las tres condiciones juntas, No vale el >=.
+
+\begin{lemma}\label{lem:seg123-not-ge-chi}
+No es cierto que \(\segonetwothree(G)\ge \chi(G)\) para todo grafo \(G\).
+\end{lemma}
+
+\begin{proof}
+Se exhibe un contraejemplo: existe un grafo \(G\) tal que \(\chi(G)=4\) y
+\(\segonetwothree(G)=3\). Para este grafo se tiene
+\[
+\segonetwothree(G)=3 \;<\; 4=\chi(G),
+\]
+por lo tanto la desigualdad \(\segonetwothree(G)\ge \chi(G)\) no vale en general.
+\end{proof}
+
+
+\subsection{Grafos de Mycielski}
+
+\begin{definition}[Paso de Mycielski]
+Sea \(M_j=(V_j,E_j)\) un grafo, con \(V_j=\{v_0,\dots,v_{n-1}\}\).
+Se construye \(M_{j+1}\) introduciendo una copia
+\[
+W_j:=\{w_0,\dots,w_{n-1}\},
+\]
+y un vértice adicional \(w\). Se fija
+\[
+V(M_{j+1}) \;:=\; V_j \,\dot\cup\, W_j \,\dot\cup\, \{w\}.
+\]
+La adyacencia en \(M_{j+1}\) se determina imponiendo, para todo \(i,\ell\in\{0,\dots,n-1\}\),
+\[
+v_i \sim v_\ell \ \text{en } M_{j+1}
+\quad\Longleftrightarrow\quad
+v_i \sim v_\ell \ \text{en } M_j,
+\]
+\[
+w_i \sim v_\ell \ \text{en } M_{j+1}
+\quad\Longleftrightarrow\quad
+v_i \sim v_\ell \ \text{en } M_j,
+\]
+y además
+\[
+w \sim w_i \ \text{en } M_{j+1}\qquad\text{para todo } i=0,\dots,n-1.
+\]
+No se agregan otras aristas.
+\end{definition}
+
+\begin{definition}[Familia \(M_j\)]
+Se fija \(M_2:=K_2\) y, para todo \(j\ge 2\), se define \(M_{j+1}\) a partir de \(M_j\)
+mediante el paso anterior.
+\end{definition}
+
+% --- Colores de las clases (sin sombreado: solo borde + texto) ---
+\colorlet{Czero}{red!70!black}
+\colorlet{Cone}{blue!70!black}
+\colorlet{Ctwo}{green!50!black}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.40\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1.65,
+  every node/.style={circle, draw, inner sep=1.2pt, font=\small, fill=white}
+]
+% M3 = C5
+\foreach \i/\ang in {0/90,1/18,2/-54,3/-126,4/162}{
+  \node (v\i) at (\ang:1.05) {$v_{\i}$};
+}
+\foreach \i/\j in {0/1,1/2,2/3,3/4,4/0}{
+  \draw (v\i) -- (v\j);
+}
+\end{tikzpicture}
+\caption{\(M_3 \cong C_5\).}
+\label{fig:M3}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.58\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1.55,
+  every node/.style={circle, inner sep=1.2pt, font=\small, fill=white},
+  V0/.style={draw=Czero, text=Czero, line width=0.7pt},
+  V1/.style={draw=Cone,  text=Cone,  line width=0.7pt},
+  V2/.style={draw=Ctwo,  text=Ctwo,  line width=0.7pt}
+]
+
+% v0..v4 (pentágono exterior)
+\node[V2] (v0) at ( 90:1.10) {$v_0$};
+\node[V2] (v1) at ( 18:1.10) {$v_1$};
+\node[V0] (v2) at (-54:1.10) {$v_2$};
+\node[V2] (v3) at (-126:1.10) {$v_3$};
+\node[V1] (v4) at (162:1.10) {$v_4$};
+
+% w0..w4 (copias, pentágono interior)
+\node[V0] (w0) at ( 90:0.62) {$w_0$};
+\node[V1] (w1) at ( 18:0.62) {$w_1$};
+\node[V0] (w2) at (-54:0.62) {$w_2$};
+\node[V1] (w3) at (-126:0.62) {$w_3$};
+\node[V1] (w4) at (162:0.62) {$w_4$};
+
+% vértice extra w
+\node[V0] (w) at (0,0) {$w$};
+
+% aristas del C5: v_i v_{i+1}
+\draw (v0)--(v1)--(v2)--(v3)--(v4)--(v0);
+
+% aristas w_i a vecinos de v_i (en M3=C5)
+\draw (w0)--(v1) (w0)--(v4);
+\draw (w1)--(v0) (w1)--(v2);
+\draw (w2)--(v1) (w2)--(v3);
+\draw (w3)--(v2) (w3)--(v4);
+\draw (w4)--(v0) (w4)--(v3);
+
+% aristas w - w_i
+\draw (w)--(w0) (w)--(w1) (w)--(w2) (w)--(w3) (w)--(w4);
+
+\end{tikzpicture}
+\caption{\(M_4\) (con la 3-partición indicada por colores).}
+\label{fig:M4}
+\end{subfigure}
+
+\caption{Los grafos \(M_3\) y \(M_4\).}
+\label{fig:M3M4}
+\end{figure}
+
+Se recuerda que el grafo de Mycielski \(M_4\) satisface \(\chi(M_4)=4\).
+En lo que sigue se trabaja con el etiquetado
+\[
+V(M_4)=\{v_0,\dots,v_4,w_0,\dots,w_4,w\}.
+\]
+
+\medskip
+\noindent\textbf{Lista de adyacencias de \(M_4\).}
+\[
+\begin{array}{rcl}
+N(v_0)&=&\{v_1,\,v_4,\,w_1,\,w_4\},\\
+N(v_1)&=&\{v_0,\,v_2,\,w_0,\,w_2\},\\
+N(v_2)&=&\{v_1,\,v_3,\,w_1,\,w_3\},\\
+N(v_3)&=&\{v_2,\,v_4,\,w_2,\,w_4\},\\
+N(v_4)&=&\{v_0,\,v_3,\,w_0,\,w_3\},\\[1mm]
+N(w_0)&=&\{v_1,\,v_4,\,w\},\\
+N(w_1)&=&\{v_0,\,v_2,\,w\},\\
+N(w_2)&=&\{v_1,\,v_3,\,w\},\\
+N(w_3)&=&\{v_2,\,v_4,\,w\},\\
+N(w_4)&=&\{v_0,\,v_3,\,w\},\\
+N(w)&=&\{w_0,\,w_1,\,w_2,\,w_3,\,w_4\}.
+\end{array}
+\]
+
+\medskip
+\noindent\textbf{Orden.}
+\[
+\begin{aligned}
+w &\prec w_4 \prec v_4 \prec v_3 \prec v_1 \prec w_2 \prec w_0\\
+  &\prec v_2 \prec w_3 \prec w_1 \prec v_0.
+\end{aligned}
+\]
+
+\noindent\textbf{3-partición.}
+\[
+\begin{aligned}
+V_0&=\{w,\,w_2,\,w_0,\,v_2\},\\
+V_1&=\{w_4,\,v_4,\,w_3,\,w_1\},\\
+V_2&=\{v_3,\,v_1,\,v_0\}.
+\end{aligned}
+\]
+
+\medskip
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  x=0.85cm, y=0.95cm,
+  every node/.style={circle, inner sep=1.2pt, font=\small, fill=white},
+  V0/.style={draw=red!70!black,  text=red!70!black,  line width=0.7pt},
+  V1/.style={draw=blue!70!black, text=blue!70!black, line width=0.7pt},
+  V2/.style={draw=green!50!black,text=green!50!black,line width=0.7pt}
+]
+
+% Etiquetas de filas
+\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,2) {$V_0$};
+\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,1) {$V_1$};
+\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,0) {$V_2$};
+
+% (Opcional) marcas de posición del orden
+\foreach \x in {1,...,11}{
+  \draw[gray!25] (\x, -0.35) -- (\x, 2.35);
+}
+
+% Orden: [10, 9, 4, 3, 1, 7, 5, 2, 8, 6, 0]
+% En notación: 10=w, 9=w_4, 4=v_4, 3=v_3, 1=v_1, 7=w_2, 5=w_0, 2=v_2, 8=w_3, 6=w_1, 0=v_0
+
+% Fila V0 = {w, w2, w0, v2} en posiciones 1,6,7,8
+\node[V0] at (1,2) {$w$};
+\node[V0] at (6,2) {$w_2$};
+\node[V0] at (7,2) {$w_0$};
+\node[V0] at (8,2) {$v_2$};
+
+% Fila V1 = {w4, v4, w3, w1} en posiciones 2,3,9,10
+\node[V1] at (2,1) {$w_4$};
+\node[V1] at (3,1) {$v_4$};
+\node[V1] at (9,1) {$w_3$};
+\node[V1] at (10,1) {$w_1$};
+
+% Fila V2 = {v3, v1, v0} en posiciones 4,5,11
+\node[V2] at (4,0) {$v_3$};
+\node[V2] at (5,0) {$v_1$};
+\node[V2] at (11,0) {$v_0$};
+
+% (Opcional) flecha del orden
+\draw[->, line width=0.6pt] (1,2.55) -- (11,2.55);
+\node[draw=none, circle=none, fill=none, font=\small] at (6,2.75) {orden \(\prec\)};
+
+\end{tikzpicture}
+\caption{Orden fijado y 3-partición de \(V(M_4)\) (cada vértice en la fila de su clase).}
+\label{fig:M4-order-rows}
+\end{figure}
+
+
+A continuación se verificará que el orden y la 3-partición anteriores satisfacen la definición de
+\(\segonetwothree\), es decir, que cumplen simultáneamente \textup{(Seg\(_{\to}\))},
+\textup{(Seg\(_{\leftarrow}\))} y \textup{(Seg\(_3\))}.
+
+
+
+
+\begin{lemma}\label{lem:M4-segto}
+El orden y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
+satisfacen \textup{Seg\(_{\to}\)}.
+\end{lemma}
+
+\begin{proof}
+Sea \(r<s<t\) y sean \(v_r,v_s,v_t\) los vértices en esas posiciones del orden tal que
+
+\[
+v_r,v_s\in V_i \quad\text{y}\quad v_r\sim v_s
+\]
+para \(i\in\{0,1,2\}\), mostraremos que necesariamente \(v_s\not\sim v_t\).
+
+Con la lista de adyacencias y la partición fijada, las aristas internas de las clases son:
+\[
+\text{en }V_0:\ w\sim w_2,\ w\sim w_0\qquad
+\text{en }V_1:\ v_4\sim w_3\qquad
+\text{en }V_2:\ v_1\sim v_0
+\]
+Por lo tanto, si \(r<s\) y \(v_r\sim v_s\) con \(v_r,v_s\) en la misma clase, necesariamente ocurre
+uno de los siguientes casos:
+\[
+v_s\in\{w_2,\ w_0,\ w_3,\ v_0\}.
+\]
+
+Verifiquemos que en cada caso, \(v_s\) no tiene vecinos a la derecha:
+
+\smallskip
+\noindent\textbf{(1) \(v_s=w_2\)}
+se tiene \(N(w_2)=\{v_1,v_3,w\}\), y en el orden fijado
+\(
+w \prec v_3 \prec v_1 \prec w_2
+\).
+Luego todo vecino de \(w_2\) queda a la izquierda de \(w_2\).
+
+\smallskip
+\noindent\textbf{(2) \(v_s=w_0\)}
+se tiene \(N(w_0)=\{v_1,v_4,w\}\), y en el orden fijado
+\(
+w \prec v_4 \prec v_1 \prec w_0
+\).
+Luego todo vecino de \(w_0\) queda a la izquierda de \(w_0\).
+
+\smallskip
+\noindent\textbf{(3) \(v_s=w_3\)}
+se tiene \(N(w_3)=\{v_2,v_4,w\}\), y en el orden fijado
+\(
+w \prec v_4 \prec v_2 \prec w_3
+\).
+Luego todo vecino de \(w_3\) queda a la izquierda de \(w_3\).
+
+\smallskip
+\noindent\textbf{(4) \(v_s=v_0\)}
+en el orden fijado, \(v_0\) es el último vértice, por lo que no existe \(t>s\).
+\end{proof}
+
+
+\begin{lemma}\label{lem:M4-segfrom}
+El orden y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
+satisfacen \textup{Seg\(_{\leftarrow}\)}.
+\end{lemma}
+
+\begin{proof}
+Sea \(r<s<t\) tal que \(v_s\) y \(v_t\) pertenecen a una misma clase \(V_i\) y que \(v_s\sim v_t\)
+por la lista de adyacencias, las únicas aristas internas de las clases son
+\[
+\text{en }V_0:\ w\sim w_2,\ w\sim w_0\qquad
+\text{en }V_1:\ v_4\sim w_3\qquad
+\text{en }V_2:\ v_1\sim v_0.
+\]
+En consecuencia, necesariamente
+\[
+v_s\in\{w,\ v_4,\ v_1\}
+\]
+pues \(v_s\) es el extremo izquierdo de una arista interna de su clase.
+
+En cada una de estas tres posibilidades verifiquemos que \(v_s\) no tiene vecinos a la izquierda:
+
+\smallskip
+\noindent\textbf{(1) \(v_s=w\)}
+en el orden fijado \(w\) es el primer vértice, luego no existe \(r<s\).
+
+\smallskip
+\noindent\textbf{(2) \(v_s=v_4\)}
+se tiene \(N(v_4)=\{v_0,v_3,w_0,w_3\}\), y en el orden fijado
+\(v_4\prec v_3\), \(v_4\prec w_0\), \(v_4\prec w_3\) y \(v_4\prec v_0\)
+por lo tanto, todo vecino de \(v_4\) queda a la derecha de \(v_4\).
+
+
+\smallskip
+\noindent\textbf{(3) \(v_s=v_1\)}
+se tiene \(N(v_1)=\{v_0,v_2,w_0,w_2\}\), y en el orden fijado
+\(v_1\prec w_2\), \(v_1\prec w_0\), \(v_1\prec v_2\) y \(v_1\prec v_0\)
+por lo tanto, todo vecino de \(v_1\) queda a la derecha de \(v_1\).
+\end{proof}
+
+
+\begin{lemma}\label{lem:M4-seg3}
+El orden y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
+satisfacen \textup{Seg\(_3\)}.
+\end{lemma}
+
+\begin{proof}
+Para esta verificación basta comprobar que, para todo vértice \(u\),
+las clases de los vecinos de \(u\) a la izquierda son disjuntas de las clases de los vecinos de \(u\) a la derecha.
+
+
+En los extremos \(w\) y \(v_0\) no hay, respectivamente, vecinos a la izquierda ni a la derecha, y no hay nada que verificar.
+Para los restantes vértices se verifica la condición usando la lista de adyacencias:
+
+
+\smallskip
+\noindent\textbf{(1) \(w_4\),}
+a la izquierda sólo aparece \(w\in V_0\), mientras que a la derecha aparecen \(v_3,v_0\in V_2\).
+
+
+\smallskip
+\noindent\textbf{(2) \(v_4\),}
+no tiene vecinos a la izquierda en el orden, por lo tanto la condición es trivial.
+
+\smallskip
+\noindent\textbf{(3) \(v_3\),}
+a la izquierda aparecen \(w_4,v_4\in V_1\), y a la derecha aparecen \(w_2,v_2\in V_0\).
+
+
+\smallskip
+\noindent\textbf{(4) \(v_1\),}
+no tiene vecinos a la izquierda en el orden, por lo tanto la condición es trivial.
+
+\smallskip
+\noindent\textbf{(5) \(w_2\),}
+no tiene vecinos a la derecha y la condición es trivial.
+
+\smallskip
+\noindent\textbf{(6) \(w_0\),}
+no tiene vecinos a la derecha y la condición es trivial.
+
+\smallskip
+\noindent\textbf{(7) \(v_2\),}
+a la izquierda aparecen \(v_3,v_1\in V_2\), y a la derecha aparecen \(w_3,w_1\in V_1\).
+
+
+\smallskip
+\noindent\textbf{(8) \(w_3\),}
+No tiene vecinos a la derecha yla condición es trivial.
+
+\smallskip
+\noindent\textbf{(9) \(w_1\),}
+a la izquierda aparecen \(w,v_2\in V_0\), y a la derecha aparece \(v_0\in V_2\).
+\end{proof}
+
+
+\end{document}
+
