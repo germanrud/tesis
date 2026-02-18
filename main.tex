@@ -20,6 +20,7 @@
 \theoremstyle{plain} % estilo "teorema" (itálica)
 \newtheorem{theorem}{Teorema}[section]
 \newtheorem{lemma}[theorem]{Lema}
+\newtheorem{Claim}[theorem]{Claim}
 \newtheorem{corollary}[theorem]{Corolario}
 
 \theoremstyle{definition} % estilo "definición" (normal)
@@ -43,6 +44,18 @@
 \newcommand{\segthree}{\operatorname{seg}_{3}}
 \newcommand{\segthirteen}{\operatorname{seg}_{13}}
 \newcommand{\segonetwothree}{\operatorname{seg}_{123}}
+\newcommand{\minClases}{\operatorname{minClases}}
+
+\newcommand{\segone}{\operatorname{seg}_{1}}
+\newcommand{\Pone}{\mathcal{P}_{1}}
+
+\newcommand{\segtwo}{\operatorname{seg}_{2}}
+\newcommand{\Ptwo}{\mathcal{P}_{2}}
+
+\newcommand{\segonetwo}{\operatorname{seg}_{12}}
+\newcommand{\Ponetwo}{\mathcal{P}_{12}}
+
+\newcommand{\Pthree}{\mathcal{P}_{3}}
 
 \title{Tesis}
 \author{German y Eric}
@@ -55,10 +68,87 @@
 \section{Preliminares}
 
 
+\begin{definition}[Patrón coloreado]
+Un \emph{patrón coloreado} es una terna \(P=(A,N,C)\) tal que
+\[
+A,N,C \subseteq \binom{\{1,2,3\}}{2}
+\qquad\text{donde}\qquad
+\binom{\{1,2,3\}}{2}=\bigl\{\{1,2\},\{1,3\},\{2,3\}\bigr\}.
+\]
+Los elementos de \(\binom{\{1,2,3\}}{2}\) se interpretan como pares de posiciones.
+
+El conjunto \(A\) indica los pares que \emph{deben} ser aristas, \(N\) indica los pares que \emph{no pueden}
+ser aristas, y los pares fuera de \(A\cup N\) se consideran libres.
+Finalmente, \(C\) indica los pares de posiciones que se consideran \emph{coloreadas del mismo color}.
+\end{definition}
+
+
+
+\begin{definition}[Solución]
+Una \emph{solución} de un grafo G es un par \((\prec,\mathcal{S})\), donde \(\prec\) es un orden total sobre \(V\) y
+\(\mathcal{S}\) es una partición de \(V\).
+Se define el \emph{valor} de la solución \((\prec,\mathcal{S})\) como
+\[
+\operatorname{val}(\prec,\mathcal{S}) \;:=\; |\mathcal{S}|,
+\]
+es decir, la cantidad de clases de la partición.
+\end{definition}
+
+
+
+\begin{definition}[Evitar un patrón]
+Sea \(G=(V,E)\) un grafo y sea \((\prec,\mathcal{S})\) una solución de \(G\), donde
+\(\prec\) es un orden en \(V\) y \(\mathcal{S}\) es una partición de \(V\).
+Sea además \(P=(A,N,C)\) un patrón coloreado.
+
+Dada una terna \((v_1,v_2,v_3)\). (DUDA!!, debo decir que v1<v2<v3 aca no??) de vértices distintos de \(G\), se dice que
+\((v_1,v_2,v_3)\) \emph{evita} el patrón \(P\) si ocurre al menos una de las siguientes condiciones:
+\begin{enumerate}
+  \item Existe \(\{i,j\}\in A\) tal que \(\{v_i,v_j\}\notin E\).
+  \item Existe \(\{i,j\}\in N\) tal que \(\{v_i,v_j\}\in E\).
+  \item Existe \(\{i,j\}\in C\) tal que \(v_i\) y \(v_j\) pertenecen a clases distintas de \(\mathcal{S}\).
+
+\end{enumerate}
+
+Se dice que la solución \((\prec,\mathcal{S})\) \emph{evita} el patrón \(P\) si para toda terna de
+vértices \emph{distintos} \(v_1,v_2,v_3\in V\) tal que \(v_1\prec v_2\prec v_3\), se cumple que
+\((v_1,v_2,v_3)\) evita \(P\).
+\end{definition}
+
+
+
+
+\begin{definition}[Parámetro por patrones prohibidos]
+Sea \(\mathcal{P}\) una familia finita de patrones coloreados.
+Dado un grafo \(G=(V,E)\), se define
+\[
+\minClases_{\mathcal{P}}(G)
+\]
+como el mínimo entero \(k\in\mathbb{N}\) tal que existe una solución \((\prec,\mathcal{S})\) de \(G\)
+con \(|\mathcal{S}|=k\) que evita todo patrón de \(\mathcal{P}\), es decir, que evita simultáneamente
+todos los patrones \(\mathcal{Q}\in\mathcal{P}\).
+\end{definition}
+
+\begin{remark}
+En particular, si \(\mathcal{P}=\{\mathcal{P}_1,\mathcal{P}_2,\mathcal{P}_3\}\), entonces
+\(\minClases_{\mathcal{P}}(G)\) coincide con el mínimo número de clases de una solución que evita
+\(\mathcal{P}_1,\mathcal{P}_2\) y \(\mathcal{P}_3\).
+\end{remark}
+
+\begin{definition}[Solución óptima]\label{def:sol-optima}
+Sea \(G\) un grafo y sea \(\mathcal P\) una familia de patrones coloreados.
+Una solución \(S=(\prec,\mathcal S)\) se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
+\[
+|\mathcal S|=\minClases_{\mathcal P}(G).
+\]
+\end{definition}
+
+
+----
 
 \begin{definition}
 Sea \(G=(V,E)\) un grafo y \(k\in\mathbb{N}\).
-\(G\) es \emph{\(k\)-segregable\(_\to\)} si existen
+\(G\) es \emph{\(k\)-segregable\(_1\)} si existen
 
 \begin{itemize}
   \item un ordenamiento de los vértices \(v_1 \prec v_2 \prec \cdots \prec v_n\), y
@@ -73,13 +163,120 @@ Tales que para cada tripla \((r,s,t)\) con \(r<s<t\),
 \end{definition}
 
 \begin{definition}
-Se define \(\segto(G)\) como el mínimo \(k\) tal que \(G\) es \(k\)-segregable\(_\to\).
+\(\segone(G)\) es el mínimo \(k\) tal que \(G\) es \(k\)-segregable\(_1\).
 \end{definition}
 
-\begin{theorem}\label{thm:segto1-bip}
-Sea \(G=(V,E)\) un grafo. Entonces \(G\) es \(1\)-segregable\(_\to\) (equivalentemente, \(\segto(G)=1\))
-si y solo si \(G\) es bipartito.
+
+HOLIII
+
+\begin{definition}[Patrón prohibido para \(\segone\)]
+Se fija el patrón coloreado
+\[
+\Pone=(A_1,N_1,C_1),
+\]
+donde
+\[
+A_1=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad
+N_1=\varnothing,\qquad
+C_1=\bigl\{\{1,2\}\bigr\}.
+\]
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
+\node[fill=gray!20] (a) at (0,0) {1};
+\node[fill=gray!20] (b) at (1.2,0) {2};
+\node             (c) at (2.4,0) {3};
+\draw (a)--(b);
+\draw (b)--(c);
+\end{tikzpicture}
+\caption{El patrón \(\Pone\): se exigen las aristas \(12\) y \(23\), y se exige que \(1\) y \(2\) estén en la misma clase.}
+\end{figure}
+
+\begin{definition}[\(\segone\)]
+Dado un grafo \(G\), se define
+\[
+\segone(G)\;:=\;\minClases_{\{\Pone\}}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita el patrón \(\Pone\).
+\end{definition}
+
+
+\begin{theorem}\label{thm:seg1-bip}
+Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si \(\segone(G)=1\).
 \end{theorem}
+
+DEMO NUEVA
+
+\begin{proof}
+\noindent(\(\Rightarrow\)) Supongamos que \(G\) es bipartito. Entonces existe una partición
+\(V=A\,\dot\cup\,B\) tal que \(A\) y \(B\) son independientes.
+Consideremos la partición en una sola clase \(\mathcal{S}:=\{V\}\) y se fija un orden \(\prec\) \emph{por bloques}, en el sentido de que
+\[
+\text{para todo } a\in A \text{ y todo } b\in B,\qquad a\prec b.
+\]
+Dentro de cada bloque \(A\) y \(B\) se toma un orden arbitrario.
+
+Sea \(\Pone=(A_1,N_1,C_1)\) el patrón definido previamente para \(\segone\), con
+\(A_1=\{\{1,2\},\{2,3\}\}\), \(N_1=\varnothing\) y \(C_1=\{\{1,2\}\}\).
+Verifiquemos que \((\prec,\mathcal{S})\) evita \(\Pone\).
+Sea \(v_1\prec v_2\prec v_3\) una terna de vértices.
+
+
+Supongamos que simultáneamente \(v_1\sim v_2\) y \(v_2\sim v_3\), en particular \(v_1\in A\) y \(v_2\in B\), (pues \(A\) es independiente y
+el orden ubica a todos los vértices de \(B\) a la derecha de los de \(A\)), además como \(v_2\prec v_3\) se deduce
+\(v_3\in B\), pero eso es absurdo porque \(B\) es independiente, se tiene que \(v_2\not\sim v_3\).
+
+
+Luego \(\segone(G)\le 1\) y como siempre vale que \(\segone(G)\ge 1\), se obtiene \(\segone(G)=1\).
+
+
+
+\medskip
+\noindent(\(\Leftarrow\)) Supongamos ahora que \(\segone(G)=1\),
+por definición, existe una solución \((\prec,\mathcal{S})\) con \(|\mathcal{S}|=1\) que evita \(\Pone\),
+en particular, \(\mathcal{S}=\{V\}\), de modo que para toda tripla de vértices
+\(r\prec s\prec t\) no pueden ocurrir simultáneamente
+\(r\sim s\) y \(s\sim t\) o sea,
+\[
+(r\sim s)\ \Rightarrow\ (s\not\sim t)
+\qquad\text{para todo } r\prec s\prec t
+\]
+En particular, si un vértice tiene algún vecino a la izquierda, entonces no puede tener vecinos a la derecha 
+y viceversa.
+
+
+Se definen los conjuntos
+\[
+L:=\{\,s\in V:\ \text{no existe } t\in V \text{ con } s\prec t \text{ y } s\sim t\,\},
+\]
+\[
+D:=\{\,s\in V:\ \text{no existe } r\in V \text{ con } r\prec s \text{ y } r\sim s\,\}.
+\]
+Es decir, \(L\) es el conjunto de vértices sin vecinos a la derecha, y \(D\) el de vértices sin vecinos a la izquierda.
+
+Veamos que \(L\) es independiente, si \(r\prec s\) con \(r,s\in L\) y \(r\sim s\), entonces \(r\) tendría
+un vecino a la derecha (\(s\)), contradicción con la definición de \(L\),
+luego no hay aristas internas en \(L\), analogo para \(D\).
+
+
+
+Por la observación anterior, todo vértice no aislado pertenece a \(L\) o a \(D\) y
+los vértices aislados no afectan la independencia, y pueden asignarse al final a cualquiera de los dos conjuntos.
+Luego obtuvimos una partición de \(V\) en dos conjuntos independientes, y por lo tanto \(G\) es bipartito.
+\end{proof}
+
+
+
+DEMO VIEJA
+
+
+\begin{theorem}\label{thm:segto1-bip}
+Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si es \(1\)-segregable\(_\to\).
+\end{theorem}
+
+
 
 \begin{proof}
 \noindent(\(\Rightarrow\)) sea \(G\) bipartito, entonces existe una partición
@@ -126,78 +323,108 @@ Así se obtiene una partición de \(V\) en dos conjuntos independientes, y por l
 
 
 
-Un posible algoritmo de backtracking para decidir si \(\segto(G)\le 2\) consiste en construir
-incrementalmente un orden \(v_1\prec\cdots\prec v_n\) y una partición \(V=V_1\,\dot\cup\,V_2\).
+Un posible algoritmo de backtracking para decidir si \(\segone(G)\le k\) consiste en construir
+incrementalmente un orden \(v_1\prec\cdots\prec v_n\) y una partición
+\[
+V \;=\; V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k.
+\]
 En cada paso se elige un vértice no ubicado, se lo agrega al final del orden parcial y se le asigna
-una de las dos clases.
+una de las \(k\) clases.
 
-Tras cada asignación se verifica la condición \textup{(Seg\(_{\to}\))} en lo ya construido:
+Tras cada asignación se verifica la condición correspondiente a \(\segone\) en lo ya construido:
 si el nuevo vértice queda en la posición \(t\), se chequea que no existan \(r<s<t\) tales que
 \(v_r\) y \(v_s\) estén en la misma clase, \(v_r\sim v_s\) y \(v_s\sim v_t\).
 Si se detecta una violación, se descarta la rama y se retrocede; si no, se continúa.
 
-\begin{center}
-\begin{tabbing}
-\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\hspace{0.9cm}\=\kill
 
-\textsc{esSeg}(\texttt{adj}) \\
-\> $N \leftarrow |\texttt{adj}|$ \\
-\> \texttt{used[0..N-1]} $\leftarrow$ \textbf{false} \\
-\> \texttt{order[0..N-1]} $\leftarrow$ \textbf{vacío} \\
-\> \texttt{col[0..N-1]} $\leftarrow$ \textbf{vacío} \\[2mm]
+El procedimiento utilizado fue probar grafos conocidos y asi poder conjeturar y demostrar lo siguiente:
 
-\> \textsc{SonAdyacentes}$(u,v)$: \\
-\>\> \textbf{para cada} $x$ \textbf{en} \texttt{adj[u]} \textbf{hacer} \\
-\>\>\> \textbf{si} $x=v$ \textbf{entonces devolver} \textbf{true} \\
-\>\> \textbf{devolver} \textbf{false} \\[2mm]
-
-\> \textsc{EsValida}$(i)$: \\
-\>\> $t \leftarrow \texttt{order}[i]$ \\
-\>\> \textbf{para} $s=0$ \textbf{hasta} $i-1$ \textbf{hacer} \\
-\>\>\> $v_s \leftarrow \texttt{order}[s]$ \\
-\>\>\> \textbf{si} \textsc{SonAdyacentes}$(v_s,t)$ \textbf{entonces} \\
-\>\>\>\> \textbf{para} $r=0$ \textbf{hasta} $s-1$ \textbf{hacer} \\
-\>\>\>\>\> $v_r \leftarrow \texttt{order}[r]$ \\
-\>\>\>\>\> \textbf{si} $\texttt{col}[r]=\texttt{col}[s]$ \textbf{y} \textsc{SonAdyacentes}$(v_r,v_s)$ \textbf{entonces} \\
-\>\>\>\>\>\> \textbf{devolver} \textbf{false} \\
-\>\> \textbf{devolver} \textbf{true} \\[2mm]
-
-\> \textsc{BT}$(k)$: \\
-\>\> \textbf{si} $k=N$ \textbf{entonces devolver} \textbf{true} \\
-\>\> \textbf{para} $v=0$ \textbf{hasta} $N-1$ \textbf{hacer} \\
-\>\>\> \textbf{si} \texttt{used[v]} $=$ \textbf{false} \textbf{entonces} \\
-\>\>\>\> \textbf{para cada} $c \in \{1,2\}$ \textbf{hacer} \\
-\>\>\>\>\> \texttt{order[k]} $\leftarrow v$ \\
-\>\>\>\>\> \texttt{col[k]} $\leftarrow c$ \\
-\>\>\>\>\> \texttt{used[v]} $\leftarrow$ \textbf{true} \\
-\>\>\>\>\> \textbf{si} \textsc{EsValida}$(k)$ \textbf{y} \textsc{BT}$(k+1)$ \textbf{entonces devolver} \textbf{true} \\
-\>\>\>\>\> \texttt{used[v]} $\leftarrow$ \textbf{false} \\
-\>\>\>\>\> \texttt{col[k]} $\leftarrow$ \textbf{vacío} \\
-\>\>\>\>\> \texttt{order[k]} $\leftarrow$ \textbf{vacío} \\
-\>\> \textbf{devolver} \textbf{false} \\[2mm]
-
-\> \textbf{devolver} \textsc{BT}$(0)$
-
-\end{tabbing}
-\end{center}
-
-El procedimiento utilizado fue probar grafos conocidos y asi poder conjeturar lo siguiente:
-
-\begin{theorem}\label{thm:segto-chi}
+\begin{theorem}\label{thm:segone-chi}
 
 \[
-\segto(G)=\chi(G)-1.
+\segone(G)=\chi(G)-1.
 \]
 \end{theorem}
+
+DEMO NUEVA
+
+
+
+
+\begin{Claim}\label{lem:seg1-le}
+\(\segone(G)\le \chi(G)-1\).
+\end{Claim}
+
+\begin{proof}
+Sea \(m=\chi(G)\) y sea \(c:V\to\{1,\dots,m\}\) un \(m\)-coloreo propio de \(G\).
+Para cada \(i\in\{1,\dots,m\}\) se define la \emph{clase de color}
+\[
+C_i:=\{\,v\in V:\ c(v)=i\,\}.
+\]
+A partir de estas clases se construye una partición \(\mathcal{S}\) de \(V\) en \(m-1\) clases dada por
+\[
+V_1:=C_1\cup C_m,
+\qquad
+V_i:=C_i \ \ \text{para todo } i=2,\dots,m-1,
+\]
+y se escribe \(\mathcal{S}:=\{V_1,\dots,V_{m-1}\}\). Como \(C_1,\dots,C_m\) forman una partición de \(V\),
+también lo hacen \(V_1,\dots,V_{m-1}\).
+
+Además, se fija un orden total \(\prec\) \emph{por bloques} imponiendo que
+\[
+C_1 \prec C_2 \prec \cdots \prec C_{m-1} \prec C_m,
+\]
+esto es, para todo \(i<j\), para todo \(u\in C_i\) y todo \(v\in C_j\), se cumple \(u\prec v\),
+y dentro de cada bloque \(C_i\) se toma un orden arbitrario.
+
+Probemos que \((\prec,\mathcal{S})\) evita el patrón \(\mathcal{P}_1=(A_1,N_1,C_1)\) que define \(\segone\),
+donde
+\[
+A_1=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad N_1=\varnothing,\qquad C_1=\bigl\{\{1,2\}\bigr\}.
+\]
+Sea \(r\prec s\prec t\) una terna de vértices.
+Si \(r\not\sim s\), entonces falla la arista \(\{1,2\}\in A_1\) y si \(r\) y \(s\) pertenecen a clases distintas de \(\mathcal{S}\), entonces falla la condición de color
+asociada a \(\{1,2\}\in C_1\) supongamos entonces que \(r\sim s\) y que \(r\) y \(s\) pertenecen a una misma clase de \(\mathcal{S}\).
+
+
+Como todas las clases \(V_i\) para \(i=2,\dots,m-1\) son independientes, necesariamente
+\(r,s\in V_1\) y por construcción,
+\[
+V_1=C_1\,\dot\cup\, C_m,
+\]
+y el orden dentro de \(V_1\) ubica a todos los vértices de \(C_1\) antes que todos los de \(C_m\)
+por lo tanto, de \(r\prec s\) y \(r,s\in V_1\) se deduce
+\[
+r\in C_1
+\quad\text{y}\quad
+s\in C_m.
+\]
+
+Pero \(C_m\) es independiente (por ser clase de un coloreo propio), lo cual contradice
+\(s\sim t\), por lo tanto, \(s\not\sim t\), es decir, falla la arista \(\{2,3\}\in A_1\), y la terna
+\(r\prec s\prec t\) evita \(\mathcal{P}_1\).
+
+Como la terna fue arbitraria, \((\prec,\mathcal{S})\) evita \(\mathcal{P}_1\) y tiene \(|\mathcal{S}|=m-1\).
+En consecuencia,
+\[
+\segone(G)\le m-1=\chi(G)-1,
+\]
+como se quería demostrar.
+\end{proof}
+
+
+
+
+DEMO VIEJA
 
 \begin{proof}
 Su demostración es mostrando ambas desigualdades.
 
 \medskip
 
-\begin{lemma}\label{lem:segto-le}
+\begin{Claim}\label{lem:segto-le}
 \(\segto(G)\le \chi(G)-1\).
-\end{lemma}
+\end{Claim}
 
 
 \begin{proof}
@@ -225,7 +452,7 @@ es decir, para todo \(i<j\), para todo \(u\in C_i\) y todo \(v\in C_j\), se cump
 y dentro de cada clase \(C_i\) se toma un orden arbitrario.
 (la idea intuitiva de este ordenamiento es juntar dos colores en una sola clase, y poner 
 un color de esa clase al principio del orden y otro al final de manera que de la unica forma
-que el antecedente de la definicion de verdadero sea en esa clase que es la mas a la derecha)
+que el antecedente de la definicion de verdadero sea en la clase mayor del orden)
 
 Ahora falta ver que esta particion y ordenamiento efectivamente cumplen con la definición de \(\segto(G)\). De esa forma
 G sería (m-1)-\(\segto(G)\).
@@ -317,12 +544,12 @@ Por (a) y (b), no existe arista cuyos extremos tengan el mismo color; por lo tan
 \]
 como se quería demostrar.
 \end{proof}
-
-
 \medskip
-Combinando los Lemas \ref{lem:segto-le} y \ref{lem:le-segto} se obtiene la igualdad.
+
 \end{proof}
 
+
+SEG2 
 
 \begin{definition}
 Sea \(G=(V,E)\) un grafo. Se define \(\segfrom(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
@@ -343,6 +570,63 @@ V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
 \]
 que satisfacen simultáneamente las condiciones \textup{(Seg\(_\to\))} y \textup{(Seg\(_\leftarrow\))}.
 \end{definition}
+
+
+
+
+\begin{definition}[Patrón prohibido para \(\segtwo\)]
+Se fija el patrón coloreado
+\[
+\Ptwo=(A_2,N_2,C_2),
+\]
+donde
+\[
+A_2=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad
+N_2=\varnothing,\qquad
+C_2=\bigl\{\{2,3\}\bigr\}.
+\]
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
+\node             (a) at (0,0)   {1};
+\node[draw=red, very thick] (b) at (1.2,0) {2};
+\node[draw=red, very thick] (c) at (2.4,0) {3};
+\draw (a)--(b);
+\draw (b)--(c);
+\end{tikzpicture}
+\caption{El patrón \(\Ptwo\): se exigen las aristas \(12\) y \(23\), y se exige que \(2\) y \(3\) estén en la misma clase.}
+\end{figure}
+
+\begin{definition}[\(\segtwo\)]
+Dado un grafo \(G\), se define
+\[
+\segtwo(G)\;:=\;\minClases_{\{\Ptwo\}}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita el patrón \(\Ptwo\).
+\end{definition}
+
+
+
+
+
+\begin{definition}[\(\segonetwo\)]
+Se fija la familia de patrones
+\[
+\Ponetwo := \{\mathcal{P}_1,\mathcal{P}_2\}.
+\]
+Dado un grafo \(G\), se define
+\[
+\segonetwo(G)\;:=\;\minClases_{\Ponetwo}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita simultáneamente
+los patrones \(\mathcal{P}_1\) y \(\mathcal{P}_2\).
+\end{definition}
+
+
+
+
 
 \begin{theorem}\label{thm:seg12-chi}
 Para todo grafo \(G\),
@@ -377,6 +661,9 @@ Usando el Teorema \ref{thm:segto-chi}, se concluye que
 \begin{lemma}\label{lem:seg12-le}
 Para todo grafo \(G\), se cumple \(\segg(G)\le \chi(G)-1\).
 \end{lemma}
+
+
+
 
 \begin{proof}
 Para probar \(\segg(G)\le \chi(G)-1\) se reutiliza la misma construcción del
@@ -438,7 +725,9 @@ como se quería demostrar.
 \medskip
 Combinando los Lemas \ref{lem:seg12-ge-segto} y \ref{lem:seg12-le} se obtiene la igualdad.
 \end{proof}
-holi
+
+
+SEG3
 
 \begin{definition}
 Sea \(G=(V,E)\) un grafo. Se define \(\segthree(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
@@ -455,6 +744,46 @@ pertenecen a una misma clase \(V_i\), entonces no ocurre simultáneamente que
 \neg\bigl( (v_r\sim v_s)\wedge(v_s\sim v_t) \bigr).
 \]
 \end{definition}
+
+
+
+
+
+\begin{definition} [\(\segthree\)]
+Definimos el patrón coloreado
+\[
+\Pthree=(A_3,N_3,C_3),
+\]
+donde
+\[
+A_3=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad
+N_3=\varnothing,\qquad
+C_3=\bigl\{\{1,3\}\bigr\}.
+\]
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
+\node[draw=red, very thick] (a) at (0,0)   {1};
+\node                      (b) at (1.2,0) {2};
+\node[draw=red, very thick] (c) at (2.4,0) {3};
+\draw (a)--(b);
+\draw (b)--(c);
+\end{tikzpicture}
+\caption{El patrón \(\Pthree\): se exigen las aristas \(12\) y \(23\), y se exige que \(1\) y \(3\) estén en la misma clase.}
+\end{figure}
+
+\begin{definition}[\(\segthree\)]
+Dado un grafo \(G\), se define
+\[
+\segthree(G)\;:=\;\minClases_{\{\Pthree\}}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita el patrón \(\Pthree\).
+\end{definition}
+
+
+
 
 \begin{theorem}\label{thm:seg3-chi}
 Para todo grafo \(G\),
@@ -554,6 +883,7 @@ Para todo grafo \(G\), se cumple
 \]
 \end{lemma}
 
+
 \begin{proof}
 Sea \(G\) un grafo con \(\segthree(G)=k\), probaremos que \(G\) admite un \(2k\)-coloreo.
 
@@ -608,6 +938,9 @@ Combinando los Lemas \ref{lem:seg3-le} y \ref{lem:le-seg3} se obtiene la igualda
 
 
 
+SEG13
+
+
 \begin{definition}
 Sea \(G=(V,E)\) un grafo simple. Se define \(\segthirteen(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
 existen un orden \(v_1 \prec \cdots \prec v_n\) de \(V\) y una partición
@@ -616,6 +949,28 @@ V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
 \]
 que satisfacen simultáneamente las condiciones \textup{(Seg\(_{\to}\))} y \textup{(Seg\(_3\))}.
 \end{definition}
+
+
+\newcommand{\segonethree}{\operatorname{seg}_{13}}
+\newcommand{\Ponethree}{\mathcal{P}_{13}}
+
+\begin{definition}[\(\segonethree\)]
+Fijamos la familia de patrones
+\[
+\Ponethree := \{\mathcal{P}_1,\mathcal{P}_3\}.
+\]
+Dado un grafo \(G\), se define
+\[
+\segonethree(G)\;:=\;\minClases_{\Ponethree}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita simultáneamente
+los patrones \(\mathcal{P}_1\) y \(\mathcal{P}_3\).
+\end{definition}
+
+
+
+
+
 
 \begin{theorem}\label{thm:seg13-eq}
 Para todo grafo \(G\),
@@ -742,6 +1097,8 @@ Combinando los Lemas \ref{lem:seg13-ge-chi-1} y \ref{lem:seg13-le-chi-1} se obti
 \end{proof}
 
 
+SEG123
+
 
 \begin{definition}
 Sea \(G=(V,E)\) un grafo. Se define \(\segonetwothree(G)\) como el mínimo \(k\in\mathbb{N}\) tal que
@@ -751,6 +1108,24 @@ V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
 \]
 que satisfacen simultáneamente las condiciones \textup{(Seg\(_{\to}\))}, \textup{(Seg\(_{\leftarrow}\))} y \textup{(Seg\(_3\))}.
 \end{definition}
+
+
+\newcommand{\Ponetwothree}{\mathcal{P}_{123}}
+
+\begin{definition}[\(\segonetwothree\)]
+Se fija la familia de patrones
+\[
+\Ponetwothree := \{\mathcal{P}_1,\mathcal{P}_2,\mathcal{P}_3\}.
+\]
+Dado un grafo \(G\), se define
+\[
+\segonetwothree(G)\;:=\;\minClases_{\Ponetwothree}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita simultáneamente
+los patrones \(\mathcal{P}_1\), \(\mathcal{P}_2\) y \(\mathcal{P}_3\).
+\end{definition}
+
+
 
 \begin{lemma}\label{lem:seg123-le-chi}
 Para todo grafo \(G\), se cumple
@@ -936,25 +1311,7 @@ En lo que sigue se trabaja con el etiquetado
 V(M_4)=\{v_0,\dots,v_4,w_0,\dots,w_4,w\}.
 \]
 
-\medskip
-\noindent\textbf{Lista de adyacencias de \(M_4\).}
-\[
-\begin{array}{rcl}
-N(v_0)&=&\{v_1,\,v_4,\,w_1,\,w_4\},\\
-N(v_1)&=&\{v_0,\,v_2,\,w_0,\,w_2\},\\
-N(v_2)&=&\{v_1,\,v_3,\,w_1,\,w_3\},\\
-N(v_3)&=&\{v_2,\,v_4,\,w_2,\,w_4\},\\
-N(v_4)&=&\{v_0,\,v_3,\,w_0,\,w_3\},\\[1mm]
-N(w_0)&=&\{v_1,\,v_4,\,w\},\\
-N(w_1)&=&\{v_0,\,v_2,\,w\},\\
-N(w_2)&=&\{v_1,\,v_3,\,w\},\\
-N(w_3)&=&\{v_2,\,v_4,\,w\},\\
-N(w_4)&=&\{v_0,\,v_3,\,w\},\\
-N(w)&=&\{w_0,\,w_1,\,w_2,\,w_3,\,w_4\}.
-\end{array}
-\]
 
-\medskip
 \noindent\textbf{Orden.}
 \[
 \begin{aligned}
@@ -1184,5 +1541,151 @@ a la izquierda aparecen \(w,v_2\in V_0\), y a la derecha aparece \(v_0\in V_2\).
 \end{proof}
 
 
+EST1
+
+\newcommand{\estone}{\operatorname{est}_{1}}
+\newcommand{\EStone}{\mathcal{E}_{1}}
+
+\begin{definition}[Patrón prohibido para \(\estone\)]
+Se fija el patrón coloreado
+\[
+\EStone=(A,N,C),
+\]
+donde
+\[
+A=\bigl\{\{1,2\}\bigr\},\qquad
+N=\varnothing,\qquad
+C=\bigl\{\{1,2\}\bigr\}.
+\]
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
+\node[draw=red, very thick] (a) at (0,0)   {1};
+\node[draw=red, very thick] (b) at (1.2,0) {2};
+\node                      (c) at (2.4,0) {3};
+\draw (a)--(b);
+\end{tikzpicture}
+\caption{El patrón \(\mathcal{E}_1\): se exige la arista \(12\) y se exige que \(1\) y \(2\) estén en la misma clase.}
+\end{figure}
+
+\begin{definition}[\(\estone\)]
+Dado un grafo \(G\), se define
+\[
+\estone(G)\;:=\;\minClases_{\{\mathcal{E}_1\}}(G),
+\]
+es decir, el mínimo número de clases de una solución \((\prec,\mathcal{S})\) de \(G\) que evita el patrón \(\mathcal{E}_1\).
+\end{definition}
+
+\begin{Claim}\label{cl:chi-1-le-est}
+Para todo grafo \(G\) se cumple \(\chi(G)-1\le \estone(G)\).
+\end{Claim}
+
+
+\begin{proof}
+Toda solución que evita \(\mathcal E_1\) evita, en particular, el patrón \(\mathcal P_1\); por lo tanto
+\(\segone(G)\le \estone(G)\).
+Como \(\segone(G)=\chi(G)-1\), se concluye \(\chi(G)-1\le \estone(G)\).
+\end{proof}
+
+
+\begin{theorem}[Caracterización del caso \(\estone(G)=\chi(G)\)]\label{thm:est1-chi}
+Sea \(G\) un grafo y sea \(k=\estone(G)\), son equivalentes:
+\begin{enumerate}
+\item \(\estone(G)=\chi(G)\).
+\item Existe una solución \(S=(\prec,\mathcal{S})\) de valor \(k\), con
+\[
+\mathcal{S}=\{C_1,\dots,C_k\}\qquad\text{y}\qquad V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k,
+\]
+tal que \(S\) evita el patrón \(\mathcal{E}_1\) y además, si \(v_n\) es el último vértice del orden \(\prec\) y
+\(v_n\in C_j\), entonces
+\[
+N(v_n)\cap C_j=\varnothing.
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\noindent(1 \(\Rightarrow\) 2).
+Fijemos un \(k\)-coloreo propio, es decir, una partición
+\[
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+\]
+tal que cada \(C_i\) es independiente. Tomemos un orden \(\prec\) arbitrario sobre \(V(G)\).
+
+
+Como no hay aristas dentro de ninguna clase \(C_i\), toda terna de vértices distintos evita \(\mathcal E_1\).
+Por lo tanto, la solución \(S=(\prec,\{C_1,\dots,C_k\})\) evita \(\mathcal E_1\) y tiene valor \(k\),
+además, si \(v_n\in C_j\), entonces \(N(v_n)\cap C_j=\varnothing\).
+
+
+\medskip
+\noindent\emph{En particular}, la construcción anterior muestra que para todo grafo \(G\) se cumple
+\(\estone(G)\le \chi(G)\), ya que a partir de un \(\chi(G)\)-coloreo propio se obtiene una solución que evita
+\(\mathcal E_1\) con \(\chi(G)\) clases.
+
+
+\medskip
+\noindent(2 \(\Rightarrow\) 1).
+Sea \(S=(\prec,\mathcal S)\) una solución de valor \(k\) que evita \(\mathcal E_1\).
+
+\[
+\mathcal S=\{C_1,\dots,C_k\},\qquad V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k,
+\]
+y sea \(v_1\prec\cdots\prec v_n\) el orden inducido por \(\prec\), Supongamos \(v_n\in C_j\) y
+\[
+N(v_n)\cap C_j=\varnothing.
+\]
+
+Veamos que cada clase \(C_i\) es independiente, supongamos por absurdo que existen
+\(x\prec y\) con \(x,y\in C_i\) y \(x\sim y\).
+\begin{itemize}
+\item Si \(y\neq v_n\), se toma \(z\) un vértice distinto de \(x\) e \(y\) con \(y\prec z\)
+(por ejemplo, \(z:=v_n\)). Entonces la terna \(x\prec y\prec z\) no evita \(\mathcal E_1\),
+pues \(\{1,2\}\) es una arista presente y \(x,y\) están en la misma clase, contradicción.
+\item Si \(y=v_n\), entonces \(x\in C_j\) y \(x\sim v_n\), lo cual contradice la hipótesis
+\(N(v_n)\cap C_j=\varnothing\).
+\end{itemize}
+En ambos casos se llega a una contradicción, luego no existen aristas dentro de \(C_i\), y por tanto \(C_i\)
+es independiente.
+
+Así, \((C_1,\dots,C_k)\) es un \(k\)-coloreo propio, de donde \(\chi(G)\le k\). Como siempre
+\(\estone(G)\le \chi(G)\) y aquí \(k=\estone(G)\), se obtiene \(\chi(G)=k\).
+
+\end{proof}
+
+
+\begin{corollary}\label{cor:est1-chi-1}
+Sea \(G\) un grafo y sea \(k=\estone(G)\). Si para toda solución óptima
+\(S=(\prec,\mathcal S)\) (para \(\{\mathcal E_1\}\)), si llamamos \(v_n\) al último vértice del orden \(\prec\) y
+\(v_n\in C_j\in\mathcal S\), necesariamente se cumple
+\[
+N(v_n)\cap C_j\neq\varnothing,
+\]
+entonces
+\[
+\estone(G)=\chi(G)-1.
+\]
+\end{corollary}
+
+\begin{proof}
+Por hipótesis, ninguna solución óptima \(S=(\prec,\mathcal S)\) (para \(\{\mathcal E_1\}\)) verifica
+\(N(v_n)\cap C(v_n)=\varnothing\), donde \(v_n\) es el último vértice del orden \(\prec\).
+Luego, por el Teorema~\ref{thm:est1-chi}, se tiene \(\estone(G)\neq \chi(G)\).
+
+Como además \(\chi(G)-1\le \estone(G)\le \chi(G)\), se concluye necesariamente
+\(\estone(G)=\chi(G)-1\).
+\end{proof}
+
+
+
+
+
+
+
+
 \end{document}
+
+
 
