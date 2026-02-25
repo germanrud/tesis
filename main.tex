@@ -6,6 +6,7 @@
 
 % Matemática
 \usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools} % Para \coloneq
 
 \usepackage[hidelinks]{hyperref}
 \usepackage{algorithm}
@@ -68,7 +69,7 @@
 \newcommand{\estone}{\operatorname{est}_{1}}
 \newcommand{\EStone}{\mathcal{E}_{1}}
 
-
+\newcommand{\eric}[1]{\textcolor{green}{#1}}
 
 \title{Tesis}
 \author{German y Eric}
@@ -99,15 +100,17 @@ ser aristas, y los pares fuera de \(A\cup N\) se consideran libres.
 Finalmente, el par \(C\) indica qué dos posiciones se consideran \emph{coloreadas del mismo color}.
 \end{definition}
 
+\eric{Acá mostrar el ejemplo de thinness.}
+
 
 
 
 \begin{definition}[Solución]
-Una \emph{solución} de un grafo G es un par \((\prec,\mathcal{Q})\), donde \(\prec\) es un orden total sobre \(V\) y
+Una \emph{solución} de un grafo $G\coloneq(V,E)$ es un par \(S \coloneq (\prec,\mathcal{Q})\), donde \(\prec\) es un orden total sobre \(V\) y
 \(\mathcal{Q}\) es una partición de \(V\).
-Se define el \emph{valor} de la solución \((\prec,\mathcal{Q})\) como
+Se define el \emph{valor} de la solución \(S\) como
 \[
-\operatorname{val}(\prec,\mathcal{Q}) \;:=\; |\mathcal{Q}|,
+\operatorname{val}(S) \;\coloneq\; |\mathcal{Q}|,
 \]
 es decir, la cantidad de clases de la partición.
 \end{definition}
@@ -124,55 +127,59 @@ N=\bigl\{\{2,3\}\bigr\},\quad
 C=\{1,2\}.
 \]
 
-\begin{center}
-\begin{minipage}{0.40\textwidth}
-\centering
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.2pt, font=\small}
-]
-  % posiciones en el orden: 1 < 2 < 3
-  \node (p1) at (0,0)   [draw=red, thick] {$1$};
-  \node (p2) at (1.6,0) [draw=red, thick] {$2$};
-  \node (p3) at (3.2,0) {$3$};
+\begin{figure}[ht]
+  \begin{center}
+  \begin{minipage}{0.40\textwidth}
+  \centering
+  \begin{tikzpicture}[
+    scale=1,
+    every node/.style={circle, draw, inner sep=1.2pt, font=\small}
+  ]
+    % posiciones en el orden: 1 < 2 < 3
+    \node (p1) at (0,0)   [draw=red, thick] {$1$};
+    \node (p2) at (1.6,0) [draw=red, thick] {$2$};
+    \node (p3) at (3.2,0) {$3$};
 
-  % arista obligatoria (A): 1--3 (curvada para no pasar por 2)
-  \draw[line width=0.6pt, bend left=30] (p1) to (p3);
+    % arista obligatoria (A): 1--3 (curvada para no pasar por 2)
+    \draw[line width=0.6pt, bend left=30] (p1) to (p3);
 
-  % no-arista obligatoria (N): 2--3 punteada
-  \draw[densely dashed, line width=0.6pt] (p2)--(p3);
+    % no-arista obligatoria (N): 2--3 punteada
+    \draw[densely dashed, line width=0.6pt] (p2)--(p3);
 
-  % indicar el orden (opcional)
-  \node[draw=none, rectangle, font=\small] at (1.6,-0.85) {$1\prec 2\prec 3$};
-\end{tikzpicture}
+    % indicar el orden (opcional)
+    \node[draw=none, rectangle, font=\small] at (1.6,-0.85) {$1\prec 2\prec 3$};
+  \end{tikzpicture}
 
-\smallskip
-Patrón \(P_{\mathrm{thin}}\).
-\end{minipage}
-\hfill
-\begin{minipage}{0.56\textwidth}
-\centering
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.2pt, font=\small}
-]
-  % Colocación en triángulo para que la arista no atraviese un nodo
-  \node (a) at (0,0) {$a$};
-  \node (c) at (2.4,0) {$c$};
-  \node (b) at (1.2,1.2) {$b$};
+  %\smallskip
+  %Patrón \(P_{\mathrm{thin}}\).
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.56\textwidth}
+  \centering
+  \begin{tikzpicture}[
+    scale=1,
+    every node/.style={circle, draw, inner sep=1.2pt, font=\small}
+  ]
+    % Colocación en triángulo para que la arista no atraviese un nodo
+    \node (a) at (0,0) {$a$};
+    \node (c) at (2.4,0) {$c$};
+    \node (b) at (1.2,1.2) {$b$};
 
-  % grafo G: una sola arista a~c
-  \draw[line width=0.6pt] (a)--(c);
+    % grafo G: una sola arista a~c
+    \draw[line width=0.6pt] (a)--(c);
 
-  \node[draw=none, rectangle, font=\small] at (1.2,-0.8) {$a\prec c\prec b$};
-  \node[draw=none, rectangle, font=\small] at (1.2,-1.2)
-    {$\mathcal Q=\bigl\{\{a,b\},\{c\}\bigr\}$};
-\end{tikzpicture}
+    \node[draw=none, rectangle, font=\small] at (1.2,-0.8) {$a\prec c\prec b$};
+    \node[draw=none, rectangle, font=\small] at (1.2,-1.4)
+      {$\mathcal Q=\bigl\{\{a,b\},\{c\}\bigr\}$};
+  \end{tikzpicture}
 
-\smallskip
-Grafo \(G\) y una solución \(S=(\prec,\mathcal Q)\).
-\end{minipage}
-\end{center}
+  %\smallskip
+  %Grafo \(G\) y una solución \(S=(\prec,\mathcal Q)\).
+  \end{minipage}
+  \end{center}
+  \caption{Patrón $P_{\mathrm{thin}}$ y una solución $(\prec,\mathcal Q)$ para un grafo.}
+\end{figure}
+
 \end{example}
 
 
@@ -201,7 +208,7 @@ vértices \emph{distintos} \(v_1,v_2,v_3\in V\) tal que \(v_1\prec v_2\prec v_3\
 
 
 
-
+\eric{Acá poner el ejemplo de una solución que evita/no evita el patrón de thinness de un grafo de al menos 4 vértices. Mencionar que en los papers de thinness la llaman "solución consistente" a una solución que evita el patrón.}
 
 \begin{example}[La solución evita el patrón de thinness]
 Se consideran el patrón \(P_{\mathrm{thin}}\) y la solución \(S=(\prec,\mathcal Q)\) del Ejemplo 1.3.
