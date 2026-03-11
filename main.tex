@@ -2223,24 +2223,24 @@ Resta probar \(\estonethree(G)\le \estone(G)\).
 Sea \(k=\estone(G)\). Fijamos una solución \(S=(\prec,\mathcal Q)\) de valor \(k\) que evita \(\mathcal E_1\), con
 \(\mathcal Q=\{V_1,\dots,V_k\}\). Sea \(u\) el último vértice del orden \(\prec\).
 
-\medskip
-\noindent\textbf{Observación.} Si \(x\prec y\), \(x,y\in V_i\) y \(x\sim y\), entonces \(y=u\).
+\begin{Claim} Si \(x\prec y\), \(x,y\in V_i\) y \(x\sim y\), entonces \(y=u\).
+\end{Claim}
 
-\smallskip
+\begin{proof}
 Si \(y\neq u\), existe \(t\) con \(y\prec t\). Entonces la terna \((x,y,t)\) no evita \(\mathcal E_1\)
-(porque \(x\sim y\) y \(x,y\) están en la misma clase), contradicción. Luego \(y=u\).
+(porque \(x\sim y\) y \(x,y\) están en la misma clase), lo cual es una contradicción. Luego \(y=u\).
+\end{proof}
 
-\medskip
 Sea \(V_j\) la clase que contiene a \(u\) ESTO esta OK???. Se construye un nuevo orden \(\prec'\) por bloques respecto de \(\mathcal Q\)
-poniendo primero todos los vértices de \(V_1,\dots,V_{j-1},V_{j+1},\dots,V_k\) (en cualquier orden por bloques), y al final
+poniendo primero todos los vértices de \(V_1,\dots,V_{j-1},V_{j+1},\dots,V_k\) (en cualquier orden por bloques)\eric{definir orden por bloques de una familia de conjuntos disjuntos dos a dos}, y al final
 los vértices de \(V_j\). Dentro de \(V_j\), se ubican primero los vértices de \(V_j\setminus\{u\}\) (en cualquier orden) y
 al final \(u\). Definimos \(S':=(\prec',\mathcal Q)\).
 
 \medskip
 \noindent\textbf{Verifiquemos que \(S'\) evita \(\mathcal E_1\).}
 Sea \(r\prec' s\prec' t\).
-Si \(r\) y \(s\) están en clases distintas, se cumple (3) y la terna evita \(\mathcal E_1\).
-Si \(r,s\in V_i\) y \(r\sim s\), por la observación necesariamente \(s=u\). Pero \(u\) es el último vértice del orden
+Si \(r\) y \(s\) están en clases distintas, se cumple (3)\eric{citar la def de evitar} y la terna evita \(\mathcal E_1\).\eric{Sacar esta primera frase y asumir directamente lo siguiente}
+Si \(r,s\in V_i\) y \(r\sim s\), por la observación \eric{citar} necesariamente \(s=u\). Pero \(u\) es el último vértice del orden
 \(\prec'\), así que no existe \(t\) con \(s\prec' t\). Luego no existe ninguna terna que viole \(\mathcal E_1\), y \(S'\)
 evita \(\mathcal E_1\).
 
