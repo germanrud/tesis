@@ -41,12 +41,13 @@
 
 
 \title{Forbidden Colored Patterns:\\a Systematic Family of Graph Parameters}
-\author{Germ\'an Javier Rud%
-\thanks{B.Sc.\eric{Cambiar todos los Bachelors a Masters, o a lo sumo Bachelors + Masters, y poner entre paréntesis "Licenciatura" por las dudas}\ in Business Administration (UADE). B.Sc.\ candidate in Data Science at the Faculty of Exact and Natural Sciences, University of Buenos Aires (final two courses).}%
-\and Eric Brandwein%
-\thanks{Thesis supervisor (B.Sc.\ in Data Science, University of Buenos Aires).}}
-\date{\today}
 
+\author{Germ\'an Javier Rud%
+\thanks{Licenciatura (M.Sc.\ equivalent) in Business Administration (UADE). M.Sc.\ candidate in Data Science at the Faculty of Exact and Natural Sciences, University of Buenos Aires (final two courses).}%
+\and Eric Brandwein%
+\thanks{Thesis supervisor (M.Sc.\ in Data Science, University of Buenos Aires).}}
+
+\date{\today}
 \begin{document}
 \maketitle
 
@@ -64,30 +65,29 @@ invariants in multiple cases, and outline complexity and algorithmic directions 
 
 \section{Motivation: thinness, variants, and forbidden patterns}
 
-Thinness is a width parameter defined by ...\eric{Poner quién definió la thinness, Lekkerkerker y Boland creo} that generalizes interval graphs\eric{citar el que haya definido los interval graphs}: interval graphs are exactly the graphs of thinness~$1$,
-and bounded thinness is used to extend algorithmic techniques beyond interval graphs\eric{No citar a shitov que no dijo nada de que la bounded thinness extienda ninguna algorithmic technique} \cite{Shitov2025}.
-\eric{Definir thinness, junto con patrones coloreados prohibidos}
-A common motivation in the thinness literature is that many problems that are hard in general
-become polynomial-time solvable on graphs of bounded thinness, provided a suitable certificate
-(order + partition) is available \cite{BB2021}\eric{Mejor citar creo que lo de diego de estrada que dijo efectivamente que thinness ayuda a resolver muchos problemas}.
+Thinness, introduced by Mannino, Oriolo, Ricci, and Chandran \cite{Mannino2007}, is a width parameter defined via a vertex order together with a partition of the vertex set into a bounded number of classes.
+It generalizes interval graphs (intersection graphs of intervals on the real line \cite{LekkerkerkerBoland1962,FulkersonGross1965}); in fact, interval graphs are exactly the graphs of thinness~$1$ \cite{Mannino2007}.
+A common motivation in the thinness literature is that bounded thinness can be used to extend algorithmic techniques beyond interval graphs:
+many problems that are hard in general admit polynomial-time algorithms on graphs of bounded thinness, provided that an explicit certificate (order + partition) is available \cite{BonomoDeEstrada2019}.
 
-Proper thinness\eric{Citar quién definió la proper thinness} is defined analogously as a generalization of \emph{proper} interval graphs\eric{Citar quién definió los proper interval graphs}.
-Conceptually, it strengthens thinness by adding a second consistency requirement (the reverse order\eric{No se entiende qué es el reverse order, mejor definir proper thinness}),
-which can be viewed as forbidding an additional local configuration (a ``reverse'' pattern) \cite{BB2021}\eric{Este paper no definió proper thinness por primera vez.}.
+\medskip
+Proper thinness was introduced by Bonomo and de Estrada \cite{BonomoDeEstrada2019} as an interval-like generalization of \emph{proper} interval graphs (also known as indifference / unit interval graphs), introduced by Roberts \cite{Roberts1969}.
 
 \medskip
 \noindent\textbf{Why go beyond interval graphs?}
-Proper thinness can be seen as ``thinness + one more forbidden pattern'' (the reverse constraint).
+Proper thinness can be viewed as ``thinness + one more forbidden pattern'' (made precise in Section~\ref{sec:framework-patterns}).
 This motivates a broader question: what happens if we take \emph{other} small collections of forbidden colored patterns
-and define the minimum number of parts in a vertex partition needed to avoid them?
+and define the minimum number of parts in an order+partition certificate needed to avoid them?
 If these parameters preserve useful properties of the underlying class they generalize,
 then problems solvable efficiently on that class may remain solvable (or become parametrically tractable)
 when the parameter is bounded.
 
-\section{Framework: forbidden colored patterns}
+
+
+\section{Framework: forbidden colored patterns}\label{sec:framework-patterns}
 
 The use of forbidden patterns on three vertices as class descriptors is inspired by the systematic study of
-such classes \eric{Queda mejor citar a los nombres de los autores, se puede hacer facil con textcite} in \textcite{FeuilloleyHabib2018}.
+such classes by \textcite{FeuilloleyHabib2018}.
 
 \subsection{Patterns, solutions, avoidance}
 
@@ -99,14 +99,14 @@ A,N \subseteq \binom{\{1,2,3\}}{2},
 C \in \binom{\{1,2,3\}}{2}.
 \]
 Elements of \(\binom{\{1,2,3\}}{2}=\{\{1,2\},\{1,3\},\{2,3\}\}\) are interpreted as pairs of \emph{positions}
-in an ordered triple of vertices $u \prec v \prec w$.
+in an ordered triple of vertices \(u \prec v \prec w\).
 The set \(A\) specifies edges that \emph{must} be present, \(N\) specifies edges that \emph{must not} be present,
 and the pair \(C\) indicates which two positions are required to lie in the \emph{same} part of a partition.
 \end{definition}
 
 \begin{definition}[Solution and value]
 Let \(G=(V,E)\). A \emph{solution} is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V\)
-and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V\) in $k$ parts.
+and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V\) into \(k\) parts.
 The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 \end{definition}
 
@@ -155,12 +155,33 @@ For a finite family of patterns \(\mathcal P\), define
 \label{fig:tiny-pattern}
 \end{figure}
 
-
-
 A certificate consists of a total order \(\prec\) on \(V(G)\) and a partition \(\mathcal Q\) of \(V(G)\) such that every ordered triple \(x\prec y\prec z\) avoids all forbidden patterns in \(\mathcal P\).
 Equivalently, \(\minClases_{\mathcal P}(G)\) is the minimum number of parts in such a certificate.
 
+\subsection{Thinness and proper thinness in the pattern framework}
 
+In the language above, the thinness consistency requirement can be expressed by forbidding a single colored pattern on three ordered positions.
+Namely, a triple \(x\prec y\prec z\) violates thinness consistency if \(x\) and \(y\) lie in the same part, \(x\sim z\), and \(y\not\sim z\).
+This is precisely the forbidden colored pattern
+\[
+P_{\mathrm{thin}}=(A_{\mathrm{thin}},N_{\mathrm{thin}},C_{\mathrm{thin}}),
+\qquad
+A_{\mathrm{thin}}=\bigl\{\{1,3\}\bigr\},\quad
+N_{\mathrm{thin}}=\bigl\{\{2,3\}\bigr\},\quad
+C_{\mathrm{thin}}=\{1,2\}.
+\]
+Thus, thinness can be phrased as the minimum number of parts in an order+partition certificate that avoids \(P_{\mathrm{thin}}\).
+
+\medskip
+Proper thinness strengthens thinness by requiring the same partition to be consistent with both an order and its reverse \cite{BonomoDeEstrada2019}.
+Equivalently, it can be phrased as avoiding \(P_{\mathrm{thin}}\) and its mirror pattern
+\[
+P_{\mathrm{thin}}^{\mathrm{rev}}=(A_{\mathrm{rev}},N_{\mathrm{rev}},C_{\mathrm{rev}}),
+\qquad
+A_{\mathrm{rev}}=\bigl\{\{1,3\}\bigr\},\quad
+N_{\mathrm{rev}}=\bigl\{\{1,2\}\bigr\},\quad
+C_{\mathrm{rev}}=\{2,3\}.
+\]
 
 
 \section{Why this generalizes graph classes}
@@ -172,6 +193,12 @@ larger values measure how many parts are needed so that each part (together with
 This also parallels a familiar theme in width parameters. Treewidth and pathwidth generalize trees and paths by allowing
 bounded-width decompositions; here, forbidden-pattern parameters generalize a target class by allowing a bounded number of
 parts, each avoiding the same local obstructions.
+
+
+
+
+
+
 
 \section{What we have been doing}
 
@@ -326,7 +353,9 @@ Finally, we note that a separate team is currently working on the parameter that
   \item \textbf{XP:} running time \(O(f(k)\,n^{g(k)})\), for computable functions \(f\) and \(g\).
   \end{itemize}
 \end{itemize}
-\section*{References (short, for the summary)\eric{Definitivamente no poner la parte de short for the summary jajaj}}
+
+
+
 \eric{Usar \url{https://www.overleaf.com/learn/latex/Bibliography\_management\_in\_LaTeX}}
 \printbibliography
 
