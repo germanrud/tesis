@@ -73,7 +73,7 @@ invariants in multiple cases, and outline complexity and algorithmic directions 
 
 A \emph{pattern} is a small template that specifies a combination of edges and non-edges in a set of ordered vertices. Many graph classes can be characterized by the existence of a total vertex order that avoids a specific pattern on three vertices, for every ordered triple of vertices. For instance, interval graphs \cite{LekkerkerkerBoland1962,FulkersonGross1965} are exactly the graphs that admit an order avoiding the pattern where \(u\) and \(w\) are adjacent, \(v\) and \(w\) are non-adjacent, and no other edges are required or forbidden. A systematic study of graph classes defined by forbidden patterns on three vertices was carried out by \textcite{FeuilloleyHabib2018}.
 
-The thinness graph parameter can be seen as an extension of this concept. Introduced by \textcite{Mannino2007}, thinness is defined by the minimum number of parts in a vertex partition, together with a vertex order, that avoids a specific \emph{forbidden colored pattern} on three vertices. A colored pattern on three vertices is a pattern that additionally specifies which vertices must lie in the same part of the partition.  
+The thinness graph parameter can be seen as an extension of this concept. Introduced by \textcite{Mannino2007}, thinness is defined by the minimum number of parts in a vertex partition, together with a vertex order, that avoids a specific \emph{forbidden colored pattern} on three vertices. A colored pattern on three vertices is a pattern that additionally specifies which vertices must lie in the same part of the partition. A precise definition is given in \cref{sec:framework-patterns}.
 
 The thinness parameter generalizes interval graphs in the sense that interval graphs are exactly the graphs of thinness~$1$ \cite{Mannino2007}.
 A common motivation in the literature is that bounded thinness can be used to extend algorithmic techniques beyond interval graphs:
@@ -87,14 +87,17 @@ If these parameters preserve useful properties of the underlying class they gene
 then problems solvable efficiently on that class may remain solvable (or become parametrically tractable)
 when the parameter is bounded.
 
+\section{Objectives}
+The main goal of this research program is to systematically analyze the family of graph parameters obtained by forbidding combinations of colored patterns on three vertices, including:
+\begin{itemize}
+  \item Determining the complexity of computing each parameter.
+  \item Positioning each parameter in the landscape of graph parameters by identifying collapses to classical invariants (e.g., vertex arboricity, chromatic number) and establishing domination relations.
+  \item Finding algorithmic applications for problems that are tractable when the parameter is bounded, and understanding the role of the certificate structure in such algorithms.
+\end{itemize}
 
+We begin by analyzing colored patterns where the non-edge set is empty. Ignoring the coloring constraints, these still correspond to the forbidden patterns of interesting graph classes, such as the class of all stars ($K_{1,n} + cK_1$), bipartite graphs ($K_{m,n}$), and forests, among others.
 
 \section{Framework: forbidden colored patterns}\label{sec:framework-patterns}
-
-The use of forbidden patterns on three vertices as class descriptors is inspired by the systematic study of
-such classes by \textcite{FeuilloleyHabib2018}.
-
-\subsection{Patterns, solutions, avoidance}
 
 \begin{definition}[Colored pattern on three vertices]
 A \emph{colored pattern} is a triple \(P=(A,N,C)\) where
@@ -103,44 +106,13 @@ A,N \subseteq \binom{\{1,2,3\}}{2},
 \qquad
 C \in \binom{\{1,2,3\}}{2}.
 \]
-Elements of \(\binom{\{1,2,3\}}{2}=\{\{1,2\},\{1,3\},\{2,3\}\}\) are interpreted as pairs of \emph{positions}
+Elements of \(\binom{\{1,2,3\}}{2}=\{\{1,2\},\{1,3\},\{2,3\}\}\) are interpreted as pairs of vertices
 in an ordered triple of vertices \(u \prec v \prec w\).
-The set \(A\) specifies edges that \emph{must} be present, \(N\) specifies edges that \emph{must not} be present,
-and the pair \(C\) indicates which two positions are required to lie in the \emph{same} part of a partition.
+The set \(A\) specifies edges, \(N\) specifies non-edges,
+and the pair \(C\) indicates which two vertices lie in the same part of a partition.
 \end{definition}
 
-\begin{definition}[Solution and value]
-Let \(G=(V,E)\). A \emph{solution} is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V\)
-and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V\) into \(k\) parts.
-The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
-\end{definition}
-
-\begin{definition}[Avoiding a pattern]
-Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\).
-Given three distinct vertices \(x\prec y\prec z\) (written as \((v_1,v_2,v_3)=(x,y,z)\)),
-we say \((x,y,z)\) \emph{avoids} \(P=(A,N,C)\) if at least one of the following holds:
-\begin{enumerate}
-\item some required edge from \(A\) is missing in \(G[\{x,y,z\}]\);
-\item some forbidden edge from \(N\) is present in \(G[\{x,y,z\}]\);
-\item the pair of positions \(C=\{i,j\}\) lands in different parts of \(\mathcal Q\).
-\end{enumerate}
-The solution \(S\) \emph{avoids} \(P\) if every triple \(x\prec y\prec z\) avoids \(P\).
-For a finite family of patterns \(\mathcal P\), the solution avoids \(\mathcal P\) if it avoids each \(P\in\mathcal P\).
-\end{definition}
-
-\begin{definition}[Parameter induced by forbidden patterns]
-For a finite family of patterns \(\mathcal P\), define
-\[
-\minClases_{\mathcal P}(G)
-=
-\min\{\,|\mathcal Q|:\ (\prec,\mathcal Q)\text{ is a solution for }G\text{ that avoids all }P\in\mathcal P\,\}.
-\]
-\end{definition}
-
-
-
-% --- Figure: pattern ---
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   font=\small,
@@ -154,61 +126,70 @@ For a finite family of patterns \(\mathcal P\), define
 \draw[line width=0.6pt] (p1)--(p2);
 \draw[densely dashed, line width=0.6pt] (p2)--(p3);
 
-\node[draw=none] at (1.7,-0.95) {$A=\{\{1,2\}\}$,\ $N=\{\{2,3\}\}$,\ $C=\{1,3\}$};
 \end{tikzpicture}
-\caption{A forbidden colored pattern (solid = required, dashed = forbidden, red = same part).}
+\caption{The forbidden colored pattern $P = (A,N,C)$ where $A=\{\{1,2\}\}$, $N=\{\{2,3\}\}$, and $C=\{1,3\}$. The edges in $A$ are represented by solid lines, the non-edges in $N$ are represented by dashed lines, and the vertices in $C$ are highlighted in red.}
 \label{fig:tiny-pattern}
 \end{figure}
 
-A certificate consists of a total order \(\prec\) on \(V(G)\) and a partition \(\mathcal Q\) of \(V(G)\) such that every ordered triple \(x\prec y\prec z\) avoids all forbidden patterns in \(\mathcal P\).
-Equivalently, \(\minClases_{\mathcal P}(G)\) is the minimum number of parts in such a certificate.
+\begin{definition}[Solution and value]
+Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
+and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
+The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
+\end{definition}
 
-\subsection{Thinness and proper thinness in the pattern framework}
+\begin{definition}[Avoiding a pattern]
+Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for $G$.
+Given three distinct vertices \(v_1\prec v_2\prec v_3\) in $V(G)$,
+we say \((v_1,v_2,v_3)\) \emph{avoids} the colored pattern \(P=(A,N,C)\) if at least one of the following holds:
+\begin{enumerate}
+\item For some $\{i, j\} \in A$, we have that $\{v_i,v_j\} \notin E(G)$.
+\item For some $\{i, j\} \in N$, we have that $\{v_i,v_j\} \in E(G)$.
+\item If $C = \{i,j\}$, then \(v_i\) and \(v_j\) lie in different parts of \(\mathcal Q\).
+\end{enumerate}
+The solution \(S\) \emph{avoids} \(P\) if every triple \(x\prec y\prec z\) avoids \(P\).
+For a family of colored patterns \(\mathcal P\), the solution avoids \(\mathcal P\) if it avoids each \(P\in\mathcal P\).
+\end{definition}
 
-In the language above, the thinness consistency requirement can be expressed by forbidding a single colored pattern on three ordered positions.
-Namely, a triple \(x\prec y\prec z\) violates thinness consistency if \(x\) and \(y\) lie in the same part, \(x\sim z\), and \(y\not\sim z\).
-This is precisely the forbidden colored pattern
-\[
-P_{\mathrm{thin}}=(A_{\mathrm{thin}},N_{\mathrm{thin}},C_{\mathrm{thin}}),
-\qquad
-A_{\mathrm{thin}}=\bigl\{\{1,3\}\bigr\},\quad
-N_{\mathrm{thin}}=\bigl\{\{2,3\}\bigr\},\quad
-C_{\mathrm{thin}}=\{1,2\}.
-\]
-Thus, thinness can be phrased as the minimum number of parts in an order+partition certificate that avoids \(P_{\mathrm{thin}}\).
+\begin{definition}[Parameter induced by forbidden patterns]
+For a finite family of patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value of a solution for $G$ that avoids \(\mathcal P\).
+\end{definition}
 
-\medskip
-Proper thinness strengthens thinness by requiring the same partition to be consistent with both an order and its reverse \cite{BonomoDeEstrada2019}.
-Equivalently, it can be phrased as avoiding \(P_{\mathrm{thin}}\) and its mirror pattern
-\[
-P_{\mathrm{thin}}^{\mathrm{rev}}=(A_{\mathrm{rev}},N_{\mathrm{rev}},C_{\mathrm{rev}}),
-\qquad
-A_{\mathrm{rev}}=\bigl\{\{1,3\}\bigr\},\quad
-N_{\mathrm{rev}}=\bigl\{\{1,2\}\bigr\},\quad
-C_{\mathrm{rev}}=\{2,3\}.
-\]
+We sometimes refer to a solution that avoids a family of patterns as a \emph{certificate} for the avoidance of those patterns.
+
+\eric{Creo que no nos interesa esta parte que comenté.}
+% \subsection{Thinness and proper thinness in the pattern framework}
+
+% In the language above, the thinness consistency requirement can be expressed by forbidding a single colored pattern on three vertices.
+% Namely, a triple \(x\prec y\prec z\) is \emph{forbidden} if \(x\) and \(y\) lie in the same part, \(x\sim z\), and \(y\not\sim z\).
+% This is precisely the forbidden colored pattern
+% \[
+% P_{\mathrm{thin}}=(A_{\mathrm{thin}},N_{\mathrm{thin}},C_{\mathrm{thin}}),
+% \qquad
+% A_{\mathrm{thin}}=\bigl\{\{1,3\}\bigr\},\quad
+% N_{\mathrm{thin}}=\bigl\{\{2,3\}\bigr\},\quad
+% C_{\mathrm{thin}}=\{1,2\}.
+% \]
+% Thus, thinness can be phrased as the minimum number of parts in a solution that avoids \(P_{\mathrm{thin}}\).
+
+% \medskip
+% Proper thinness strengthens thinness by requiring both $(\prec, \mathcal{Q})$ and $(\succ, \mathcal{Q})$ to be solutions that avoid the forbidden thinness pattern \cite{BonomoDeEstrada2019}.
+% Equivalently, it can be phrased as avoiding \(P_{\mathrm{thin}}\) and its mirror pattern
+% \[
+% P_{\mathrm{thin}}^{\mathrm{rev}}=(A_{\mathrm{rev}},N_{\mathrm{rev}},C_{\mathrm{rev}}),
+% \qquad
+% A_{\mathrm{rev}}=\bigl\{\{1,3\}\bigr\},\quad
+% N_{\mathrm{rev}}=\bigl\{\{1,2\}\bigr\},\quad
+% C_{\mathrm{rev}}=\{2,3\}.
+% \]
 
 
-\section{Why this generalizes graph classes}
+Note that if \(\minClases_{\mathcal P}(G)=1\), then every triple of vertices in \(G\) belongs to the same part of the only partition \(Q\)---the one with every single vertex belonging to a single part. Thus, the coloring constraint of the colored patterns \(\mathcal P\) is always satisfied. Therefore, \(G\) must belong to the class defined by the forbidden (uncolored) patterns \(\mathcal P\). This justifies viewing the parameter as a ``distance'' to the class defined by those forbidden patterns.
 
-If \(\minClases_{\mathcal P}(G)=1\), then the entire graph must avoid \(\mathcal P\), so \(G\) belongs to the class
-defined by those forbidden patterns. This justifies viewing the parameter as a ``distance'' to the class:
-larger values measure how many parts are needed so that each part (together with the same order) avoids the patterns.
-
-This also parallels a familiar theme in width parameters. Treewidth and pathwidth generalize trees and paths by allowing
+This also parallels a familiar theme in width parameters. Treewidth and pathwidth\eric{citar de algun lado.}\eric{Deberíamos poner esto en la parte de motivations, mostrando que para otros parámetros que generalizan otras clases de grafos hay un montón de problemas que se resuelven rápido.} generalize trees and paths by allowing
 bounded-width decompositions; here, forbidden-pattern parameters generalize a target class by allowing a bounded number of
 parts, each avoiding the same local obstructions.
 
-
-
-
-
-
-
-\section{What we have been doing}
-
-The research program is to analyze \emph{all} parameters obtained from combinations of forbidden colored patterns on
-three positions. 
+\section{Our results}
 
 \begin{figure}[h]
 \centering
@@ -251,50 +232,41 @@ three positions.
 \end{scope}
 
 \end{tikzpicture}
-\caption{Three basic ``colored'' constraints on the ordered positions \(r\prec s\prec t\), keeping fixed an \(\mathrm{est}\)-type edge template (solid \(rs\), dashed \(st\)).}
+\caption{Three basic colored patterns on the vertices \(r\prec s\prec t\), keeping fixed an \(\mathrm{est}\)-type edge template (solid \(rs\), dashed \(st\)).}
 \label{fig:basic-C-examples}
 
-
-
 \end{figure}
+\eric{Esta figure no nos sirve; nosotros no estamos analizando patrones con non-edges. Además, decís algo como est-edge template que no esta definido.}
 
-
-
-We denote by \(P_{rs}\), \(P_{st}\), and \(P_{rt}\) the full patterns obtained from the same edge template by choosing
+\eric{No decir template, hablar de pattern o colored pattern. Tampoco decir full pattern, decir colored pattern.}
+We denote by \(P_{rs}\), \(P_{st}\), and \(P_{rt}\) the colored patterns obtained from the same edge template by choosing
 \(C=\{r,s\}\), \(C=\{s,t\}\), and \(C=\{r,t\}\), respectively.
-We write \(P_{rs\text{-}st}\) for the family \(\{P_{rs},P_{st}\}\), and similarly \(P_{rs\text{-}st\text{-}rt}\) for \(\{P_{rs},P_{st},P_{rt}\}\).
+We write \(P_{rs\text{-}st}\) for the family \(\{P_{rs},P_{st}\}\), and similarly \(P_{rs\text{-}st\text{-}rt}\) for \(\{P_{rs},P_{st},P_{rt}\}\).\eric{Usaría $\mathcal{P}$ para referirme a conjuntos de patrones como hacés abajo. \(P_{rs\text{-}st\text{-}rt}\) parece que es un sólo patrón.}
 \medskip
 
 \noindent
 Beyond the three basic choices \(C\in\{rs,st,rt\}\) for a fixed edge template, we also study \emph{combinations of full patterns}.
 That is, instead of imposing a single forbidden pattern \(P\), we impose a \emph{family} of forbidden patterns
 \(\mathcal P=\{P^{(1)},P^{(2)},\dots\}\) and require solutions to avoid all of them simultaneously
-(e.g., \(\mathcal P=\{P_{rs},P_{st}\}\), or \(\mathcal P=\{P_{rs},P_{st},P_{rt}\}\)).
+(e.g., \(\mathcal P=\{P_{rs},P_{st}\}\), or \(\mathcal P=\{P_{rs},P_{st},P_{rt}\}\)). 
 \medskip
 
 
-We started with families motivated by three familiar classes:
+We started with families motivated by three familiar classes:\eric{Cambiar cada item como puse en el primero. Además, agregar el patrón prohibido de cada una de las clases. Además, no queda claro que las combinaciones de patrones coloreados que estudiamos hasta ahora sean cada una de una clase. O sea, no combinamos patron coloreado de for con est ni nada.}
 \begin{itemize}
-\item \textbf{Star-like constraints:} many combinations collapse to vertex cover or chromatic number,
+\item \textbf{Star graphs:} many combinations collapse to vertex cover or chromatic number,
 suggesting limited room for polynomial-time computability in general.
 \item \textbf{Bipartite-like constraints:} some combinations admit clean exact formulas in terms of \(\chi(G)\).
 \item \textbf{Forest-like constraints:} one combination matches vertex arboricity; several others do not match standard
-parameters and appear structurally richer. We also studied variants ``given an order'' or ``given a partition''.
+parameters and appear structurally richer. We also studied variants ``given an order'' or ``given a partition''\eric{Esto entre comillas queda medio ambiguo. }.
 \end{itemize}
-
-
-
-This systematic viewpoint is inspired by the classification of graph classes defined by forbidden patterns on three vertices in \cite{FeuilloleyHabib2018}.
 
 
 \medskip
 
-In the thesis manuscript, we focus on the star-based and bipartite-based families, while the forest-based family
-is organized for a follow-up publication.
+In the thesis\eric{Especificar que es la tesis de tu masters} manuscript, we focus on the family of graph parameters that generalize star graphs, and the family of those that generalize bipartite graphs. The family that generalizes forests is left for a follow-up publication.
 
-Finally, we note that a separate team is currently working on the parameter that generalizes path graphs.
-
-
+Finally, we note that a separate team at UBA is currently working on the parameter that generalizes linear forests.\eric{Decir cual es el patron prohibido}
 
 
 \section{Future directions}
