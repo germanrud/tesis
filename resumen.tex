@@ -275,46 +275,46 @@ Finally, we note that a separate team at UBA is currently working on the paramet
 \begin{itemize}
 \item \textbf{Continue the ``forest'' family.}
   We have analyzed the forest-based parameters up to the combinations
-  \(\mathrm{for}_{rs,st}\) (in our current notation), and a natural next step is to
+  \(\mathrm{for}_{rs,st}\)\eric{No sabemos qué es for. Además esto no sigue la notación que definiste antes.} (in our current notation), and a natural next step is to
   complete the remaining cases in the same family. This includes:
   \begin{itemize}
-  \item finishing the missing combinations and the corresponding class identifications (when they exist),
-  \item completing the complexity landscape (polynomial-time cases vs.\ NP-hardness),
-  \item and understanding the effect of fixing auxiliary information (e.g., ``given the order'' or ``given the partition'').
+  \item finishing analyzing the remaining combinations and the corresponding class identifications (when they exist)\eric{No entendí qué quiere decir corresponding class identifications.},
+  \item completing the complexity landscape (polynomial-time cases vs.\ NP-hardness), and
+  \item understanding the effect of fixing auxiliary information (e.g., ``given the order'' or ``given the partition''\eric{El lector no sabe qué significa esto}).
   \end{itemize}
 
-\item \textbf{Compare with other graph parameters via domination.}
+\item \textbf{Compare with other graph parameters.}
   A useful structural goal is to relate our parameters to established ones.
   If two parameters \(p\) and \(q\) satisfy
   \[
   p(G)\ \le\ f(q(G))
   \quad\text{for some computable function } f,
   \]
-  then any algorithmic result that is efficient for bounded \(p\) can be transferred to bounded \(q\)
+  then any algorithmic result that is efficient\eric{Los resultados no son eficientes; los algoritmos son eficientes.} for bounded \(p\) can be transferred to bounded \(q\)
   (up to a loss captured by \(f\)). Conversely, if
   \[
   p(G)\ \ge\ g(q(G))
   \quad\text{for some computable function } g,
   \]
-  then lower bounds or hardness results for bounded \(p\) can often be used to rule out
+  then lower bounds or hardness results for bounded \(p\)\eric{No está muy claro qué quiere decir "for bounded \(p\)"} can often be used to rule out
   analogous guarantees for bounded \(q\).
   We would like to systematically establish such relations with parameters such as
-  treewidth/pathwidth, vertex arboricity, and coloring-based measures.
+  treewidth, pathwidth, vertex arboricity, and coloring-based measures.
 
 \item \textbf{Hybrid pattern families: generalizing two classes at once.}
-  One promising direction is to combine patterns from different ``themes'' (e.g., a star-based constraint together
-  with a forest-based constraint), creating parameters that simultaneously generalize two graph classes.
-  For instance, mixing constraints of the form \(\mathrm{est}_1\) and \(\mathrm{for}_3\) produces a hybrid family.
+  One promising direction is to combine patterns from different ``themes''\eric{no me gusta themes; en realidad son patterns correspondientes a distintas clases de grafos} (e.g., a star-based constraint together
+  with a forest-based constraint\eric{Por la misma razón no me gusta decir "forest-based constraint". Ya tenemos definiciones para estas "constraints" en forma de patterns, mejor decir patterns}), creating parameters that simultaneously generalize two graph classes.\eric{Mentira esto igual, si vos combinas dos patrones no estas generalizando las dos clases al mismo tiempo, estás generalizando la intersección de las dos clases}
+  For instance, mixing constraints of the form \(\mathrm{est}_1\) and \(\mathrm{for}_3\)\eric{No sabemos que es est ni que es for} produces a hybrid family.
   These hybrids may be structurally more constrained, which raises the question of whether some of them
   have a better chance of being computable in polynomial time (or admit stronger certificates).
 
 \item \textbf{Algorithmic applications under bounded parameters.}
   Beyond identifying a parameter with a classical invariant, an important goal is to find concrete graph problems
   that become tractable when the parameter is bounded \emph{and} one can exploit the explicit certificate
-  (order + partition) provided by a consistent solution.
+  (order + partition) provided by a consistent solution\eric{Tambien nos interesa encontrar algorithmic applications sin tener la consistent solution}\eric{no decir consistent, decir "solution that avoids the patterns" o algo asi. Cambiar en todos lados.}.
   Two complementary perspectives are relevant:
   \begin{itemize}
-  \item If a problem admits an efficient algorithm parameterized by an \(\mathrm{est}\)-type parameter by explicitly
+  \item If a problem admits an efficient algorithm parameterized by an \(\mathrm{est}\)-type parameter\eric{No sabemos lo que es est, arreglar en todos lados} by explicitly
     using the structure of a consistent solution (whether given as part of the input or constructed),
     this may either (a) imply new algorithmic consequences for coloring-type parameters, or (b) show that the
     \emph{certificate structure}, not just the numeric value, is algorithmically meaningful.
@@ -326,15 +326,12 @@ Finally, we note that a separate team at UBA is currently working on the paramet
 
   In the language of parameterized complexity, the target is to obtain algorithms in:
   \begin{itemize}
-  \item \textbf{FPT:} running time \(O(f(k)\,n^c)\), where \(k\) is the parameter, \(c\) is a constant, and \(f\) is
+  \item \textbf{FPT:} running time \(O(f(k)\cdot n^c)\), where \(k\) is the parameter, \(c\) is a constant, and \(f\) is
     an arbitrary computable function;
-  \item \textbf{XP:} running time \(O(f(k)\,n^{g(k)})\), for computable functions \(f\) and \(g\).
+  \item \textbf{XP:} running time \(O(f(k)\cdot n^{g(k)})\), for computable functions \(f\) and \(g\).
   \end{itemize}
 \end{itemize}
 
-
-
-\eric{Usar \url{https://www.overleaf.com/learn/latex/Bibliography\_management\_in\_LaTeX}}
 \printbibliography
 
 
