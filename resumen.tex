@@ -5,12 +5,17 @@
 \usepackage[a4paper,margin=2.6cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[hidelinks]{hyperref}
+\usepackage[capitalize]{cleveref}
 \usepackage{xcolor}
 \usepackage{subcaption}
 \usepackage{csquotes}
-\usepackage[style=authoryear]{biblatex}
+\usepackage[
+  maxcitenames=99,
+  style=numeric,
+  natbib
+]{biblatex}
 
-\addbibresource{references.bib}
+\addbibresource{./references.bib}
 
 
 % --- Notation ---
@@ -58,27 +63,24 @@
 
 We study a systematic family of graph parameters defined via \emph{forbidden colored patterns} on ordered triples of vertices.
 Given a small set of patterns on three vertices, the parameter is the minimum number of parts in a vertex partition, together with a vertex order, that avoids all patterns for every ordered triple of vertices.
-This framework is inspired by the ``order + partition'' viewpoint behind the thinness graph parameter and its variants and provides a uniform way to
+This framework is inspired by the thinness graph parameter and its variants and provides a uniform way to
 generalize graph classes and measure distance to them.
 We analyze several families motivated by star-like, bipartite-like, and forest-like constraints, identify collapses to classical
 invariants in multiple cases, and outline complexity and algorithmic directions suggested by the resulting landscape.
 \end{abstract}
 
-\section{Motivation: thinness, variants, and forbidden patterns}
+\section{Motivation}
 
-FELIXXXXXiano molina
+A \emph{pattern} is a small template that specifies a combination of edges and non-edges in a set of ordered vertices. Many graph classes can be characterized by the existence of a total vertex order that avoids a specific pattern on three vertices, for every ordered triple of vertices. For instance, interval graphs \cite{LekkerkerkerBoland1962,FulkersonGross1965} are exactly the graphs that admit an order avoiding the pattern where \(u\) and \(w\) are adjacent, \(v\) and \(w\) are non-adjacent, and no other edges are required or forbidden. A systematic study of graph classes defined by forbidden patterns on three vertices was carried out by \textcite{FeuilloleyHabib2018}.
 
-Thinness, introduced by Mannino, Oriolo, Ricci, and Chandran \cite{Mannino2007}, is a width parameter defined via a vertex order together with a partition of the vertex set into a bounded number of classes.
-It generalizes interval graphs (intersection graphs of intervals on the real line \cite{LekkerkerkerBoland1962,FulkersonGross1965}); in fact, interval graphs are exactly the graphs of thinness~$1$ \cite{Mannino2007}.
-A common motivation in the thinness literature is that bounded thinness can be used to extend algorithmic techniques beyond interval graphs:
+The thinness graph parameter can be seen as an extension of this concept. Introduced by \textcite{Mannino2007}, thinness is defined by the minimum number of parts in a vertex partition, together with a vertex order, that avoids a specific \emph{forbidden colored pattern} on three vertices. A colored pattern on three vertices is a pattern that additionally specifies which vertices must lie in the same part of the partition.  
+
+The thinness parameter generalizes interval graphs in the sense that interval graphs are exactly the graphs of thinness~$1$ \cite{Mannino2007}.
+A common motivation in the literature is that bounded thinness can be used to extend algorithmic techniques beyond interval graphs:
 many problems that are hard in general admit polynomial-time algorithms on graphs of bounded thinness, provided that an explicit certificate (order + partition) is available \cite{BonomoDeEstrada2019}.
 
-\medskip
-Proper thinness was introduced by Bonomo and de Estrada \cite{BonomoDeEstrada2019} as an interval-like generalization of \emph{proper} interval graphs (also known as indifference / unit interval graphs), introduced by Roberts \cite{Roberts1969}.
+One could define other graph parameters by forbidding different colored patterns on three vertices, or by forbidding multiple patterns simultaneously. This is for example the case of proper thinness, which can be defined by forbidding the thinness pattern and its mirror image at the same time. Proper thinness generalizes proper interval graphs, which are exactly the graphs of proper thinness~$1$ \cite{BonomoDeEstrada2019}.
 
-\medskip
-\noindent\textbf{Why go beyond interval graphs?}
-Proper thinness can be viewed as ``thinness + one more forbidden pattern'' (made precise in Section~\ref{sec:framework-patterns}).
 This motivates a broader question: what happens if we take \emph{other} small collections of forbidden colored patterns
 and define the minimum number of parts in an order+partition certificate needed to avoid them?
 If these parameters preserve useful properties of the underlying class they generalize,
@@ -88,11 +90,6 @@ when the parameter is bounded.
 
 
 \section{Framework: forbidden colored patterns}\label{sec:framework-patterns}
-shalommm lajemmm
-HHHHHHHOOOOOLLLLIIII
-HOLLLLLAAAAA
-helloooooooo
-hey yooo
 
 The use of forbidden patterns on three vertices as class descriptors is inspired by the systematic study of
 such classes by \textcite{FeuilloleyHabib2018}.
