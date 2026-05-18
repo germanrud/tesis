@@ -75,7 +75,7 @@ invariants in multiple cases, and outline complexity and algorithmic directions 
 
 A \emph{pattern} is a small template that specifies a combination of edges and non-edges in a set of ordered vertices. Many graph classes can be characterized by the existence of a total vertex order that avoids a specific pattern on three vertices, for every ordered triple of vertices. For instance, interval graphs \cite{LekkerkerkerBoland1962,FulkersonGross1965} are exactly the graphs that admit an order avoiding the pattern where \(u\) and \(w\) are adjacent, \(v\) and \(w\) are non-adjacent, and no other edges are required or forbidden. A systematic study of graph classes defined by forbidden patterns on three vertices was carried out by \textcite{FeuilloleyHabib2018}.
 
-The thinness graph parameter can be seen as an extension of this concept. Introduced by \textcite{Mannino2007}, thinness is defined by the minimum number of parts in a vertex partition, together with a vertex order, that avoids a specific \emph{forbidden colored pattern} on three vertices. A colored pattern on three vertices is a pattern that additionally specifies which vertices must lie in the same part of the partition. A precise definition is given in \cref{sec:framework-patterns}.
+The thinness graph parameter can be seen as an extension of this concept. Introduced by \textcite{Mannino2007}, thinness is defined by the minimum number of parts in a vertex partition, together with a vertex order, that avoids a specific forbidden \emph{colored} pattern on three vertices. A colored pattern on three vertices is a pattern that additionally specifies which vertices must lie in the same part of the partition. A precise definition is given in \cref{sec:framework-patterns}.
 
 Thinness generalizes interval graphs in the sense that interval graphs are exactly the graphs of thinness~$1$ \cite{Mannino2007}.
 A common motivation in the literature is that bounded thinness can be used to extend algorithmic techniques beyond interval graphs:
@@ -125,12 +125,12 @@ A,N \subseteq \binom{\{r,s,t\}}{2},
 \qquad
 C \in \binom{\{r,s,t\}}{2}.
 \]
-Here \(r,s,t\) denote the positions of an ordered triple \(r\prec s\prec t\), and
+Here \(r,s,t\) denote the vertices of an ordered triple \(r\prec s\prec t\), and
 \[
 \binom{\{r,s,t\}}{2}=\{\{r,s\},\{r,t\},\{s,t\}\}.
 \]
 The set \(A\) specifies the pairs that must be edges, \(N\) specifies the pairs that must be non-edges,
-and \(C\) specifies the pair of positions that must lie in the same part of the partition.
+and \(C\) specifies the pair of vertices that must lie in the same part of the partition.
 \end{definition}
 
 
@@ -164,6 +164,7 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 \end{definition}
 
 \begin{definition}[Avoiding a pattern]
+  \eric{Tenés que cambiar también acá, porque cambiaste la definición de patrón.}
 Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for $G$.
 Given three distinct vertices \(v_1\prec v_2\prec v_3\) in $V(G)$,
 we say \((v_1,v_2,v_3)\) \emph{avoids} the colored pattern \(P=(A,N,C)\) if at least one of the following holds:
@@ -182,7 +183,6 @@ For a finite family of patterns \(\mathcal P\), define \(\minClases_{\mathcal P}
 
 We sometimes refer to a solution that avoids a family of patterns as a \emph{certificate} for the avoidance of those patterns.
 
-\eric{Creo que no nos interesa esta parte que comenté.}
 % \subsection{Thinness and proper thinness in the pattern framework}
 
 % In the language above, the thinness consistency requirement can be expressed by forbidding a single colored pattern on three vertices.
@@ -224,13 +224,16 @@ Note that if \(\minClases_{\mathcal P}(G)=1\), then every triple of vertices in 
 
 \section{Preliminary results}
 
+We started with three families of colored patterns, each obtained from a fixed uncolored pattern
+on three ordered vertices \(r\prec s\prec t\) by varying which pair of vertices lie in the same part, meaning, by choosing the set \(C\).
+
 \begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   scale=1,
   every node/.style={circle, draw, inner sep=1.4pt, font=\small},
   same/.style={draw=red, very thick, fill=red!12},
-  lab/.style={draw=none, font=\small},
+  lab/.style={draw=none, font=\small,inner sep=0pt, shape=rectangle},
   >=latex
 ]
 
@@ -262,21 +265,9 @@ Note that if \(\minClases_{\mathcal P}(G)=1\), then every triple of vertices in 
 \end{scope}
 
 \end{tikzpicture}
-\caption{Three examples of colored patterns on the ordered vertices \(r\prec s\prec t\). In each case the only required edge is \(rs\), there are no forbidden edges, and the red vertices indicate the pair \(C\) that must lie in the same part.}
+\caption{Three examples of colored patterns on the ordered vertices \(r\prec s\prec t\). In each case the only edge is \(rs\), there are no non-edges, and the red vertices indicate the pair \(C\) that lies in the same part.}
 \label{fig:basic-C-examples}
 \end{figure}
-
-
-
-\eric{Esta figure no nos sirve; nosotros no estamos analizando patrones con non-edges. Además, decís algo como est-edge template que no esta definido.}
-
-
-
-
-
-We started with three families of colored patterns, each obtained from a fixed uncolored pattern
-on three ordered vertices \(r\prec s\prec t\), and then varying which pair of positions is required
-to lie in the same part.
 
 \begin{itemize}
 \item \textbf{Star graphs.}
@@ -300,7 +291,7 @@ N=\varnothing.
 Avoiding this pattern with one part characterizes star graphs, possibly with isolated vertices.
 We study the three colored versions obtained by choosing \(C=\{r,s\}\), \(C=\{s,t\}\), or \(C=\{r,t\}\),
 and also combinations of these colored patterns. Several of the resulting parameters collapse
-to vertex cover or chromatic number.
+to vertex cover or chromatic number.\eric{Decir que collapse quiere decir que son equivalentes, y que equivalentes quiere decir que existen funciones que acotan cada uno en términos del otro. Que sean equivalentes quiere decir que todos los algoritmos FPT para uno de los parámetros también son FPT para el otro, y lo mismo para XP, así que no son muy interesantes del punto de vista de la complejidad parametrizada.}
 
 \item \textbf{Bipartite graphs.}
 The underlying uncolored pattern is given by
@@ -323,7 +314,7 @@ N=\varnothing.
 \end{center}
 Avoiding this pattern with one part is equivalent to being bipartite.
 Again, we study the three colored versions, obtained by choosing the colored pair \(C\), and their combinations.
-Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).
+Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).\eric{Decir si los que no son equivalentes a chi se pueden computar en tiempo polinomial o son NP-hard. Lo mismo para las estrellas.}
 
 \item \textbf{Forests.}
 The underlying uncolored pattern is given by
@@ -372,16 +363,17 @@ the combination is taken \emph{within the same family}. Thus, in the star family
 in the bipartite family, it means forbidding both bipartite-colored patterns; and similarly for forests.
 \smallskip
 
-In German's masters thesis\eric{Especificar que es la tesis de tu masters} manuscript, we focus on the family of graph parameters that generalize star graphs, and the family of those that generalize bipartite graphs. The family that generalizes forests is left for a follow-up publication.
+In German's masters thesis manuscript, we focus on the family of graph parameters that generalize star graphs, and the family of those that generalize bipartite graphs. The family that generalizes forests is left for a follow-up publication.
 
 Finally, we note that there is ongoing parallel work at UBA on the parameter associated with the uncolored pattern
-which generalizes linear forests.
+which characterizes linear forests.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
   scale=1,
   every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  lab/.style={draw=none, font=\small,inner sep=0pt, shape=rectangle},
   >=latex
 ]
 \node (r) at (0,0) {$r$};
@@ -390,21 +382,10 @@ which generalizes linear forests.
 
 \draw[bend left=35] (r) to (t);
 
-\node[draw=none] at (1.5,-0.9) {$A=\{rt\},\ N=\varnothing$};
+\node[lab] at (1.5,-0.9) {$A=\{rt\},\ N=\varnothing$};
 \end{tikzpicture}
-\caption{The uncolored pattern that generalizes linear forests.}
+\caption{The uncolored pattern that characterizes linear forests.}
 \end{figure}
-
-
-
-
-
-
-
-
-
-
-\medskip
 
 \section{Future directions}
 
