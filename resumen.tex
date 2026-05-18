@@ -89,6 +89,15 @@ If these parameters preserve useful properties of the underlying class they gene
 then problems solvable efficiently on that class may remain solvable (or become parametrically tractable)
 when the parameter is bounded.
 
+This perspective parallels a familiar theme in width parameters. Treewidth and pathwidth generalize trees and paths via
+tree/path decompositions, and many algorithmic techniques become efficient on graphs of bounded treewidth once a suitable
+decomposition is available; see, for example, \textcite{Bodlaender1993}.
+Algorithmic meta-theorems, such as Courcelle's theorem, further show that many logic-definable graph properties become tractable
+on graphs of bounded treewidth \cite{Courcelle1990}.
+
+
+
+
 \section{Objectives}
 The main goal of this research program is to systematically analyze the family of graph parameters obtained by forbidding combinations of colored patterns on three vertices. This includes:
 \begin{itemize}
@@ -99,20 +108,31 @@ The main goal of this research program is to systematically analyze the family o
 
 We begin by analyzing colored patterns where the non-edge set is empty. Ignoring the coloring constraints, these still correspond to the forbidden patterns of interesting graph classes, such as the class of all stars ($K_{1,n} + cK_1$), bipartite graphs ($K_{m,n}$), and forests, among others.
 
+
+
+
+
+
+
+
+
 \section{Framework: forbidden colored patterns}\label{sec:framework-patterns}
 
 \begin{definition}[Colored pattern on three vertices]
 A \emph{colored pattern} is a triple \(P=(A,N,C)\) where
 \[
-A,N \subseteq \binom{\{1,2,3\}}{2},
+A,N \subseteq \binom{\{r,s,t\}}{2},
 \qquad
-C \in \binom{\{1,2,3\}}{2}.
+C \in \binom{\{r,s,t\}}{2}.
 \]
-Elements of \(\binom{\{1,2,3\}}{2}=\{\{1,2\},\{1,3\},\{2,3\}\}\) are interpreted as pairs of vertices
-in an ordered triple of vertices \(u \prec v \prec w\).
-The set \(A\) specifies edges, \(N\) specifies non-edges,
-and the pair \(C\) indicates which two vertices lie in the same part of a partition.
+Here \(r,s,t\) denote the positions of an ordered triple \(r\prec s\prec t\), and
+\[
+\binom{\{r,s,t\}}{2}=\{\{r,s\},\{r,t\},\{s,t\}\}.
+\]
+The set \(A\) specifies the pairs that must be edges, \(N\) specifies the pairs that must be non-edges,
+and \(C\) specifies the pair of positions that must lie in the same part of the partition.
 \end{definition}
+
 
 \begin{figure}[ht]
 \centering
@@ -121,17 +141,21 @@ and the pair \(C\) indicates which two vertices lie in the same part of a partit
   every node/.style={circle, draw, inner sep=1.4pt},
   >=latex
 ]
-\node[draw=red, very thick, fill=red!12] (p1) at (0,0) {1};
-\node (p2) at (1.7,0) {2};
-\node[draw=red, very thick, fill=red!12] (p3) at (3.4,0) {3};
+\node[draw=red, very thick, fill=red!12] (pr) at (0,0) {$r$};
+\node (ps) at (1.7,0) {$s$};
+\node[draw=red, very thick, fill=red!12] (pt) at (3.4,0) {$t$};
 
-\draw[line width=0.6pt] (p1)--(p2);
-\draw[densely dashed, line width=0.6pt] (p2)--(p3);
+\draw[line width=0.6pt] (pr)--(ps);
+\draw[densely dashed, line width=0.6pt] (ps)--(pt);
 
 \end{tikzpicture}
-\caption{The forbidden colored pattern $P = (A,N,C)$ where $A=\{\{1,2\}\}$, $N=\{\{2,3\}\}$, and $C=\{1,3\}$. The edges in $A$ are represented by solid lines, the non-edges in $N$ are represented by dashed lines, and the vertices in $C$ are highlighted in red.}
+\caption{The forbidden colored pattern \(P=(A,N,C)\), where \(A=\{\{r,s\}\}\), \(N=\{\{s,t\}\}\), and \(C=\{r,t\}\). Solid lines represent required edges, dashed lines represent required non-edges, and red vertices represent the pair required to lie in the same part.}
 \label{fig:tiny-pattern}
 \end{figure}
+
+
+
+
 
 \begin{definition}[Solution and value]
 Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
@@ -187,13 +211,20 @@ We sometimes refer to a solution that avoids a family of patterns as a \emph{cer
 
 Note that if \(\minClases_{\mathcal P}(G)=1\), then every triple of vertices in \(G\) belongs to the same part of the only partition \(Q\)---the one with every single vertex belonging to a single part. Thus, the coloring constraint of the colored patterns \(\mathcal P\) is always satisfied. Therefore, \(G\) must belong to the class defined by the forbidden (uncolored) patterns \(\mathcal P\). This justifies viewing the parameter as a ``distance'' to the class defined by those forbidden patterns.
 
-This also parallels a familiar theme in width parameters. Treewidth and pathwidth\eric{citar de algun lado.}\eric{Deberíamos poner esto en la parte de motivations, mostrando que para otros parámetros que generalizan otras clases de grafos hay un montón de problemas que se resuelven rápido.} generalize trees and paths by allowing
-bounded-width decompositions; here, forbidden-pattern parameters generalize a target class by allowing a bounded number of
-parts, each avoiding the same local obstructions.
+%This also parallels a familiar theme in width parameters. Treewidth and pathwidth\eric{citar de algun lado.}\eric{Deberíamos poner esto en la parte de motivations, mostrando que para otros parámetros que generalizan otras clases de grafos hay un montón de problemas que se resuelven rápido.} generalize trees and paths by allowing
+%bounded-width decompositions; here, forbidden-pattern parameters generalize a target class by allowing a bounded number of
+%parts, each avoiding the same local obstructions.
+
+
+
+
+
+
+
 
 \section{Preliminary results}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   scale=1,
@@ -209,8 +240,7 @@ parts, each avoiding the same local obstructions.
 \node[same] (s) at (1.5,0) {$s$};
 \node       (t) at (3,0) {$t$};
 \draw (r)--(s);
-\draw[densely dashed] (s)--(t);
-\node[lab] at (1.5,-0.9) {$C=rs$};
+\node[lab] at (1.5,-0.9) {$C=\{r,s\}$};
 \end{scope}
 
 % --- C = st ---
@@ -219,8 +249,7 @@ parts, each avoiding the same local obstructions.
 \node[same] (s) at (1.5,0) {$s$};
 \node[same] (t) at (3,0) {$t$};
 \draw (r)--(s);
-\draw[densely dashed] (s)--(t);
-\node[lab] at (1.5,-0.9) {$C=st$};
+\node[lab] at (1.5,-0.9) {$C=\{s,t\}$};
 \end{scope}
 
 % --- C = rt ---
@@ -229,109 +258,219 @@ parts, each avoiding the same local obstructions.
 \node       (s) at (1.5,0) {$s$};
 \node[same] (t) at (3,0) {$t$};
 \draw (r)--(s);
-\draw[densely dashed] (s)--(t);
-\node[lab] at (1.5,-0.9) {$C=rt$};
+\node[lab] at (1.5,-0.9) {$C=\{r,t\}$};
 \end{scope}
 
 \end{tikzpicture}
-\caption{Three basic colored patterns on the vertices \(r\prec s\prec t\), keeping fixed an \(\mathrm{est}\)-type edge template (solid \(rs\), dashed \(st\)).}
+\caption{Three examples of colored patterns on the ordered vertices \(r\prec s\prec t\). In each case the only required edge is \(rs\), there are no forbidden edges, and the red vertices indicate the pair \(C\) that must lie in the same part.}
 \label{fig:basic-C-examples}
-
 \end{figure}
+
+
+
 \eric{Esta figure no nos sirve; nosotros no estamos analizando patrones con non-edges. Además, decís algo como est-edge template que no esta definido.}
 
-\eric{No decir template, hablar de pattern o colored pattern. Tampoco decir full pattern, decir colored pattern.}
-We denote by \(P_{rs}\), \(P_{st}\), and \(P_{rt}\) the colored patterns obtained from the same edge template by choosing
-\(C=\{r,s\}\), \(C=\{s,t\}\), and \(C=\{r,t\}\), respectively.
-We write \(P_{rs\text{-}st}\) for the family \(\{P_{rs},P_{st}\}\), and similarly \(P_{rs\text{-}st\text{-}rt}\) for \(\{P_{rs},P_{st},P_{rt}\}\).\eric{Usaría $\mathcal{P}$ para referirme a conjuntos de patrones como hacés abajo. \(P_{rs\text{-}st\text{-}rt}\) parece que es un sólo patrón.}
-\medskip
-
-\noindent
-Beyond the three basic choices \(C\in\{rs,st,rt\}\) for a fixed edge template, we also study \emph{combinations of full patterns}.
-That is, instead of imposing a single forbidden pattern \(P\), we impose a \emph{family} of forbidden patterns
-\(\mathcal P=\{P^{(1)},P^{(2)},\dots\}\) and require solutions to avoid all of them simultaneously
-(e.g., \(\mathcal P=\{P_{rs},P_{st}\}\), or \(\mathcal P=\{P_{rs},P_{st},P_{rt}\}\)). 
-\medskip
 
 
-We started with families motivated by three familiar classes:\eric{Cambiar cada item como puse en el primero. Además, agregar el patrón prohibido de cada una de las clases. Además, no queda claro que las combinaciones de patrones coloreados que estudiamos hasta ahora sean cada una de una clase. O sea, no combinamos patron coloreado de for con est ni nada.}
+
+
+We started with three families of colored patterns, each obtained from a fixed uncolored pattern
+on three ordered vertices \(r\prec s\prec t\), and then varying which pair of positions is required
+to lie in the same part.
+
 \begin{itemize}
-\item \textbf{Star graphs:} many combinations collapse to vertex cover or chromatic number,
-suggesting limited room for polynomial-time computability in general.
-\item \textbf{Bipartite-like constraints:} some combinations admit clean exact formulas in terms of \(\chi(G)\).
-\item \textbf{Forest-like constraints:} one combination matches vertex arboricity; several others do not match standard
-parameters and appear structurally richer. We also studied variants ``given an order'' or ``given a partition''\eric{Esto entre comillas queda medio ambiguo. }.
+\item \textbf{Star graphs.}
+The underlying uncolored pattern is given by
+\[
+A=\bigl\{\{r,s\}\bigr\},
+\qquad
+N=\varnothing.
+\]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (r) at (0,0) {$r$};
+\node (s) at (1.5,0) {$s$};
+\node (t) at (3,0) {$t$};
+\draw (r)--(s);
+\end{tikzpicture}
+\end{center}
+Avoiding this pattern with one part characterizes star graphs, possibly with isolated vertices.
+We study the three colored versions obtained by choosing \(C=\{r,s\}\), \(C=\{s,t\}\), or \(C=\{r,t\}\),
+and also combinations of these colored patterns. Several of the resulting parameters collapse
+to vertex cover or chromatic number.
+
+\item \textbf{Bipartite graphs.}
+The underlying uncolored pattern is given by
+\[
+A=\bigl\{\{r,s\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing.
+\]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (r) at (0,0) {$r$};
+\node (s) at (1.5,0) {$s$};
+\node (t) at (3,0) {$t$};
+\draw (r)--(s);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+Avoiding this pattern with one part is equivalent to being bipartite.
+Again, we study the three colored versions, obtained by choosing the colored pair \(C\), and their combinations.
+Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).
+
+\item \textbf{Forests.}
+The underlying uncolored pattern is given by
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing.
+\]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (r) at (0,0) {$r$};
+\node (s) at (1.5,0) {$s$};
+\node (t) at (3,0) {$t$};
+\draw (r)--(t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+Avoiding this pattern with one part is equivalent to being a forest.
+We study the corresponding colored versions and their combinations. One of these parameters matches
+vertex arboricity, while several others do not seem to collapse to standard parameters and appear
+structurally richer. We also studied variants in which either the order or the partition is given
+as part of the input.
 \end{itemize}
+\medskip
+
+
+
+For each of the three families above, we denote by \(P_{rs}\), \(P_{st}\), and \(P_{rt}\)
+the colored patterns obtained from the same underlying uncolored pattern by choosing,
+respectively,
+\[
+C=\{r,s\},\qquad C=\{s,t\},\qquad C=\{r,t\}.
+\]
+
+When we write, for instance,
+\[
+\mathcal P_{rs\text{-}st}:=\{P_{rs},P_{st}\},
+\qquad
+\mathcal P_{rs\text{-}st\text{-}rt}:=\{P_{rs},P_{st},P_{rt}\},
+\]
+the combination is taken \emph{within the same family}. Thus, in the star family,
+\(\mathcal P_{rs\text{-}st}\) means that we forbid both star-colored patterns \(P_{rs}\) and \(P_{st}\);
+in the bipartite family, it means forbidding both bipartite-colored patterns; and similarly for forests.
+\smallskip
+
+In German's masters thesis\eric{Especificar que es la tesis de tu masters} manuscript, we focus on the family of graph parameters that generalize star graphs, and the family of those that generalize bipartite graphs. The family that generalizes forests is left for a follow-up publication.
+
+Finally, we note that there is ongoing parallel work at UBA on the parameter associated with the uncolored pattern
+which generalizes linear forests.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  >=latex
+]
+\node (r) at (0,0) {$r$};
+\node (s) at (1.5,0) {$s$};
+\node (t) at (3,0) {$t$};
+
+\draw[bend left=35] (r) to (t);
+
+\node[draw=none] at (1.5,-0.9) {$A=\{rt\},\ N=\varnothing$};
+\end{tikzpicture}
+\caption{The uncolored pattern that generalizes linear forests.}
+\end{figure}
+
+
+
+
+
+
+
+
 
 
 \medskip
-
-In the thesis\eric{Especificar que es la tesis de tu masters} manuscript, we focus on the family of graph parameters that generalize star graphs, and the family of those that generalize bipartite graphs. The family that generalizes forests is left for a follow-up publication.
-
-Finally, we note that a separate team at UBA is currently working on the parameter that generalizes linear forests.\eric{Decir cual es el patron prohibido}
-
 
 \section{Future directions}
 
 \begin{itemize}
-\item \textbf{Continue the ``forest'' family.}
-  We have analyzed the forest-based parameters up to the combinations
-  \(\mathrm{for}_{rs,st}\)\eric{No sabemos qué es for. Además esto no sigue la notación que definiste antes.} (in our current notation), and a natural next step is to
-  complete the remaining cases in the same family. This includes:
+\item \textbf{Complete the forest family.}
+  A first direction is to complete the analysis of the parameters obtained from the colored patterns associated with forests.
+  In the current work we have analyzed several one-pattern and two-pattern families, but a complete classification is still open.
+  This includes:
   \begin{itemize}
-  \item finishing analyzing the remaining combinations and the corresponding class identifications (when they exist)\eric{No entendí qué quiere decir corresponding class identifications.},
-  \item completing the complexity landscape (polynomial-time cases vs.\ NP-hardness), and
-  \item understanding the effect of fixing auxiliary information (e.g., ``given the order'' or ``given the partition''\eric{El lector no sabe qué significa esto}).
+  \item determining whether the remaining parameters coincide with known graph parameters or define genuinely new ones;
+  \item completing the complexity landscape, distinguishing polynomial-time cases from NP-hard cases;
+  \item studying restricted input variants, for example the problem of deciding the parameter when the vertex order is given
+  as part of the input, or when the partition is given as part of the input.
   \end{itemize}
 
 \item \textbf{Compare with other graph parameters.}
-  A useful structural goal is to relate our parameters to established ones.
-  If two parameters \(p\) and \(q\) satisfy
+  A useful structural goal is to relate these parameters to established ones, such as treewidth, pathwidth,
+  vertex arboricity, vertex cover, and coloring-based measures.
+  Inequalities between parameters can transfer algorithmic information. For instance, if two parameters \(p\) and \(q\)
+  satisfy
   \[
-  p(G)\ \le\ f(q(G))
-  \quad\text{for some computable function } f,
+  p(G)\le f(q(G))
   \]
-  then any algorithmic result that is efficient\eric{Los resultados no son eficientes; los algoritmos son eficientes.} for bounded \(p\) can be transferred to bounded \(q\)
-  (up to a loss captured by \(f\)). Conversely, if
-  \[
-  p(G)\ \ge\ g(q(G))
-  \quad\text{for some computable function } g,
-  \]
-  then lower bounds or hardness results for bounded \(p\)\eric{No está muy claro qué quiere decir "for bounded \(p\)"} can often be used to rule out
-  analogous guarantees for bounded \(q\).
-  We would like to systematically establish such relations with parameters such as
-  treewidth, pathwidth, vertex arboricity, and coloring-based measures.
+  for some computable function \(f\), then every class of graphs with bounded \(q\) also has bounded \(p\).
+  Consequently, algorithms that are efficient for bounded \(p\) may also be applicable when \(q\) is bounded,
+  provided that the required certificates can be obtained or are given as part of the input.
 
-\item \textbf{Hybrid pattern families: generalizing two classes at once.}
-  One promising direction is to combine patterns from different ``themes''\eric{no me gusta themes; en realidad son patterns correspondientes a distintas clases de grafos} (e.g., a star-based constraint together
-  with a forest-based constraint\eric{Por la misma razón no me gusta decir "forest-based constraint". Ya tenemos definiciones para estas "constraints" en forma de patterns, mejor decir patterns}), creating parameters that simultaneously generalize two graph classes.\eric{Mentira esto igual, si vos combinas dos patrones no estas generalizando las dos clases al mismo tiempo, estás generalizando la intersección de las dos clases}
-  For instance, mixing constraints of the form \(\mathrm{est}_1\) and \(\mathrm{for}_3\)\eric{No sabemos que es est ni que es for} produces a hybrid family.
-  These hybrids may be structurally more constrained, which raises the question of whether some of them
-  have a better chance of being computable in polynomial time (or admit stronger certificates).
+  Conversely, proving that a parameter is not controlled by another one can help explain why certain algorithmic
+  techniques do not transfer. Establishing such comparisons would clarify where the parameters defined by forbidden
+  colored patterns sit among standard graph measures.
+
+\item \textbf{Combine patterns associated with different graph classes.}
+  Another direction is to study families of forbidden colored patterns obtained by combining patterns associated with
+  different graph classes. If one pattern defines a class \(\mathcal C_1\) and another defines a class \(\mathcal C_2\),
+  then forbidding both patterns with one part corresponds to the intersection
+  \[
+  \mathcal C_1\cap \mathcal C_2.
+  \]
+  Thus, the resulting parameter can be viewed as a way of measuring distance to an intersection of graph classes.
+  Such hybrid families may be more structured than the individual ones, and it is natural to ask whether some of them
+  are easier to compute or admit stronger algorithmic applications.
 
 \item \textbf{Algorithmic applications under bounded parameters.}
   Beyond identifying a parameter with a classical invariant, an important goal is to find concrete graph problems
-  that become tractable when the parameter is bounded \emph{and} one can exploit the explicit certificate
-  (order + partition) provided by a consistent solution\eric{Tambien nos interesa encontrar algorithmic applications sin tener la consistent solution}\eric{no decir consistent, decir "solution that avoids the patterns" o algo asi. Cambiar en todos lados.}.
-  Two complementary perspectives are relevant:
+  that become tractable when the parameter is bounded. There are two natural versions of this question:
   \begin{itemize}
-  \item If a problem admits an efficient algorithm parameterized by an \(\mathrm{est}\)-type parameter\eric{No sabemos lo que es est, arreglar en todos lados} by explicitly
-    using the structure of a consistent solution (whether given as part of the input or constructed),
-    this may either (a) imply new algorithmic consequences for coloring-type parameters, or (b) show that the
-    \emph{certificate structure}, not just the numeric value, is algorithmically meaningful.
-  \item Since the forest-generalizing parameters do not seem to collapse to standard measures in several cases,
-    it is particularly worthwhile to search for problems that are tractable for these parameters but not known
-    to be tractable under more classical ones. This would position such parameters as additional tools in the
-    ``graph algorithm toolbox'' for practical instances.
+  \item the algorithm receives only the graph and the parameter is known to be bounded;
+  \item the algorithm receives, in addition, a certificate \(S=(\prec,\mathcal Q)\) avoiding the relevant family of patterns.
   \end{itemize}
 
-  In the language of parameterized complexity, the target is to obtain algorithms in:
+  The second version may be easier and can still be useful: it may show that the structure of the certificate
+  (the order and the partition), not only the numerical value of the parameter, is algorithmically meaningful.
+  In particular, for parameters that do not seem to collapse to standard measures, it is worth searching for problems
+  that are tractable under these parameters but not known to be tractable under more classical ones. This would position
+  forbidden-pattern parameters as an additional tool in the graph algorithm toolbox.
+
+  In the language of parameterized complexity, the goal is to obtain algorithms of the following types:
   \begin{itemize}
-  \item \textbf{FPT:} running time \(O(f(k)\cdot n^c)\), where \(k\) is the parameter, \(c\) is a constant, and \(f\) is
-    an arbitrary computable function;
+  \item \textbf{FPT:} running time \(O(f(k)\cdot n^c)\), where \(k\) is the parameter, \(c\) is a constant, and \(f\)
+  is a computable function;
   \item \textbf{XP:} running time \(O(f(k)\cdot n^{g(k)})\), for computable functions \(f\) and \(g\).
   \end{itemize}
 \end{itemize}
+
+
+
 
 \printbibliography
 \eric{Tenés algunas citas con los nombres y otras con las iniciales. Hacer que todas tengan los nombres completos.}
