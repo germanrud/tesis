@@ -163,25 +163,42 @@ and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts
 The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 \end{definition}
 
+
+
+
+
+
 \begin{definition}[Avoiding a pattern]
-  \eric{Tenés que cambiar también acá, porque cambiaste la definición de patrón.}
-Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for $G$.
-Given three distinct vertices \(v_1\prec v_2\prec v_3\) in $V(G)$,
-we say \((v_1,v_2,v_3)\) \emph{avoids} the colored pattern \(P=(A,N,C)\) if at least one of the following holds:
+Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
+Let \(P=(A,N,C)\) be a colored pattern on the ordered positions \(r\prec s\prec t\).
+
+An \emph{ordered occurrence} of the three positions in \(G\) is an injective map
+\[
+\varphi:\{r,s,t\}\to V
+\]
+such that
+\[
+\varphi(r)\prec \varphi(s)\prec \varphi(t).
+\]
+
+We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
 \begin{enumerate}
-\item For some $\{i, j\} \in A$, we have that $\{v_i,v_j\} \notin E(G)$.
-\item For some $\{i, j\} \in N$, we have that $\{v_i,v_j\} \in E(G)$.
-\item If $C = \{i,j\}$, then \(v_i\) and \(v_j\) lie in different parts of \(\mathcal Q\).
+\item There exists \(\{a,b\}\in A\) such that \(\varphi(a)\not\sim \varphi(b)\).
+\item There exists \(\{a,b\}\in N\) such that \(\varphi(a)\sim \varphi(b)\).
+\item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
-The solution \(S\) \emph{avoids} \(P\) if every triple \(x\prec y\prec z\) avoids \(P\).
-For a family of colored patterns \(\mathcal P\), the solution avoids \(\mathcal P\) if it avoids each \(P\in\mathcal P\).
+
+The solution \(S\) \emph{avoids} \(P\) if every ordered occurrence \(\varphi:\{r,s,t\}\to V\) avoids \(P\).
+For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
+\(P\in\mathcal P\).
 \end{definition}
 
 \begin{definition}[Parameter induced by forbidden patterns]
-For a finite family of patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value of a solution for $G$ that avoids \(\mathcal P\).
+For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
+of a solution for \(G\) that avoids \(\mathcal P\).
 \end{definition}
 
-We sometimes refer to a solution that avoids a family of patterns as a \emph{certificate} for the avoidance of those patterns.
+We sometimes refer to a solution that avoids a family of colored patterns as a \emph{certificate} for the avoidance of those patterns.
 
 % \subsection{Thinness and proper thinness in the pattern framework}
 
@@ -290,8 +307,20 @@ N=\varnothing.
 \end{center}
 Avoiding this pattern with one part characterizes star graphs, possibly with isolated vertices.
 We study the three colored versions obtained by choosing \(C=\{r,s\}\), \(C=\{s,t\}\), or \(C=\{r,t\}\),
-and also combinations of these colored patterns. Several of the resulting parameters collapse
-to vertex cover or chromatic number.\eric{Decir que collapse quiere decir que son equivalentes, y que equivalentes quiere decir que existen funciones que acotan cada uno en términos del otro. Que sean equivalentes quiere decir que todos los algoritmos FPT para uno de los parámetros también son FPT para el otro, y lo mismo para XP, así que no son muy interesantes del punto de vista de la complejidad parametrizada.}
+and also combinations of these colored patterns. Several of the resulting parameters collapse to vertex cover
+or chromatic number.
+
+Here, by saying that two parameters \(p\) and \(q\) are \emph{equivalent}, we mean that they bound each other
+by computable functions: there exist computable functions \(f\) and \(g\) such that
+\[
+p(G)\le f(q(G))
+\qquad\text{and}\qquad
+q(G)\le g(p(G))
+\]
+for every graph \(G\). In particular, from the point of view of parameterized complexity, equivalent parameters
+give rise to the same classes of FPT and XP algorithms: an FPT (respectively, XP) algorithm parameterized by one of them
+is also FPT (respectively, XP) when parameterized by the other. Thus, when one of our parameters is equivalent to
+vertex cover or chromatic number, it is less likely to define a genuinely new parameterized complexity landscape.
 
 \item \textbf{Bipartite graphs.}
 The underlying uncolored pattern is given by
@@ -316,6 +345,13 @@ Avoiding this pattern with one part is equivalent to being bipartite.
 Again, we study the three colored versions, obtained by choosing the colored pair \(C\), and their combinations.
 Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).\eric{Decir si los que no son equivalentes a chi se pueden computar en tiempo polinomial o son NP-hard. Lo mismo para las estrellas.}
 
+\medskip
+
+Overall, in the star and bipartite families, the parameters studied so far collapse to previously known graph
+parameters, such as vertex cover or chromatic number, or are equivalent to them.
+\medskip
+
+
 \item \textbf{Forests.}
 The underlying uncolored pattern is given by
 \[
@@ -331,7 +367,8 @@ N=\varnothing.
 \node (r) at (0,0) {$r$};
 \node (s) at (1.5,0) {$s$};
 \node (t) at (3,0) {$t$};
-\draw (r)--(t);
+
+\draw[bend left=25] (r) to (t);
 \draw (s)--(t);
 \end{tikzpicture}
 \end{center}
