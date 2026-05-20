@@ -170,9 +170,9 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 
 \begin{definition}[Avoiding a pattern]
 Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
-Let \(P=(A,N,C)\) be a colored pattern on the ordered positions \(r\prec s\prec t\).
+Let \(P=(A,N,C)\) be a colored pattern on the ordered vertices \(r\prec s\prec t\).
 
-An \emph{ordered occurrence} of the three positions in \(G\) is an injective map
+An \emph{ordered occurrence} of the three vertices in \(G\) is an injective map
 \[
 \varphi:\{r,s,t\}\to V
 \]
@@ -183,7 +183,7 @@ such that
 
 We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
 \begin{enumerate}
-\item There exists \(\{a,b\}\in A\) such that \(\varphi(a)\not\sim \varphi(b)\).
+\item There exists \(\{a,b\}\in A\) such that \(\varphi(a)\not\sim \varphi(b)\).\eric{Tenés que definir el sim, no es estándar}
 \item There exists \(\{a,b\}\in N\) such that \(\varphi(a)\sim \varphi(b)\).
 \item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
