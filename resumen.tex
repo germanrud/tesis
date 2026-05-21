@@ -183,8 +183,8 @@ such that
 
 We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
 \begin{enumerate}
-\item There exists \(\{a,b\}\in A\) such that \(\varphi(a)\not\sim \varphi(b)\).\eric{Tenés que definir el sim, no es estándar}
-\item There exists \(\{a,b\}\in N\) such that \(\varphi(a)\sim \varphi(b)\).
+\item There exists \(\{a,b\}\in A\) such that \(\{\varphi(a),\varphi(b)\}\notin E\).
+\item There exists \(\{a,b\}\in N\) such that \(\{\varphi(a),\varphi(b)\}\in E\).
 \item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
 
@@ -343,7 +343,7 @@ N=\varnothing.
 \end{center}
 Avoiding this pattern with one part is equivalent to being bipartite.
 Again, we study the three colored versions, obtained by choosing the colored pair \(C\), and their combinations.
-Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).\eric{Decir si los que no son equivalentes a chi se pueden computar en tiempo polinomial o son NP-hard. Lo mismo para las estrellas.}
+Some of the resulting parameters admit clean exact formulas in terms of \(\chi(G)\).
 
 \medskip
 
@@ -488,9 +488,8 @@ which characterizes linear forests.
 \end{itemize}
 
 
-
-
 \printbibliography
-\eric{Tenés algunas citas con los nombres y otras con las iniciales. Hacer que todas tengan los nombres completos.}
+
+
 
 \end{document}
