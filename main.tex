@@ -1870,98 +1870,445 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 
-
-\begin{definition}[Semi-coloreo]
-Sea \(G=(V,E)\) un grafo. Un \emph{semi-coloreo} de \(G\) con \(k\) colores es una partición
+\begin{definition}[Parámetro \(\sigma\)]
+Sea \(G=(V,E)\) un grafo. Se define
 \[
-V \;=\; C_1 \,\dot\cup\, \cdots \,\dot\cup\, C_k
+\sigma(G)
+:=
+\min\left\{
+k:\ 
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+\ \text{ y }\
+\tau\bigl(G[C_i]\bigr)\le 1
+\ \text{ para todo } i=1,\dots,k
+\right\},
 \]
-tal que, para todo \(i\in\{1,\dots,k\}\), a lo sumo un vértice de \(C_i\) tiene algún vecino dentro de \(C_i\).
-Equivalentemente,
-\[
-\bigl|\{\,v\in C_i:\ N(v)\cap C_i\neq\varnothing\,\}\bigr|\le 1
-\qquad\text{para todo } i=1,\dots,k.
-\]
-Se define \(\chi_{\mathrm{semi}}(G)\) como el mínimo \(k\in\N\) para el cual \(G\) admite un semi-coloreo con \(k\) colores.
+donde \(\tau(H)\) denota el tamaño mínimo de un vertex cover de \(H\).
 \end{definition}
 
-
-
-
-\begin{theorem}\label{thm:est3-semicoloreo}
-Para todo grafo \(G\),
+\begin{remark}
+La condición
 \[
-\estthree(G)=\chisemi(G).
+\tau\bigl(G[C_i]\bigr)\le 1
+\]
+significa que, dentro de la clase \(C_i\), todas las aristas internas están incidentes a un mismo vértice.
+Equivalentemente, \(G[C_i]\) es una estrella, posiblemente con vértices aislados, o bien un grafo sin aristas.
+\end{remark}
+
+\begin{theorem}[Caracterización de \(\estthree\)]
+Para todo grafo \(G\), se cumple
+\[
+\estthree(G)=\sigma(G).
 \]
 \end{theorem}
 
+
 \begin{proof}
-Se demuestran ambas desigualdades.
+Se prueban ambas desigualdades.
 
 \medskip
-\noindent\textbf{(i) \(\chisemi(G)\le \estthree(G)\).}
-Sea \(k=\estthree(G)\). sea \(S=(\prec,\mathcal Q)\) una solución  de valor \(k\) que evita \(\mathcal E_3\),
-donde \(\mathcal Q=\{V_1,\dots,V_k\}\).
+\noindent\textbf{Primero, \(\sigma(G)\le \estthree(G)\).}
+Sea \(k=\estthree(G)\). Entonces existe una solución
+\[
+S=(\prec,\mathcal Q),
+\qquad
+\mathcal Q=\{V_1,\dots,V_k\},
+\]
+de valor \(k\) que evita el patrón \(\mathcal E_3\).
+
 Para cada \(i\in\{1,\dots,k\}\), sea \(c_i\) el último vértice de \(V_i\) en el orden \(\prec\).
+Vamos a ver que
+\[
+\tau(G[V_i])\le 1
+\qquad\text{para todo } i.
+\]
+Equivale a probar que \(V_i\setminus\{c_i\}\) es independiente.
 
+Fijemos \(i\). Supongamos que existen \(x,y\in V_i\setminus\{c_i\}\) tales que \(x\sim y\).
+Sin pérdida de generalidad, tomamos \(x\prec y\).
+Como \(y\neq c_i\), el vértice \(y\) no es el último de \(V_i\); por lo tanto existe \(z\in V_i\) tal que
+\[
+y\prec z.
+\]
+Entonces \(x\prec y\prec z\), con \(x\sim y\) y \(x,z\in V_i\).
+Por lo tanto, la terna \((x,y,z)\) no evita \(\mathcal E_3\), contradicción.
 
-Veamos que \(V_i\setminus\{c_i\}\) es independiente. 
-Supongamos que existen \(x,y\in V_i\setminus\{c_i\}\)
-con \(x\prec y\) y \(x\sim y\). Como \(y\neq c_i\), existe \(t\in V_i\) con \(y\prec t\). Entonces la terna \(x\prec y\prec t\) satisface que \(x\sim y\) y además \(x\) y \(t\) están en la misma clase
-\(V_i\), lo cual contradice que \(S\) evita \(\mathcal E_3\). El absurdo viene de asumir que existen \(x,y\in V_i\setminus\{c_i\}\) adyacentes.
-
-En consecuencia, la partición \(V=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k\) es un semi-coloreo con \(k\) colores,
-en cada clase \(V_i\), a lo sumo el vértice \(c_i\) puede tener vecinos dentro de \(V_i\).
-
-
-
-
-
+Luego \(V_i\setminus\{c_i\}\) es independiente. Así, \(c_i\) cubre todas las aristas de \(G[V_i]\), y por lo tanto
+\[
+\tau(G[V_i])\le 1.
+\]
+Como esto vale para todo \(i\), la partición \(\mathcal Q=\{V_1,\dots,V_k\}\) testifica que
+\[
+\sigma(G)\le k=\estthree(G).
+\]
 
 \medskip
-\noindent\textbf{(ii) \(\estthree(G)\le \chisemi(G)\).}
-Sea \(k=\chisemi(G)\). tomemos un semi-coloreo con \(k\) colores, es decir, una partición
+\noindent\textbf{Ahora, \(\estthree(G)\le \sigma(G)\).}
+Sea \(k=\sigma(G)\). Entonces existe una partición
 \[
-V \;=\; C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
 \]
-tal que, para cada \(i\), el conjunto
-\(
-\{v\in C_i:\ N(v)\cap C_i\neq\varnothing\}
-\)
-tiene a lo sumo un elemento. Para cada \(i\), si existe, denotemos por \(c_i\in C_i\) al vértice (único) que tiene algún
-vecino dentro de \(C_i\), si no existe tal vértice, se elige \(c_i\in C_i\) arbitrario.
-
-Se construye una solución \(S=(\prec,\mathcal Q)\) de valor \(k\) que evita \(\mathcal E_3\) tomando
+tal que
 \[
-\mathcal Q:=\{C_1,\dots,C_k\},
+\tau(G[C_i])\le 1
+\qquad\text{para todo } i=1,\dots,k.
 \]
-y fijando un orden \(\prec\) por bloques imponiendo
+Para cada \(i\), elegimos un vértice \(c_i\in C_i\) que cubre todas las aristas de \(G[C_i]\).
+Si \(G[C_i]\) no tiene aristas, elegimos \(c_i\in C_i\) arbitrariamente.
+En todos los casos se cumple que
 \[
-C_1\prec C_2\prec\cdots\prec C_k,
+C_i\setminus\{c_i\}
 \]
-y dentro de cada bloque \(C_i\) ubicando al final al vértice \(c_i\) (y ordenando el resto arbitrariamente).
+es independiente.
 
-Verifiquemos que \(S\) evita \(\mathcal E_3\).
-Sea  \(r\prec s\prec t\) una terna de vértices.
-Recordemos que \(\mathcal E_3=(A,N,C)\) con \(A=\{\{1,2\}\}\), \(N=\varnothing\) y \(C=\{1,3\}\).
-Como \(N=\varnothing\), la condición (2) nunca aplica. Por lo tanto, para que \((r,s,t)\) evite \(\mathcal E_3\)
-alcanza con que ocurra (1) o (3):
-\begin{enumerate}
-\item[(1)] falta alguna arista exigida por \(A\) (aquí: \(r\not\sim s\));
-\item[(3)] el par indicado por \(C\) no queda en la misma clase (aquí: \(r\) y \(t\) quedan en clases distintas).
-\end{enumerate}
+Tomamos como partición de la solución
+\[
+\mathcal Q:=\{C_1,\dots,C_k\}.
+\]
+Definimos un orden \(\prec\) por bloques:
+\[
+C_1\prec C_2\prec \cdots \prec C_k,
+\]
+y dentro de cada bloque \(C_i\) ubicamos al vértice \(c_i\) al final. El resto de los vértices de \(C_i\)
+se ordena arbitrariamente.
 
-Si \(r\) y \(t\) pertenecen a clases distintas de \(\mathcal Q\), entonces se cumple (3) y \((r,s,t)\) evita \(\mathcal E_3\).
-Supongamos entonces que \(r\) y \(t\) pertenecen a una misma clase \(C_i\).
+Verifiquemos que la solución \(S=(\prec,\mathcal Q)\) evita \(\mathcal E_3\).
+Sea \(r\prec s\prec t\) una terna de vértices distintos.
+Para evitar \(\mathcal E_3\), alcanza con que ocurra alguna de estas dos cosas:
+\[
+r\not\sim s
+\qquad\text{o}\qquad
+r \text{ y } t \text{ están en clases distintas de } \mathcal Q.
+\]
 
-Por construcción, dentro de \(C_i\) el vértice \(c_i\) se ubicó al final, y todo vértice de \(C_i\setminus\{c_i\}\)
-no tiene vecinos dentro de \(C_i\). Como \(r\prec s\prec t\) y \(r,t\in C_i\), se tiene \(r\in C_i\setminus\{c_i\}\),
-y por lo tanto \(r\) no es adyacente a ningún vértice de \(C_i\), en particular \(r\not\sim s\).
-Luego se cumple (1), y \((r,s,t)\) evita \(\mathcal E_3\).
+Si \(r\) y \(t\) están en clases distintas, entonces la terna evita \(\mathcal E_3\).
+Supongamos entonces que \(r,t\in C_i\) para alguna clase \(C_i\).
+Como el orden es por bloques, de \(r\prec s\prec t\) se deduce que también \(s\in C_i\).
 
-En consecuencia, toda terna \(r\prec s\prec t\) evita \(\mathcal E_3\), y \(S\) evita \(\mathcal E_3\).
+Además, como \(s\prec t\), el vértice \(s\) no puede ser el último de \(C_i\). Por construcción, el último vértice
+de \(C_i\) es \(c_i\), luego \(s\neq c_i\). También \(r\neq c_i\), porque \(r\prec s\).
+Por lo tanto,
+\[
+r,s\in C_i\setminus\{c_i\}.
+\]
+Como \(C_i\setminus\{c_i\}\) es independiente, se tiene \(r\not\sim s\).
+Entonces la terna \((r,s,t)\) evita \(\mathcal E_3\).
 
+Así, toda terna evita \(\mathcal E_3\), y por lo tanto \(S\) es una solución de valor \(k\) que evita \(\mathcal E_3\).
+En consecuencia,
+\[
+\estthree(G)\le k=\sigma(G).
+\]
+
+Combinando ambas desigualdades, se obtiene
+\[
+\estthree(G)=\sigma(G).
+\]
 \end{proof}
+
+
+\begin{theorem}\label{thm:sigma-np-complete}
+Para todo \(k\ge 3\), decidir si
+\[
+\sigma(G)\le k
+\]
+es NP-completo. En particular, calcular \(\sigma(G)\) es NP-hard.
+\end{theorem}
+
+\begin{proof}
+La reducción es desde \(k\)-\textsc{Coloring}, que es NP-completo para todo \(k\ge 3\).
+
+Sea \(X\) una instancia de \(k\)-\textsc{Coloring}. Construimos el grafo
+\[
+G \;:=\; X \,\dot\cup\, K_{2k},
+\]
+es decir, la unión disjunta de \(X\) con una clique de tamaño \(2k\).
+
+Vamos a probar que
+\[
+X \text{ es \(k\)-coloreable}
+\quad\Longleftrightarrow\quad
+\sigma(G)\le k.
+\]
+
+\medskip
+\noindent\textbf{(\(\Rightarrow\))} Supongamos que \(X\) es \(k\)-coloreable. Entonces existe una partición
+\[
+V(X)=I_1\,\dot\cup\,\cdots\,\dot\cup\,I_k
+\]
+tal que cada \(I_i\) es independiente en \(X\).
+
+Por otro lado, particionamos los \(2k\) vértices de \(K_{2k}\) en \(k\) pares
+\[
+P_1,\dots,P_k.
+\]
+Cada \(P_i\) induce una arista.
+
+Definimos
+\[
+C_i:=I_i\cup P_i
+\qquad\text{para } i=1,\dots,k.
+\]
+Como \(G\) es la unión disjunta de \(X\) y \(K_{2k}\), no hay aristas entre \(I_i\) y \(P_i\).
+Además, \(I_i\) es independiente y \(P_i\) induce una única arista. Por lo tanto, \(G[C_i]\) es una arista
+junto con vértices aislados, y entonces
+\[
+\tau(G[C_i])\le 1.
+\]
+Así, la partición
+\[
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+\]
+muestra que \(\sigma(G)\le k\).
+
+\medskip
+\noindent\textbf{(\(\Leftarrow\))} Supongamos ahora que \(\sigma(G)\le k\). Entonces existe una partición
+\[
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_q
+\]
+con \(q\le k\), tal que
+\[
+\tau(G[C_i])\le 1
+\qquad\text{para todo } i=1,\dots,q.
+\]
+
+Miremos la clique \(K_{2k}\). Una clase \(C_i\) no puede contener tres vértices de \(K_{2k}\), porque tres vértices
+de una clique inducen un \(K_3\), y
+\[
+\tau(K_3)=2.
+\]
+Por lo tanto, cada clase contiene a lo sumo dos vértices de \(K_{2k}\).
+
+Como \(K_{2k}\) tiene \(2k\) vértices y hay \(q\le k\) clases, se deduce que necesariamente \(q=k\) y que cada clase
+contiene exactamente dos vértices de \(K_{2k}\). En particular, cada clase \(C_i\) contiene una arista proveniente
+de la clique.
+
+Ahora veamos qué ocurre con los vértices de \(X\). Si para alguna clase \(C_i\) existiera una arista \(xy\) de \(X\)
+con \(x,y\in C_i\), entonces \(G[C_i]\) contendría dos aristas disjuntas:
+\[
+\text{una arista dentro de }K_{2k}
+\qquad\text{y}\qquad
+xy \text{ dentro de }X.
+\]
+Dos aristas disjuntas no pueden cubrirse con un solo vértice, luego
+\[
+\tau(G[C_i])\ge 2,
+\]
+contradiciendo la elección de la partición.
+
+Por lo tanto, para cada \(i\), el conjunto \(C_i\cap V(X)\) es independiente en \(X\). En consecuencia,
+\[
+V(X)=\bigl(C_1\cap V(X)\bigr)\,\dot\cup\,\cdots\,\dot\cup\,\bigl(C_k\cap V(X)\bigr)
+\]
+define un \(k\)-coloreo propio de \(X\). Luego \(X\) es \(k\)-coloreable.
+
+\medskip
+Hemos probado que
+\[
+X \text{ es \(k\)-coloreable}
+\quad\Longleftrightarrow\quad
+\sigma\bigl(X\,\dot\cup\,K_{2k}\bigr)\le k.
+\]
+Por lo tanto, decidir si \(\sigma(G)\le k\) es NP-hard para todo \(k\ge 3\).
+
+Finalmente, el problema está en NP: dada una partición de \(V(G)\) en a lo sumo \(k\) clases, se puede verificar en
+tiempo polinomial si para cada clase \(C_i\) se cumple \(\tau(G[C_i])\le 1\), chequeando si todas las aristas de
+\(G[C_i]\) están incidentes a un mismo vértice.
+
+En conclusión, para todo \(k\ge 3\), decidir si \(\sigma(G)\le k\) es NP-completo.
+\end{proof}
+
+
+
+
+\begin{theorem}\label{thm:sigma-dos-poly}
+El problema de decidir si \(\sigma(G)\le 2\) se puede resolver en tiempo polinomial.
+\end{theorem}
+
+\begin{proof}
+Consideramos el siguiente algoritmo.
+
+\begin{center}
+\begin{tabbing}
+\hspace{1cm}\=\hspace{1cm}\=\hspace{1cm}\=\kill
+\textsc{Decidir-\(\sigma\)-dos}(\(G\)) \\
+\> \textbf{para cada} \(S\subseteq V(G)\) con \(|S|\le 2\) \textbf{hacer} \\
+\>\> \textbf{si} \(G-S\) es bipartito \textbf{entonces} \\
+\>\>\> \textbf{devolver} \textbf{true} \\
+\> \textbf{devolver} \textbf{false}
+\end{tabbing}
+\end{center}
+
+El algoritmo es polinomial, ya que hay
+\[
+1+|V(G)|+\binom{|V(G)|}{2}
+\]
+subconjuntos \(S\subseteq V(G)\) de tamaño a lo sumo \(2\), y para cada uno se puede verificar en tiempo lineal
+si \(G-S\) es bipartito mediante BFS o DFS.
+
+Veamos ahora que el algoritmo es correcto.
+
+\medskip
+\noindent\textbf{(\(\Rightarrow\))} Supongamos que \(\sigma(G)\le 2\). Entonces existe una partición
+\[
+V(G)=V_1\,\dot\cup\,V_2
+\]
+tal que
+\[
+\tau(G[V_i])\le 1
+\qquad\text{para } i=1,2.
+\]
+Para cada \(i\in\{1,2\}\), tomamos un conjunto \(S_i\subseteq V_i\) que cubre todas las aristas de \(G[V_i]\) y
+tal que \(|S_i|\le 1\). Definimos
+\[
+S:=S_1\cup S_2.
+\]
+Entonces \(|S|\le 2\). Además, como \(S_i\) cubre todas las aristas internas de \(G[V_i]\), el conjunto
+\(V_i\setminus S\) es independiente para \(i=1,2\). Por lo tanto,
+\[
+G-S
+\]
+es bipartito, con bipartición
+\[
+(V_1\setminus S)\,\dot\cup\,(V_2\setminus S).
+\]
+Luego el algoritmo encuentra un conjunto \(S\) de tamaño a lo sumo \(2\) tal que \(G-S\) es bipartito, y por lo tanto
+devuelve \textbf{true}.
+
+\medskip
+\noindent\textbf{(\(\Leftarrow\))} Supongamos ahora que existe \(S\subseteq V(G)\) con \(|S|\le 2\) tal que \(G-S\)
+es bipartito. Sea
+\[
+V(G)\setminus S = A\,\dot\cup\,B
+\]
+una bipartición de \(G-S\), donde \(A\) y \(B\) son independientes.
+
+Como \(|S|\le 2\), podemos escribir
+\[
+S=S_1\,\dot\cup\,S_2
+\]
+con \(|S_1|\le 1\) y \(|S_2|\le 1\). Definimos
+\[
+V_1:=A\cup S_1,
+\qquad
+V_2:=B\cup S_2.
+\]
+Entonces
+\[
+V(G)=V_1\,\dot\cup\,V_2.
+\]
+
+Veamos que cada clase induce un grafo con vertex cover de tamaño a lo sumo \(1\).
+Como \(A\) es independiente y \(|S_1|\le 1\), todas las aristas internas de \(G[V_1]\), si existen, están incidentes
+al único vértice de \(S_1\). Por lo tanto,
+\[
+\tau(G[V_1])\le 1.
+\]
+Del mismo modo, como \(B\) es independiente y \(|S_2|\le 1\), se tiene
+\[
+\tau(G[V_2])\le 1.
+\]
+Así, la partición \(V(G)=V_1\,\dot\cup\,V_2\) testifica que
+\[
+\sigma(G)\le 2.
+\]
+
+Concluimos que el algoritmo devuelve \textbf{true} si y solo si \(\sigma(G)\le 2\). Por lo tanto, decidir si
+\(\sigma(G)\le 2\) se puede hacer en tiempo polinomial.
+\end{proof}
+
+
+%\begin{definition}[Semi-coloreo]
+%Sea \(G=(V,E)\) un grafo. Un \emph{semi-coloreo} de \(G\) con \(k\) colores es una partición
+%\[
+%V \;=\; C_1 \,\dot\cup\, \cdots \,\dot\cup\, C_k
+%\]
+%tal que, para todo \(i\in\{1,\dots,k\}\), a lo sumo un vértice de \(C_i\) tiene algún vecino dentro de \(C_i\).
+%Equivalentemente,
+%\[
+%\bigl|\{\,v\in C_i:\ N(v)\cap C_i\neq\varnothing\,\}\bigr|\le 1
+%\qquad\text{para todo } i=1,\dots,k.
+%\]
+%Se define \(\chi_{\mathrm{semi}}(G)\) como el mínimo \(k\in\N\) para el cual \(G\) admite un semi-coloreo con \(k\) colores.
+%\end{definition}
+
+
+
+
+%\begin{theorem}\label{thm:est3-semicoloreo}
+%Para todo grafo \(G\),
+%\[
+%\estthree(G)=\chisemi(G).
+%\]
+%\end{theorem}
+
+%\begin{proof}
+%Se demuestran ambas desigualdades.
+
+%\medskip
+%\noindent\textbf{(i) \(\chisemi(G)\le \estthree(G)\).}
+%Sea \(k=\estthree(G)\). sea \(S=(\prec,\mathcal Q)\) una solución  de valor \(k\) que evita \(\mathcal E_3\),
+%donde \(\mathcal Q=\{V_1,\dots,V_k\}\).
+%Para cada \(i\in\{1,\dots,k\}\), sea \(c_i\) el último vértice de \(V_i\) en el orden \(\prec\).
+
+
+%Veamos que \(V_i\setminus\{c_i\}\) es independiente. 
+%Supongamos que existen \(x,y\in V_i\setminus\{c_i\}\)
+%con \(x\prec y\) y \(x\sim y\). Como \(y\neq c_i\), existe \(t\in V_i\) con \(y\prec t\). Entonces la terna \(x\prec y\prec t\) satisface que \(x\sim y\) y además \(x\) y \(t\) están en la misma clase
+%\(V_i\), lo cual contradice que \(S\) evita \(\mathcal E_3\). El absurdo viene de asumir que existen \(x,y\in V_i\setminus\{c_i\}\) adyacentes.
+
+%En consecuencia, la partición \(V=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k\) es un semi-coloreo con \(k\) colores,
+%en cada clase \(V_i\), a lo sumo el vértice \(c_i\) puede tener vecinos dentro de \(V_i\).
+
+
+
+
+
+
+%\medskip
+%\noindent\textbf{(ii) \(\estthree(G)\le \chisemi(G)\).}
+%Sea \(k=\chisemi(G)\). tomemos un semi-coloreo con \(k\) colores, es decir, una partición
+%\[
+%V \;=\; C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+%\]
+%tal que, para cada \(i\), el conjunto
+%\(
+%\{v\in C_i:\ N(v)\cap C_i\neq\varnothing\}
+%\)
+%tiene a lo sumo un elemento. Para cada \(i\), si existe, denotemos por \(c_i\in C_i\) al vértice (único) que tiene algún
+%vecino dentro de \(C_i\), si no existe tal vértice, se elige \(c_i\in C_i\) arbitrario.
+
+%Se construye una solución \(S=(\prec,\mathcal Q)\) de valor \(k\) que evita \(\mathcal E_3\) tomando
+%\[
+%\mathcal Q:=\{C_1,\dots,C_k\},
+%\]
+%y fijando un orden \(\prec\) por bloques imponiendo
+%\[
+%C_1\prec C_2\prec\cdots\prec C_k,
+%\]
+%y dentro de cada bloque \(C_i\) ubicando al final al vértice \(c_i\) (y ordenando el resto arbitrariamente).
+
+%Verifiquemos que \(S\) evita \(\mathcal E_3\).
+%Sea  \(r\prec s\prec t\) una terna de vértices.
+%Recordemos que \(\mathcal E_3=(A,N,C)\) con \(A=\{\{1,2\}\}\), \(N=\varnothing\) y \(C=\{1,3\}\).
+%Como \(N=\varnothing\), la condición (2) nunca aplica. Por lo tanto, para que \((r,s,t)\) evite \(\mathcal E_3\)
+%alcanza con que ocurra (1) o (3):
+%\begin{enumerate}
+%\item[(1)] falta alguna arista exigida por \(A\) (aquí: \(r\not\sim s\));
+%\item[(3)] el par indicado por \(C\) no queda en la misma clase (aquí: \(r\) y \(t\) quedan en clases distintas).
+%\end{enumerate}
+
+%Si \(r\) y \(t\) pertenecen a clases distintas de \(\mathcal Q\), entonces se cumple (3) y \((r,s,t)\) evita \(\mathcal E_3\).
+%Supongamos entonces que \(r\) y \(t\) pertenecen a una misma clase \(C_i\).
+
+%Por construcción, dentro de \(C_i\) el vértice \(c_i\) se ubicó al final, y todo vértice de \(C_i\setminus\{c_i\}\)
+%no tiene vecinos dentro de \(C_i\). Como \(r\prec s\prec t\) y \(r,t\in C_i\), se tiene \(r\in C_i\setminus\{c_i\}\),
+%y por lo tanto \(r\) no es adyacente a ningún vértice de \(C_i\), en particular \(r\not\sim s\).
+%Luego se cumple (1), y \((r,s,t)\) evita \(\mathcal E_3\).
+
+%En consecuencia, toda terna \(r\prec s\prec t\) evita \(\mathcal E_3\), y \(S\) evita \(\mathcal E_3\).
+
+%\end{proof}
 
 
 
