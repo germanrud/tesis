@@ -204,7 +204,7 @@ Sea \(G=(V,E)\) un grafo y sea \((\prec,\mathcal{Q})\) una solución de \(G\), d
 \(\prec\) es un orden en \(V\) y \(\mathcal{Q}\) es una partición de \(V\).
 Sea además \(P=(A,N,C)\) un patrón coloreado.
 
-Dada una terna \((v_1,v_2,v_3)\). (DUDA!!, debo decir que v1<v2<v3 aca no??) de vértices distintos de \(G\), se dice que
+Dada una terna \((v_1,v_2,v_3)\). (DUDA!!, debo decir que v1<v2<v3 aca no??)\eric{Nop por lo que decís después} de vértices distintos de \(G\), se dice que
 \((v_1,v_2,v_3)\) \emph{evita} el patrón \(P\) si ocurre al menos una de las siguientes condiciones:
 \begin{enumerate}
   \item Existe \(\{i,j\}\in A\) tal que \(\{v_i,v_j\}\notin E\).
@@ -1863,7 +1863,7 @@ C=\{1,3\}.
 \begin{definition}[\(\estthree\)]
 Dado un grafo \(G\), se define
 \[
-\estthree(G)\;:=\;\minClases_{\{\mathcalEthree\}}(G),
+\estthree(G)\;\coloneq\;\minClases_{\{\mathcalEthree\}}(G),
 \]
 es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) de \(G\) que evita el patrón \(\mathcalEthree\).
 \end{definition}
@@ -1871,16 +1871,17 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 \begin{definition}[Parámetro \(\sigma\)]
+  \eric{A eric le gusta: 1. coloneq en vez de :=. 2. $i \in \{1,\dots,k\}$ en vez de $i=1,\dots,k$.}
 Sea \(G=(V,E)\) un grafo. Se define
 \[
 \sigma(G)
-:=
+\coloneq
 \min\left\{
-k:\ 
+k \in \N \mid
 V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
 \ \text{ y }\
 \tau\bigl(G[C_i]\bigr)\le 1
-\ \text{ para todo } i=1,\dots,k
+\ \text{ para todo } i \in \{1,\dots,k\}
 \right\},
 \]
 donde \(\tau(H)\) denota el tamaño mínimo de un vertex cover de \(H\).
@@ -1891,7 +1892,7 @@ La condición
 \[
 \tau\bigl(G[C_i]\bigr)\le 1
 \]
-significa que, dentro de la clase \(C_i\), todas las aristas internas están incidentes a un mismo vértice.
+significa que, dentro de la clase \(C_i\), todas las aristas internas son incidentes a un mismo vértice.
 Equivalentemente, \(G[C_i]\) es una estrella, posiblemente con vértices aislados, o bien un grafo sin aristas.
 \end{remark}
 
@@ -2002,8 +2003,9 @@ En consecuencia,
 
 Combinando ambas desigualdades, se obtiene
 \[
-\estthree(G)=\sigma(G).
+\estthree(G)=\sigma(G).\qedhere
 \]
+\eric{Poner qedhere si terminas la demo con una formula}
 \end{proof}
 
 
@@ -2029,7 +2031,7 @@ Vamos a probar que
 X \text{ es \(k\)-coloreable}
 \quad\Longleftrightarrow\quad
 \sigma(G)\le k.
-\]
+\]\eric{No usar símbolos de lógica para reemplazar texto. Escribir "si y solo si".}
 
 \medskip
 \noindent\textbf{(\(\Rightarrow\))} Supongamos que \(X\) es \(k\)-coloreable. Entonces existe una partición
@@ -2113,7 +2115,7 @@ Por lo tanto, decidir si \(\sigma(G)\le k\) es NP-hard para todo \(k\ge 3\).
 
 Finalmente, el problema está en NP: dada una partición de \(V(G)\) en a lo sumo \(k\) clases, se puede verificar en
 tiempo polinomial si para cada clase \(C_i\) se cumple \(\tau(G[C_i])\le 1\), chequeando si todas las aristas de
-\(G[C_i]\) están incidentes a un mismo vértice.
+\(G[C_i]\) son incidentes a un mismo vértice.
 
 En conclusión, para todo \(k\ge 3\), decidir si \(\sigma(G)\le k\) es NP-completo.
 \end{proof}
@@ -2139,7 +2141,7 @@ Consideramos el siguiente algoritmo.
 \end{tabbing}
 \end{center}
 
-El algoritmo es polinomial, ya que hay
+El algoritmo es polinomial\eric{Poner especificamente las complejidades temporales de los algoritmos polinomiales. En este caso es $O(n^2)$}, ya que hay
 \[
 1+|V(G)|+\binom{|V(G)|}{2}
 \]
