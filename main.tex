@@ -194,7 +194,7 @@ of a solution for \(G\) that avoids \(\mathcal P\).
 
 \begin{definition}[Solución óptima]\label{def:sol-optima}
 Sea \(G\) un grafo y sea \(\mathcal P\) una familia de patrones coloreados.
-Una solución \(S=(\prec,\mathcal Q)\) se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
+Una solución \(S=(\prec,\mathcal Q)\)\eric{para $G$} se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
 \[
 |\mathcal S|=\minClases_{\mathcal P}(G).
 \]
@@ -2575,7 +2575,7 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 \begin{definition}[\(\forrs\)]
-Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forrs\) is
+Let \(r\prec s\prec t\) be three ordered positions\eric{Mepa que mejor usemos vertices en todos lados en vez de positions, porque no estoy seguro de qué sea una position}. The colored pattern \(\forrs\) is
 \[
 \forrs=(A,N,C),
 \]
@@ -2591,6 +2591,7 @@ Thus, \(\forrs\) forbids an ordered triple \(r\prec s\prec t\)
 such that \(r\sim t\), \(s\sim t\), and \(r\) and \(s\) lie in the same part of
 the partition.
 
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[
   scale=1,
@@ -2604,6 +2605,8 @@ the partition.
 \draw (s)--(t);
 \end{tikzpicture}
 \end{center}
+\caption{asdasasasd}
+\end{figure}
 \end{definition}
 
 
@@ -2677,6 +2680,8 @@ the partition.
 \end{center}
 \end{definition}
 
+\eric{Comprimir estas 3 defs en una sola. Quizá hacer lo mismo con est y bip}
+
 
 
 
@@ -2718,7 +2723,7 @@ A solution avoids \(\mathcal F_{rs\text{-}st\text{-}rt}\) if it avoids the three
 \(\forrs\), \(\forst\), and \(\forrt\).
 \end{definition}
 
-
+\eric{Lo mismo con esto}
 
 
 
@@ -2728,7 +2733,9 @@ A solution avoids \(\mathcal F_{rs\text{-}st\text{-}rt}\) if it avoids the three
 
 Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision variants.
 
-\begin{problem}[\(\mathcal P\)-Avoidance]
+\eric{Poner los problemas en cajitas que queda mas lindo}
+\eric{Usar textsc en cada nombre de problema}  
+\begin{problem}[\textsc{\(\mathcal P\)-Avoidance}]
 \textbf{Input:} A graph \(G=(V,E)\) and an integer \(k\).
 
 \textbf{Question:} Does there exist a solution
@@ -2742,8 +2749,12 @@ q\le k,
 such that \(S\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
+\eric{Cada vez que digamos "solution" hay que decir para que grafo es.}
+
+\eric{Si las partes de la partición pueden ser vacías, podemos poner $\{V_1,\dots,V_k\}$ en cambio.}
+
 \begin{problem}[\(\mathcal P\)-Avoidance with a given order]
-\textbf{Input:} A graph \(G=(V,E)\), a total order \(\prec\) of \(V\), and an integer \(k\).
+\textbf{Input:} A graph \(G=(V,E)\) \eric{Usemos siempre o $V(G)$ o $V$}, a total order \(\prec\) of \(V\), and an integer \(k\).
 
 \textbf{Question:} Does there exist a partition
 \[
@@ -2916,12 +2927,13 @@ that avoids \(\forrs\) with respect to a given order is NP-complete.
 
 \begin{proof}[Proof sketch]
 Reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
-\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\), with \(i<j\),
+\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\)\eric{Consistencia en como representamos aristas tambien}, with \(i<j\),
 add a witness vertex \(w_{ij}\), adjacent only to \(x_i\) and \(x_j\), and do
 not keep the original edge \(x_i x_j\). Thus,
 \[
 V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
 \]
+\eric{También fijarse si usamos siempre : o mid para conjuntos por comprensión}
 and
 \[
 E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
@@ -3011,7 +3023,12 @@ of an occurrence of \(\forrs\).
 
 
 \begin{theorem}\label{thm:forrs-given-partition-poly}
-The \(\forrs\)-Avoidance problem with a given partition can be solved in polynomial time.
+  There exists an [comlpejidad] algorithm that decides whether a given graph \(G\) admits a \(\forrs\)-avoiding solution with respect to a given partition \(\mathcal Q\). Moreover, if such a solution exists, the algorithm constructs a valid order \(\prec\) of \(V(G)\) such that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids \(\forrs\).
+% The \(\forrs\)-Avoidance problem with a given partition can be solved in polynomial time. \eric{Digamos la comple} 
 \end{theorem}
 
 \begin{proof}
@@ -3033,29 +3050,21 @@ be the given partition of \(V\). We use the following greedy algorithm.
 \>\>\> \(A\leftarrow A\setminus\{v\}\) \\
 \>\> \textbf{else} \\
 \>\>\> return \textbf{NO} \\
+\> orden \(\leftarrow\) the reverse of \(L\) \\ 
 \> return \textbf{YES}
 \end{tabbing}
-\end{center}
+\eric{Usar el package algorithm o algo así. Fijarse en overleaf}
 
-If the algorithm deletes the vertices in the order
-\[
-d_1,d_2,\dots,d_n,
-\]
-then the corresponding order is
-\[
-d_n\prec d_{n-1}\prec \cdots \prec d_1.
-\]
+\eric{Armar el orden en el algoritmo.}
+\end{center}
 
 We prove correctness.
 
 First suppose that the algorithm returns \textbf{YES}. Let
 \[
-d_1,d_2,\dots,d_n
+d_n\prec d_{n-1}\prec \cdots \prec d_1
 \]
-be the deletion order, and define
-\[
-d_n\prec d_{n-1}\prec \cdots \prec d_1.
-\]
+be the order of the vertices in \(V(G)\) constructed by the algorithm.
 We claim that \(S=(\prec,\mathcal Q)\) avoids \(\forrs\).
 
 Let \(r\prec s\prec t\). In order to realize \(\forrs\), we would need
@@ -3237,7 +3246,7 @@ The \(\forst\)-Avoidance problem with a given partition is NP-complete.
 \end{theorem}
 
 \begin{proof}[Proof idea]
-We reduce from \textsc{NAE-3SAT}. Let \(\Phi\) be an instance of \textsc{NAE-3SAT}.
+We reduce from \textsc{NAE-3SAT}\eric{Definirlo citando}. Let \(\Phi\) be an instance of \textsc{NAE-3SAT}.
 A \emph{place} of \(\Phi\) is a pair
 \[
 p=(i,j),
@@ -3408,6 +3417,7 @@ A,N \subseteq \binom{\{r,s,t\}}{2}.
 The set \(A\) specifies the pairs that must be edges, while \(N\) specifies the pairs that must be non-edges.
 The symbol \(\varnothing\) indicates that the pattern imposes no condition on the parts of a partition.
 \end{definition}
+\eric{Uncolored pattern en realidad es un pattern, y lo vamos a definir antes que los colored patterns, así que mejor si no ponemos el vacio al final. Patron = (A, N)}
 
 
 
@@ -3427,8 +3437,10 @@ G[V_i]\in \mathcal C_P
 \qquad\text{for every } i=1,\dots,k.
 \]
 
-esta es parecida a la de min clases de arriba de todo, no se si unificarlas, ERIC help me
+esta es parecida a la de min clases de arriba de todo, no se si unificarlas, ERIC help me \eric{$C_P$ está definido después recién.}
 \end{definition}
+
+\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro.}
 
 
 
@@ -3450,14 +3462,14 @@ G\in \mathcal C_P
 \]
 if and only if there exists a total order \(\prec\) of \(V(G)\) such that every ordered triple of vertices of \(G\)
 avoids the pattern \(P\).
-\end{definition}
+\end{definition}\eric{Esto probablemente haya que ponerlo al principio.}
 
 
 
 
 
 \begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
-Let \(P=(A,N,C)\) be a colored pattern, and let \(\mathcal C_P\) be the graph class obtained by forgetting the color constraint of \(P\).
+Let \(P=(A,N,C)\) be a colored pattern, and let \(\mathcal C_P\) \eric{Definir un $P' = (A,N)$.} be the graph class obtained by forgetting \eric{"forgetting" no está definido} the color constraint of \(P\).
 
 Then, for every graph \(G\),
 \[
@@ -3472,6 +3484,9 @@ G[V_i]\in \mathcal C_P
 \right\}.
 \]
 \end{theorem}
+\eric{Creo que antes dijiste que ibas a usar minclases sin llavecitas si es un solo patron.}
+
+\eric{Usar minClases P' en vez de el min este.}
 
 \begin{proof}
 Let
@@ -3519,6 +3534,10 @@ V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
 \right\}.
 \]
 \end{theorem}
+
+\eric{Lo mismo con este min.}
+
+\eric{Como bien dijo germancito no hace falta que sea vacio el N.}
 
 \begin{proof}
 Let
@@ -3611,7 +3630,7 @@ Combining both inequalities, we conclude that
 
 
 
-
+\eric{mepa que esto que viene es una observation o un lemma}
 
 \begin{theorem}\label{thm:minclases-one-class}
 Let \(P=(A,N,\varnothing)\) be a pattern with no color constraint. Then, for every graph \(G\),
@@ -3693,6 +3712,8 @@ S=(\prec,\mathcal Q)
 \]
 avoids \(\forrt\) if and only if \(G[V_i]\) is a forest for every \(i=1,\dots,k\).
 \end{lemma}
+
+\eric{Corolario de lo de antes, no necesita demo.}
 
 \begin{proof}
 This is a direct consequence of Theorem~\ref{thm:rt-pattern-partition}, applied to the forest pattern
@@ -4031,7 +4052,7 @@ with \(rs\in D\). Let
 :=
 \{\forrs:rs\in D\}\cup \{\forrt:rt\in D\}\cup \{\forst:st\in D\}.
 \]
-Then, for every fixed \(k\ge 3\), the \(\mathcal F_D\)-Avoidance problem with a given order is NP-hard.
+Then, for every fixed \(k\ge 3\), the \textsc{\(\mathcal F_D\)-Avoidance with a given order} problem is NP-hard.
 \end{lemma}
 
 \begin{proof}[Proof sketch]
