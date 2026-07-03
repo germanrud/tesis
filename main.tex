@@ -34,6 +34,8 @@
 \theoremstyle{remark} % estilo "observación" (normal + título distinto)
 \newtheorem{remark}[theorem]{Observación}
 
+\newtheorem{problem}{Problem}
+
 % ---------- Notación útil de grafos ----------
 \newcommand{\adj}{\sim}
 \newcommand{\V}{V}
@@ -83,6 +85,18 @@
 \newcommand{\estoneonetwothree}{\operatorname{est}_{123}}
 \newcommand{\mathcalEonetwothree}{\mathcal{E}_{123}}
 
+\newcommand{\forrs}{\operatorname{for}_{rs}}
+\newcommand{\forrt}{\operatorname{for}_{rt}}
+\newcommand{\forst}{\operatorname{for}_{st}}
+
+\newcommand{\mathcalFrsst}{\mathcal F_{rs\text{-}st}}
+\newcommand{\mathcalFrsrt}{\mathcal F_{rs\text{-}rt}}
+\newcommand{\mathcalFrtst}{\mathcal F_{rt\text{-}st}}
+\newcommand{\mathcalFrsstrt}{\mathcal F_{rs\text{-}st\text{-}rt}}
+
+
+
+
 \title{Tesis}
 \author{German y Eric}
 \date{\today}
@@ -94,160 +108,87 @@
 \section{Preliminares}
 
 
-\begin{definition}[Patrón coloreado]
-Un \emph{patrón coloreado} en 3 vértices es una terna \(P=(A,N,C)\) tal que
+\begin{definition}[Colored pattern on three vertices]
+A \emph{colored pattern} is a triple \(P=(A,N,C)\) where
 \[
-A,N \subseteq \binom{\{1,2,3\}}{2}
-\qquad\text{y}\qquad
-C \in \binom{\{1,2,3\}}{2},
-\]
-donde
-\[
-\binom{\{1,2,3\}}{2}=\bigl\{\{1,2\},\{1,3\},\{2,3\}\bigr\}.
-\]
-Los elementos de \(\binom{\{1,2,3\}}{2}\) se interpretan como pares de posiciones.
-
-El conjunto \(A\) indica los pares que \emph{deben} ser aristas, \(N\) indica los pares que \emph{no pueden}
-ser aristas, y los pares fuera de \(A\cup N\) se consideran libres.
-Finalmente, el par \(C\) indica qué dos posiciones se consideran \emph{coloreadas del mismo color}.
-\end{definition}
-
-\eric{Acá mostrar el ejemplo de thinness.}
-
-
-
-
-\begin{definition}[Solución]
-Una \emph{solución} de un grafo $G\coloneq(V,E)$ es un par \(S \coloneq (\prec,\mathcal{Q})\), donde \(\prec\) es un orden total sobre \(V\) y
-\(\mathcal{Q}\) es una partición de \(V\).
-Se define el \emph{valor} de la solución \(S\) como
-\[
-\operatorname{val}(S) \;\coloneq\; |\mathcal{Q}|,
-\]
-es decir, la cantidad de clases de la partición.
-\end{definition}
-
-
-
-\begin{example}[Patrón de thinness y una solución]
-Se considera el patrón coloreado
-\[
-P_{\mathrm{thin}}=(A,N,C),
+A,N \subseteq \binom{\{r,s,t\}}{2},
 \qquad
-A=\bigl\{\{1,3\}\bigr\},\quad
-N=\bigl\{\{2,3\}\bigr\},\quad
-C=\{1,2\}.
+C \in \binom{\{r,s,t\}}{2}.
 \]
+Here \(r,s,t\) denote the vertices of an ordered triple \(r\prec s\prec t\), and
+\[
+\binom{\{r,s,t\}}{2}=\{\{r,s\},\{r,t\},\{s,t\}\}.
+\]
+The set \(A\) specifies the pairs that must be edges, \(N\) specifies the pairs that must be non-edges,
+and \(C\) specifies the pair of vertices that must lie in the same part of the partition.
+\end{definition}
+
 
 \begin{figure}[ht]
-  \begin{center}
-  \begin{minipage}{0.40\textwidth}
-  \centering
-  \begin{tikzpicture}[
-    scale=1,
-    every node/.style={circle, draw, inner sep=1.2pt, font=\small}
-  ]
-    % posiciones en el orden: 1 < 2 < 3
-    \node (p1) at (0,0)   [draw=red, thick] {$1$};
-    \node (p2) at (1.6,0) [draw=red, thick] {$2$};
-    \node (p3) at (3.2,0) {$3$};
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  every node/.style={circle, draw, inner sep=1.4pt},
+  >=latex
+]
+\node[draw=red, very thick, fill=red!12] (pr) at (0,0) {$r$};
+\node (ps) at (1.7,0) {$s$};
+\node[draw=red, very thick, fill=red!12] (pt) at (3.4,0) {$t$};
 
-    % arista obligatoria (A): 1--3 (curvada para no pasar por 2)
-    \draw[line width=0.6pt, bend left=30] (p1) to (p3);
+\draw[line width=0.6pt] (pr)--(ps);
+\draw[densely dashed, line width=0.6pt] (ps)--(pt);
 
-    % no-arista obligatoria (N): 2--3 punteada
-    \draw[densely dashed, line width=0.6pt] (p2)--(p3);
-
-    % indicar el orden (opcional)
-    \node[draw=none, rectangle, font=\small] at (1.6,-0.85) {$1\prec 2\prec 3$};
-  \end{tikzpicture}
-
-  %\smallskip
-  %Patrón \(P_{\mathrm{thin}}\).
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.56\textwidth}
-  \centering
-  \begin{tikzpicture}[
-    scale=1,
-    every node/.style={circle, draw, inner sep=1.2pt, font=\small}
-  ]
-    % Colocación en triángulo para que la arista no atraviese un nodo
-    \node (a) at (0,0) {$a$};
-    \node (c) at (2.4,0) {$c$};
-    \node (b) at (1.2,1.2) {$b$};
-
-    % grafo G: una sola arista a~c
-    \draw[line width=0.6pt] (a)--(c);
-
-    \node[draw=none, rectangle, font=\small] at (1.2,-0.8) {$a\prec c\prec b$};
-    \node[draw=none, rectangle, font=\small] at (1.2,-1.4)
-      {$\mathcal Q=\bigl\{\{a,b\},\{c\}\bigr\}$};
-  \end{tikzpicture}
-
-  %\smallskip
-  %Grafo \(G\) y una solución \(S=(\prec,\mathcal Q)\).
-  \end{minipage}
-  \end{center}
-  \caption{Patrón $P_{\mathrm{thin}}$ y una solución $(\prec,\mathcal Q)$ para un grafo.}
+\end{tikzpicture}
+\caption{The forbidden colored pattern \(P=(A,N,C)\), where \(A=\{\{r,s\}\}\), \(N=\{\{s,t\}\}\), and \(C=\{r,t\}\). Solid lines represent required edges, dashed lines represent required non-edges, and red vertices represent the pair required to lie in the same part.}
+\label{fig:tiny-pattern}
 \end{figure}
 
-\end{example}
+
+
+
+
+\begin{definition}[Solution and value]
+Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
+and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
+The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
+\end{definition}
 
 
 
 
 
+\begin{definition}[Avoiding a pattern]
+Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
+Let \(P=(A,N,C)\) be a colored pattern on the ordered vertices \(r\prec s\prec t\).
 
-\begin{definition}[Evitar un patrón]
-Sea \(G=(V,E)\) un grafo y sea \((\prec,\mathcal{Q})\) una solución de \(G\), donde
-\(\prec\) es un orden en \(V\) y \(\mathcal{Q}\) es una partición de \(V\).
-Sea además \(P=(A,N,C)\) un patrón coloreado.
+An \emph{ordered occurrence} of the three vertices in \(G\) is an injective map
+\[
+\varphi:\{r,s,t\}\to V
+\]
+such that
+\[
+\varphi(r)\prec \varphi(s)\prec \varphi(t).
+\]
 
-Dada una terna \((v_1,v_2,v_3)\). (DUDA!!, debo decir que v1<v2<v3 aca no??)\eric{Nop por lo que decís después} de vértices distintos de \(G\), se dice que
-\((v_1,v_2,v_3)\) \emph{evita} el patrón \(P\) si ocurre al menos una de las siguientes condiciones:
+We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
 \begin{enumerate}
-  \item Existe \(\{i,j\}\in A\) tal que \(\{v_i,v_j\}\notin E\).
-  \item Existe \(\{i,j\}\in N\) tal que \(\{v_i,v_j\}\in E\).
-  \item Existe \(\{i,j\}\in C\) tal que \(v_i\) y \(v_j\) pertenecen a clases distintas de \(\mathcal{Q}\).
-
+\item There exists \(\{a,b\}\in A\) such that \(\{\varphi(a),\varphi(b)\}\notin E\).
+\item There exists \(\{a,b\}\in N\) such that \(\{\varphi(a),\varphi(b)\}\in E\).
+\item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
 
-Se dice que la solución \((\prec,\mathcal{Q})\) \emph{evita} el patrón \(P\) si para toda terna de
-vértices \emph{distintos} \(v_1,v_2,v_3\in V\) tal que \(v_1\prec v_2\prec v_3\), se cumple que
-\((v_1,v_2,v_3)\) evita \(P\).
+The solution \(S\) \emph{avoids} \(P\) if every ordered occurrence \(\varphi:\{r,s,t\}\to V\) avoids \(P\).
+For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
+\(P\in\mathcal P\).
+\end{definition}
+
+\begin{definition}[Parameter induced by forbidden patterns]
+For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
+of a solution for \(G\) that avoids \(\mathcal P\).
 \end{definition}
 
 
 
-\eric{Acá poner el ejemplo de una solución que evita/no evita el patrón de thinness de un grafo de al menos 4 vértices. Mencionar que en los papers de thinness la llaman "solución consistente" a una solución que evita el patrón.}
-
-\begin{example}[La solución evita el patrón de thinness]
-Se consideran el patrón \(P_{\mathrm{thin}}\) y la solución \(S=(\prec,\mathcal Q)\) del Ejemplo 1.3.
-
-La única terna de vértices compatible con el orden es \((a,c,b)\),
-el par \(C=\{1,2\}\) exige que las posiciones \(1\) y \(2\) estén en una misma clase;
-sin embargo, \(a\in\{a,b\}\) y \(c\in\{c\}\) pertenecen a clases distintas. Por lo tanto,
-\((a,c,b)\) evita \(P_{\mathrm{thin}}\).
-
-En consecuencia, la solución \(S\) evita \(P_{\mathrm{thin}}\).
-\end{example}
-
-
-
-
-
-
-\begin{definition}[Parámetro por patrones prohibidos]
-Sea \(\mathcal{P}\) una familia de patrones coloreados.
-Dado un grafo \(G=(V,E)\), se define
-\[
-\minClases_{\mathcal{P}}(G)
-\]
-como el mínimo entero \(k\in\mathbb{N}\) tal que existe una solución \((\prec,\mathcal{Q})\) de \(G\)
-con \(|\mathcal{Q}|=k\) que evita todo patrón de \(\mathcal{P}\), es decir, que evita simultáneamente
-todos los patrones \(P\in\mathcal{P}\). 
-\end{definition}
 
 
 
@@ -1863,7 +1804,7 @@ C=\{1,3\}.
 \begin{definition}[\(\estthree\)]
 Dado un grafo \(G\), se define
 \[
-\estthree(G)\;\coloneq\;\minClases_{\{\mathcalEthree\}}(G),
+\estthree(G)\;:=\;\minClases_{\{\mathcalEthree\}}(G),
 \]
 es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) de \(G\) que evita el patrón \(\mathcalEthree\).
 \end{definition}
@@ -1871,17 +1812,16 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 \begin{definition}[Parámetro \(\sigma\)]
-  \eric{A eric le gusta: 1. coloneq en vez de :=. 2. $i \in \{1,\dots,k\}$ en vez de $i=1,\dots,k$.}
 Sea \(G=(V,E)\) un grafo. Se define
 \[
 \sigma(G)
-\coloneq
+:=
 \min\left\{
-k \in \N \mid
+k:\ 
 V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
 \ \text{ y }\
 \tau\bigl(G[C_i]\bigr)\le 1
-\ \text{ para todo } i \in \{1,\dots,k\}
+\ \text{ para todo } i=1,\dots,k
 \right\},
 \]
 donde \(\tau(H)\) denota el tamaño mínimo de un vertex cover de \(H\).
@@ -1892,7 +1832,7 @@ La condición
 \[
 \tau\bigl(G[C_i]\bigr)\le 1
 \]
-significa que, dentro de la clase \(C_i\), todas las aristas internas son incidentes a un mismo vértice.
+significa que, dentro de la clase \(C_i\), todas las aristas internas están incidentes a un mismo vértice.
 Equivalentemente, \(G[C_i]\) es una estrella, posiblemente con vértices aislados, o bien un grafo sin aristas.
 \end{remark}
 
@@ -2003,9 +1943,8 @@ En consecuencia,
 
 Combinando ambas desigualdades, se obtiene
 \[
-\estthree(G)=\sigma(G).\qedhere
+\estthree(G)=\sigma(G).
 \]
-\eric{Poner qedhere si terminas la demo con una formula}
 \end{proof}
 
 
@@ -2031,7 +1970,7 @@ Vamos a probar que
 X \text{ es \(k\)-coloreable}
 \quad\Longleftrightarrow\quad
 \sigma(G)\le k.
-\]\eric{No usar símbolos de lógica para reemplazar texto. Escribir "si y solo si".}
+\]
 
 \medskip
 \noindent\textbf{(\(\Rightarrow\))} Supongamos que \(X\) es \(k\)-coloreable. Entonces existe una partición
@@ -2115,7 +2054,7 @@ Por lo tanto, decidir si \(\sigma(G)\le k\) es NP-hard para todo \(k\ge 3\).
 
 Finalmente, el problema está en NP: dada una partición de \(V(G)\) en a lo sumo \(k\) clases, se puede verificar en
 tiempo polinomial si para cada clase \(C_i\) se cumple \(\tau(G[C_i])\le 1\), chequeando si todas las aristas de
-\(G[C_i]\) son incidentes a un mismo vértice.
+\(G[C_i]\) están incidentes a un mismo vértice.
 
 En conclusión, para todo \(k\ge 3\), decidir si \(\sigma(G)\le k\) es NP-completo.
 \end{proof}
@@ -2141,7 +2080,7 @@ Consideramos el siguiente algoritmo.
 \end{tabbing}
 \end{center}
 
-El algoritmo es polinomial\eric{Poner especificamente las complejidades temporales de los algoritmos polinomiales. En este caso es $O(n^2)$}, ya que hay
+El algoritmo es polinomial, ya que hay
 \[
 1+|V(G)|+\binom{|V(G)|}{2}
 \]
@@ -2635,9 +2574,1611 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 
+\begin{definition}[\(\forrs\)]
+Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forrs\) is
+\[
+\forrs=(A,N,C),
+\]
+where
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing,
+\qquad
+C=\{r,s\}.
+\]
+Thus, \(\forrs\) forbids an ordered triple \(r\prec s\prec t\)
+such that \(r\sim t\), \(s\sim t\), and \(r\) and \(s\) lie in the same part of
+the partition.
+
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node       (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\end{definition}
+
+
+\begin{definition}[\(\forrt\)]
+Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forrt\) is
+\[
+\forrt=(A,N,C),
+\]
+where
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing,
+\qquad
+C=\{r,t\}.
+\]
+Thus, \(\forrt\) forbids an ordered triple \(r\prec s\prec t\)
+such that \(r\sim t\), \(s\sim t\), and \(r\) and \(t\) lie in the same part of
+the partition.
+
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node       (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\end{definition}
+
+
+
+
+
+
+
+\begin{definition}[\(\forst\)]
+Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forst\) is
+\[
+\forst=(A,N,C),
+\]
+where
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing,
+\qquad
+C=\{s,t\}.
+\]
+Thus, \(\forst\) forbids an ordered triple \(r\prec s\prec t\)
+such that \(r\sim t\), \(s\sim t\), and \(s\) and \(t\) lie in the same part of
+the partition.
+
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node       (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\end{definition}
+
+
+
+
+
+
+\begin{definition}[\(\mathcal F_{rs\text{-}st}\)]
+We define
+\[
+\mathcal F_{rs\text{-}st}:=\{\forrs,\forst\}.
+\]
+A solution avoids \(\mathcal F_{rs\text{-}st}\) if it avoids both colored patterns
+\(\forrs\) and \(\forst\).
+\end{definition}
+
+\begin{definition}[\(\mathcal F_{rs\text{-}rt}\)]
+We define
+\[
+\mathcal F_{rs\text{-}rt}:=\{\forrs,\forrt\}.
+\]
+A solution avoids \(\mathcal F_{rs\text{-}rt}\) if it avoids both colored patterns
+\(\forrs\) and \(\forrt\).
+\end{definition}
+
+\begin{definition}[\(\mathcal F_{rt\text{-}st}\)]
+We define
+\[
+\mathcal F_{rt\text{-}st}:=\{\forrt,\forst\}.
+\]
+A solution avoids \(\mathcal F_{rt\text{-}st}\) if it avoids both colored patterns
+\(\forrt\) and \(\forst\).
+\end{definition}
+
+\begin{definition}[\(\mathcal F_{rs\text{-}st\text{-}rt}\)]
+We define
+\[
+\mathcal F_{rs\text{-}st\text{-}rt}:=\{\forrs,\forst,\forrt\}.
+\]
+A solution avoids \(\mathcal F_{rs\text{-}st\text{-}rt}\) if it avoids the three colored patterns
+\(\forrs\), \(\forst\), and \(\forrt\).
+\end{definition}
+
+
+
+
+
+
+
+\subsection{Decision variants}
+
+Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision variants.
+
+\begin{problem}[\(\mathcal P\)-Avoidance]
+\textbf{Input:} A graph \(G=(V,E)\) and an integer \(k\).
+
+\textbf{Question:} Does there exist a solution
+\[
+S=(\prec,\mathcal Q),
+\qquad
+\mathcal Q=\{V_1,\dots,V_q\},
+\qquad
+q\le k,
+\]
+such that \(S\) avoids every colored pattern in \(\mathcal P\)?
+\end{problem}
+
+\begin{problem}[\(\mathcal P\)-Avoidance with a given order]
+\textbf{Input:} A graph \(G=(V,E)\), a total order \(\prec\) of \(V\), and an integer \(k\).
+
+\textbf{Question:} Does there exist a partition
+\[
+\mathcal Q=\{V_1,\dots,V_q\},
+\qquad
+q\le k,
+\]
+such that the solution
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids every colored pattern in \(\mathcal P\)?
+\end{problem}
+
+\begin{problem}[\(\mathcal P\)-Avoidance with a given partition]
+\textbf{Input:} A graph \(G=(V,E)\) and a partition
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+of \(V\).
+
+\textbf{Question:} Does there exist a total order \(\prec\) of \(V\) such that the solution
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids every colored pattern in \(\mathcal P\)?
+\end{problem}
+
+When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \(P\)-Avoidance instead of
+\(\{P\}\)-Avoidance.
+
+
+
+In particular, we will study these three variants for the single patterns
+\[
+\forrs,\qquad \forrt,\qquad \forst,
+\]
+and for the pattern families
+\[
+\mathcal F_{rs\text{-}st},\qquad
+\mathcal F_{rs\text{-}rt},\qquad
+\mathcal F_{rt\text{-}st},\qquad
+\mathcal F_{rs\text{-}st\text{-}rt}.
+\]
+
+
+
+
+
+\begin{theorem}\label{thm:forrs-given-order-np-complete}
+The \(\forrs\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids \(\forrs\) with respect to a given order is NP-complete.
+\end{theorem}
+
+
+% esta es ka demo posta pero dejo el skecth primero
+%\begin{proof}
+%The problem belongs to NP, since a certificate is a partition of \(V(G)\) into at most \(k\) parts, and one can
+%check in polynomial time whether every ordered triple avoids \(\forrs\).
+
+%We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}, which is NP-complete for every fixed \(k\ge 3\).
+
+%Let \(X\) be an instance of \(k\)-\textsc{Coloring}, with
+%\[
+%V(X)=\{x_1,\dots,x_n\}.
+%\]
+%We construct a graph \(G\) as follows. For every edge \(x_i x_j\in E(X)\), with \(i<j\), we add a new vertex
+%\(w_{ij}\). The vertex \(w_{ij}\) is adjacent only to \(x_i\) and \(x_j\). We do not keep the original edge
+%\(x_i x_j\).
+
+%Thus,
+%\[
+%V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+%\]
+%and
+%\[
+%E(G)=\bigl\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\bigr\}.
+%\]
+
+%We fix the order \(\prec\) by placing first all original vertices and then all witness vertices:
+%\[
+%x_1\prec x_2\prec \cdots \prec x_n \prec \text{all vertices } w_{ij},
+%\]
+%where the order among the vertices \(w_{ij}\) is arbitrary.
+
+%In particular, for every edge \(x_i x_j\in E(X)\), with \(i<j\), we have
+%\[
+%x_i\prec x_j\prec w_{ij}.
+%\]
+
+%We claim that
+%\[
+%X \text{ is \(k\)-colorable}
+%\quad\Longleftrightarrow\quad
+%(G,\prec) \text{ admits a partition into at most \(k\) parts avoiding } \forrs.
+%\]
+
+%\medskip
+%\noindent\textbf{(\(\Rightarrow\))} Suppose that \(X\) admits a proper \(k\)-coloring. We keep the same colors on the
+%original vertices \(x_1,\dots,x_n\), and we assign each witness vertex \(w_{ij}\) arbitrarily to one of the \(k\)
+%parts.
+
+%Let
+%\[
+%S=(\prec,\mathcal Q)
+%\]
+%be the resulting solution. We show that \(S\) avoids \(\forrs\).
+
+%Suppose, towards a contradiction, that there is an ordered triple
+%\[
+%r\prec s\prec t
+%\]
+%that realizes \(\forrs\). Then
+%\[
+%r\sim t,
+%\qquad
+%s\sim t,
+%\]
+%and \(r\) and \(s\) lie in the same part of \(\mathcal Q\).
+
+%Since the original vertices have no neighbors preceding them in the order, the vertex \(t\) cannot be an original
+%vertex. Hence \(t=w_{ij}\) for some edge \(x_i x_j\in E(X)\), with \(i<j\). The only neighbors of \(w_{ij}\) are
+%\(x_i\) and \(x_j\), and both of them precede \(w_{ij}\). Therefore,
+%\[
+%\{r,s\}=\{x_i,x_j\}.
+%\]
+%But \(x_i x_j\in E(X)\), and the coloring of \(X\) is proper, so \(x_i\) and \(x_j\) lie in different parts of
+%\(\mathcal Q\). This contradicts the assumption that \(r\) and \(s\) lie in the same part.
+
+%Thus \(S\) avoids \(\forrs\), and therefore \((G,\prec)\) admits a solution with at most \(k\) parts.
+
+%\medskip
+%\noindent\textbf{(\(\Leftarrow\))} Suppose that \((G,\prec)\) admits a solution
+%\[
+%S=(\prec,\mathcal Q),
+%\qquad
+%\mathcal Q=\{V_1,\dots,V_q\},
+%\qquad
+%q\le k,
+%\]
+%that avoids \(\forrs\).
+
+%We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let \(x_i x_j\in E(X)\),
+%with \(i<j\). By construction, the vertex \(w_{ij}\) satisfies
+%\[
+%x_i\prec x_j\prec w_{ij},
+%\]
+%and
+%\[
+%x_i\sim w_{ij},
+%\qquad
+%x_j\sim w_{ij}.
+%\]
+%If \(x_i\) and \(x_j\) belonged to the same part of \(\mathcal Q\), then the ordered triple
+%\[
+%x_i\prec x_j\prec w_{ij}
+%\]
+%would realize the forbidden pattern \(\forrs\), contradicting that \(S\) avoids \(\forrs\).
+
+%Therefore, for every edge \(x_i x_j\in E(X)\), the vertices \(x_i\) and \(x_j\) lie in different parts of
+%\(\mathcal Q\). Hence the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\) using at most
+%\(q\le k\) colors. In particular, \(X\) is \(k\)-colorable.
+
+%This proves the equivalence, and therefore the \(\forrs\)-Avoidance problem with a given order is NP-hard.
+%Since the problem is in NP, it is NP-complete.
+%\end{proof}
+
+
+
+\begin{proof}[Proof sketch]
+Reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\), with \(i<j\),
+add a witness vertex \(w_{ij}\), adjacent only to \(x_i\) and \(x_j\), and do
+not keep the original edge \(x_i x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
+\]
+The given order is
+\[
+x_1\prec \cdots \prec x_n \prec \text{all vertices } w_{ij}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices
+and assign the witnesses arbitrarily. Then each witness \(w_{ij}\) has earlier
+neighbors \(x_i,x_j\), which have different colors.
+
+Conversely, if a \(\forrs\)-avoiding partition exists, then for every edge
+\(x_i x_j\in E(X)\), with \(i<j\), the triple
+\[
+x_i\prec x_j\prec w_{ij}
+\]
+forces \(x_i\) and \(x_j\) to lie in different parts. Hence the restriction to
+\(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+
+
+
+\begin{theorem}\label{thm:forrs-general-np-complete}
+The \(\forrs\)-Avoidance problem is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a
+\(\forrs\)-avoiding solution with at most \(k\) parts is NP-complete.
+\end{theorem}
+
+
+
+
+
+\begin{proof}[Proof sketch]
+Reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), for each edge
+\(xy\in E(X)\), add \(k+1\) common witnesses
+\[
+W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
+\]
+each adjacent only to \(x\) and \(y\), and do not keep the original edge \(xy\).
+Thus,
+\[
+V(G)=V(X)\cup \bigcup_{xy\in E(X)} W_{xy},
+\]
+and
+\[
+E(G)=\{xw^i_{xy},yw^i_{xy}: xy\in E(X),\ 1\le i\le k+1\}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, color the original vertices accordingly,
+assign the witnesses arbitrarily, and order first the original vertices and then
+the witnesses.
+
+Conversely, suppose that a \(\forrs\)-avoiding solution with at most \(k\) parts
+exists. If two adjacent original vertices \(x,y\) were in the same part, say
+\(x\prec y\), then all \(k+1\) witnesses for \(xy\) must appear before \(y\).
+Two of them lie in the same part, and together with \(y\) they form an occurrence
+of \(\forrs\), a contradiction. Hence the restriction to \(V(X)\) is a proper
+\(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+
+\begin{definition}[Removable vertex]
+Let \(G=(V,E)\) be a graph and let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V\). Let \(H=G[A]\) be an induced subgraph of \(G\), with \(A\subseteq V\).
+
+A vertex \(v\in A\) is called \emph{removable} in \(H\) with respect to \(\mathcal Q\) if
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+
+In other words, \(v\) is removable if, in the current induced subgraph \(H\), it has no two neighbors lying in the
+same part of the partition. Thus, if \(v\) is placed last among the vertices of \(H\), it cannot be the last vertex
+of an occurrence of \(\forrs\).
+\end{definition}
+
+
+
+\begin{theorem}\label{thm:forrs-given-partition-poly}
+The \(\forrs\)-Avoidance problem with a given partition can be solved in polynomial time.
+\end{theorem}
+
+\begin{proof}
+Let \(G=(V,E)\) be a graph and let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be the given partition of \(V\). We use the following greedy algorithm.
+
+\begin{center}
+\begin{tabbing}
+\hspace{1cm}\=\hspace{1cm}\=\hspace{1cm}\=\kill
+\textsc{Given-Partition-ForRS}\((G,\mathcal Q)\) \\
+\> \(A \leftarrow V(G)\) \\
+\> \(L \leftarrow\) empty list \\
+\> \textbf{while} \(A\neq\varnothing\) \textbf{do} \\
+\>\> \textbf{if} there exists a removable vertex \(v\in A\) in \(G[A]\) \textbf{then} \\
+\>\>\> append \(v\) to \(L\) \\
+\>\>\> \(A\leftarrow A\setminus\{v\}\) \\
+\>\> \textbf{else} \\
+\>\>\> return \textbf{NO} \\
+\> return \textbf{YES}
+\end{tabbing}
+\end{center}
+
+If the algorithm deletes the vertices in the order
+\[
+d_1,d_2,\dots,d_n,
+\]
+then the corresponding order is
+\[
+d_n\prec d_{n-1}\prec \cdots \prec d_1.
+\]
+
+We prove correctness.
+
+First suppose that the algorithm returns \textbf{YES}. Let
+\[
+d_1,d_2,\dots,d_n
+\]
+be the deletion order, and define
+\[
+d_n\prec d_{n-1}\prec \cdots \prec d_1.
+\]
+We claim that \(S=(\prec,\mathcal Q)\) avoids \(\forrs\).
+
+Let \(r\prec s\prec t\). In order to realize \(\forrs\), we would need
+\[
+r\sim t,\qquad s\sim t,
+\]
+and \(r\) and \(s\) in the same part of \(\mathcal Q\). Write \(t=d_j\). The vertices before \(t\) in the order
+\(\prec\) are precisely the vertices that were still active when \(d_j\) was deleted. Since \(d_j\) was removable
+in the current induced subgraph, it had at most one neighbor in each part of \(\mathcal Q\) among those active
+vertices. Hence \(t\) cannot have two earlier neighbors in the same part. Therefore no ordered triple realizes
+\(\forrs\), and \(S\) avoids \(\forrs\).
+
+Conversely, suppose that there exists an order \(\prec\) such that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids \(\forrs\). Consider any current induced subgraph \(H=G[A]\) during the algorithm, and restrict \(\prec\) to
+\(A\). Let \(v\) be the last vertex of \(A\) in this restricted order. We claim that \(v\) is removable in \(H\).
+
+Indeed, if \(v\) had two neighbors \(r,s\in A\) in the same part of \(\mathcal Q\), then both \(r\) and \(s\)
+would precede \(v\). Assuming \(r\prec s\), the triple
+\[
+r\prec s\prec v
+\]
+would realize \(\forrs\), a contradiction. Thus \(v\) is removable.
+
+Therefore, whenever a valid order exists for the current induced subgraph, at least one removable vertex exists.
+Moreover, deleting vertices cannot create a forbidden ordered triple in the remaining graph. Hence the greedy
+algorithm gets stuck if and only if no valid order exists.
+
+Thus the algorithm returns \textbf{YES} if and only if there exists an order \(\prec\) such that
+\[
+(\prec,\mathcal Q)
+\]
+avoids \(\forrs\).
+
+Finally, the algorithm is polynomial. A direct implementation runs in polynomial time. Moreover, by maintaining the
+values
+\[
+c(v,i):=|N_{G[A]}(v)\cap V_i|
+\]
+for every active vertex \(v\) and every part \(V_i\), the algorithm can be implemented in time \(O(nk+m)\), where
+\(n=|V(G)|\), \(m=|E(G)|\), and \(k=|\mathcal Q|\).  ERIC que me ayude con esta parte!!!
+\end{proof}
+
+
+
+
+
+
+\begin{theorem}\label{thm:forst-given-order-np-complete}
+The \(\forst\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids \(\forst\) with respect to a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with an arbitrary order on its vertices.
+For each edge \(xy\in E(X)\), with \(x\prec_X y\), add a witness vertex \(w_{xy}\), adjacent only to \(y\), and keep
+the original edge \(xy\). Thus,
+\[
+V(G)=V(X)\cup \{w_{xy}: xy\in E(X),\ x\prec_X y\},
+\]
+and
+\[
+E(G)=E(X)\cup \{w_{xy}y: xy\in E(X),\ x\prec_X y\}.
+\]
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+
+\node (w) at (0,0) {$w_{xy}$};
+\node (x) at (2.2,0) {$x$};
+\node (y) at (4.4,0) {$y$};
+
+\draw (x)--(y);
+\draw (w) to[bend left=35] (y);
+
+\node[draw=none, font=\small] at (2.2,-1.1) {$w_{xy}\prec x\prec y$};
+
+\end{tikzpicture}
+\caption{Gadget used in the reduction for \(\forst\) with a given order.}
+\label{fig:forst-given-order-gadget}
+\end{figure}
+
+
+The given order \(\prec\) puts first all witnesses \(w_{xy}\), in arbitrary order, and then all original vertices,
+following the order \(\prec_X\).
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices and assign each witness \(w_{xy}\)
+a color different from the color of \(y\). Then no occurrence of \(\forst\) appears.
+
+Conversely, suppose that a \(\forst\)-avoiding partition exists. For each edge \(xy\in E(X)\), with \(x\prec_X y\),
+we have
+\[
+w_{xy}\prec x\prec y,
+\qquad
+w_{xy}\sim y,
+\qquad
+x\sim y.
+\]
+Avoiding \(\forst\) therefore forces \(x\) and \(y\) to lie in different parts. Hence the restriction of the
+partition to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:forst-general-np-complete}
+The \(\forst\)-Avoidance problem is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a
+\(\forst\)-avoiding solution with at most \(k\) parts is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), for every vertex
+\(x\in V(X)\) we create an independent block
+\[
+B_x:=\{x_1,x_2\}.
+\]
+For every edge \(xy\in E(X)\), we join \(B_x\) and \(B_y\) completely, and we add no other edges. Thus
+\[
+V(G)=\bigcup_{x\in V(X)} B_x,
+\]
+and
+\[
+E(G)=\{x_i y_j:\ xy\in E(X),\ i,j\in\{1,2\}\}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, put both vertices of \(B_x\) in the color class of \(x\). Since adjacent
+vertices of \(X\) receive different colors, no edge of \(G\) lies inside a part, and hence the solution avoids
+\(\forst\) for any order.
+
+Conversely, suppose that \(G\) has a \(\forst\)-avoiding solution
+\[
+S=(\prec,\mathcal Q),
+\qquad |\mathcal Q|\le k.
+\]
+For each \(x\in V(X)\), let \(\ell_x\) be the last vertex of the block \(B_x=\{x_1,x_2\}\) in the order \(\prec\).
+We color \(x\) with the part of \(\mathcal Q\) that contains \(\ell_x\).
+
+We claim that this gives a proper \(k\)-coloring of \(X\). Let \(xy\in E(X)\). We need to show that
+\(\ell_x\) and \(\ell_y\) lie in different parts of \(\mathcal Q\). Suppose, to the contrary, that they lie in the
+same part. Without loss of generality, assume
+\[
+\ell_x \prec \ell_y.
+\]
+Let \(x'\) be the other vertex of \(B_x\). Since \(\ell_x\) is the last vertex of \(B_x\), we have
+\[
+x'\prec \ell_x\prec \ell_y.
+\]
+Moreover, because \(xy\in E(X)\), the construction makes \(B_x\) complete to \(B_y\). Hence
+\[
+x'\sim \ell_y
+\qquad\text{and}\qquad
+\ell_x\sim \ell_y.
+\]
+Finally, \(\ell_x\) and \(\ell_y\) lie in the same part by assumption. Therefore the ordered triple
+\[
+x'\prec \ell_x\prec \ell_y
+\]
+realizes the forbidden pattern \(\forst\), contradicting that \(S\) avoids \(\forst\).
+
+Thus, for every edge \(xy\in E(X)\), the vertices \(x\) and \(y\) receive different colors. Hence \(X\) is
+\(k\)-colorable.
+\end{proof}
+
+
+
+
+\begin{theorem}\label{thm:forst-given-partition-np-complete}
+The \(\forst\)-Avoidance problem with a given partition is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof idea]
+We reduce from \textsc{NAE-3SAT}. Let \(\Phi\) be an instance of \textsc{NAE-3SAT}.
+A \emph{place} of \(\Phi\) is a pair
+\[
+p=(i,j),
+\]
+corresponding to the \(i\)-th literal of the clause \(C_j\).
+
+For each place \(p\), we create two vertices
+\[
+T_p,\ F_p.
+\]
+They form one part of the fixed partition:
+\[
+V_p:=\{T_p,F_p\}.
+\]
+We add the internal edge
+\[
+T_pF_p.
+\]
+Thus the given partition is
+\[
+\mathcal Q:=\{V_p:\ p\text{ is a place of }\Phi\}.
+\]
+
+\medskip
+\noindent\textbf{Consistency edges.}
+Let \(p,q\) be two distinct places corresponding to occurrences of the same variable.
+
+If the variable appears with the same polarity in \(p\) and \(q\) (both positive or both negative), we add the edges
+\[
+T_pT_q,
+\qquad
+F_pF_q.
+\]
+If the variable appears with opposite polarity in \(p\) and \(q\), we add the edges
+\[
+T_pF_q,
+\qquad
+F_pT_q.
+\]
+These edges are intended to force all occurrences of the same variable to be oriented consistently.
+
+\medskip
+\noindent\textbf{Clause edges.}
+Let
+\[
+C_j=(L_{j1},L_{j2},L_{j3})
+\]
+be a clause, and let
+\[
+p_1=(1,j),\qquad p_2=(2,j),\qquad p_3=(3,j)
+\]
+be its three places. We add the cyclic edges
+\[
+T_{p_1}F_{p_2},
+\qquad
+T_{p_2}F_{p_3},
+\qquad
+T_{p_3}F_{p_1}.
+\]
+
+No other edges are added.
+
+The intended correspondence is that an order of the vertices chooses, for each place \(p\), which of \(T_p\) and \(F_p\)
+comes first. The consistency edges force equal variables to receive compatible choices, while the clause edges rule out
+the two forbidden assignments in which all literals of a clause receive the same truth value.
+Thus, \(\Phi\) is NAE-satisfiable if and only if the constructed instance admits an order avoiding \(\forst\) with
+respect to the fixed partition \(\mathcal Q\).
+
+DESPUES la escribo el ida y vuelta, que es medio largo
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:forrt-given-order-np-complete}
+The \(\forrt\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids \(\forrt\) with respect to a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\[
+V(X)=\{x_1,\dots,x_n\},
+\]
+ordered arbitrarily as
+\[
+x_1\prec x_2\prec\cdots\prec x_n.
+\]
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), we create a witness vertex \(w_{ij}\). We keep the original
+edge \(x_i x_j\), and we make \(w_{ij}\) adjacent only to \(x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=E(X)\cup \{w_{ij}x_j : x_i x_j\in E(X),\ i<j\}.
+\]
+
+For each \(j\), let
+\[
+W_j:=\{w_{ij}: i<j \text{ and } x_i x_j\in E(X)\}.
+\]
+The given order is
+\[
+x_1\prec W_2\prec x_2\prec W_3\prec x_3\prec\cdots\prec W_n\prec x_n,
+\]
+where the vertices inside each \(W_j\) are ordered arbitrarily. Hence, for every edge \(x_i x_j\in E(X)\), with \(i<j\),
+we have
+\[
+x_i\prec w_{ij}\prec x_j,
+\qquad
+x_i\sim x_j,
+\qquad
+w_{ij}\sim x_j.
+\]
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices and assign each witness \(w_{ij}\) a color
+different from the color of \(x_j\) (for instance, the color of \(x_i\)). This gives a partition that avoids \(\forrt\).
+
+Conversely, if a \(\forrt\)-avoiding partition exists, then for every edge \(x_i x_j\in E(X)\), with \(i<j\), the triple
+\[
+x_i\prec w_{ij}\prec x_j
+\]
+forces \(x_i\) and \(x_j\) to lie in different parts. Therefore, the restriction of the partition to \(V(X)\) is a proper
+\(k\)-coloring of \(X\).
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+
+\node (x) at (0,0) {$x_i$};
+\node (w) at (2.2,0) {$w_{ij}$};
+\node (y) at (4.4,0) {$x_j$};
+
+\draw[bend left=35] (x) to (y);
+\draw[bend right=35] (w) to (y);
+
+\node[draw=none, font=\small] at (2.2,-1.1) {$x_i\prec w_{ij}\prec x_j$};
+
+\end{tikzpicture}
+\caption{Gadget used in the reduction for \(\forrt\) with a given order.}
+\label{fig:forrt-given-order-gadget}
+\end{figure}
+
+
+
+
+
+
+
+aca empieza el lio
+
+\begin{definition}[Uncolored pattern on three vertices]
+An \emph{uncolored pattern} on three ordered positions \(r\prec s\prec t\) is a triple
+\[
+P=(A,N,\varnothing),
+\]
+where
+\[
+A,N \subseteq \binom{\{r,s,t\}}{2}.
+\]
+The set \(A\) specifies the pairs that must be edges, while \(N\) specifies the pairs that must be non-edges.
+The symbol \(\varnothing\) indicates that the pattern imposes no condition on the parts of a partition.
+\end{definition}
+
+
+
+
+\begin{definition}[\(P\)-partition number]
+Let \(P=(A,N,\varnothing)\) be a pattern with no color constraint. We define
+\[
+\minClases_P(G)
+\]
+as the minimum \(k\) such that there exists a partition
+\[
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\]
+satisfying
+\[
+G[V_i]\in \mathcal C_P
+\qquad\text{for every } i=1,\dots,k.
+\]
+
+esta es parecida a la de min clases de arriba de todo, no se si unificarlas, ERIC help me
+\end{definition}
+
+
+
+
+
+
+
+
+
+\begin{definition}[Class associated with a pattern with no color constraint]
+Let
+\[
+P=(A,N,\varnothing) ojo, aca no se si C acepta ser vacio como lo defini
+\]
+be a pattern with no color constraint. We denote by \(\mathcal C_P\) the class of graphs characterized by \(P\);
+that is,
+\[
+G\in \mathcal C_P
+\]
+if and only if there exists a total order \(\prec\) of \(V(G)\) such that every ordered triple of vertices of \(G\)
+avoids the pattern \(P\).
+\end{definition}
+
+
+
+
+
+\begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
+Let \(P=(A,N,C)\) be a colored pattern, and let \(\mathcal C_P\) be the graph class obtained by forgetting the color constraint of \(P\).
+
+Then, for every graph \(G\),
+\[
+\minClases_{\{P\}}(G)
+\;\ge\;
+\min\left\{
+k:\ 
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\text{ and }
+G[V_i]\in \mathcal C_P
+\text{ for every } i
+\right\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+S=(\prec,\mathcal Q),
+\qquad
+\mathcal Q=\{V_1,\dots,V_k\},
+\]
+be a solution that avoids \(P\). We show that every induced subgraph \(G[V_i]\) belongs to \(\mathcal C_P\).
+
+Fix a part \(V_i\), and restrict the order \(\prec\) to \(V_i\). Consider any ordered triple
+\[
+r\prec s\prec t
+\]
+of vertices in \(V_i\). Since all three vertices lie in the same part, the color constraint of \(P\) cannot be the reason why the triple avoids \(P\). Therefore, the triple must avoid \(P\) because one of the required edges in \(A\) is missing, or because one of the forbidden edges in \(N\) is present. Equivalently, the triple avoids the uncolored pattern \((A,N,\varnothing)\).
+
+Thus the restricted order witnesses that
+\[
+G[V_i]\in \mathcal C_P.
+\]
+Since this holds for every part \(V_i\), every solution avoiding \(P\) with \(k\) parts gives a partition of \(V(G)\) into \(k\) parts, each inducing a graph in \(\mathcal C_P\). Taking the minimum over all such solutions gives the desired inequality.
+\end{proof}
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:rt-pattern-partition}
+Let
+\[
+P=(A,\varnothing,\{r,t\})
+\]
+be a colored pattern. Then, for every graph \(G\),
+\[
+\minClases_{\{P\}}(G)
+=
+\min\left\{
+k:\ 
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\text{ and }
+\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
+\text{ for every } i
+\right\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+M(G):=
+\min\left\{
+k:\ 
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\text{ and }
+\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
+\text{ for every } i
+\right\}.
+\]
+
+We first prove
+\[
+\minClases_{\{P\}}(G)\ge M(G).
+\]
+This follows directly from Theorem~\ref{thm:colored-lower-bound-by-class-partition}. Indeed, every solution
+that avoids \(P\) induces a partition of \(V(G)\) into parts such that each part belongs to the class generalized
+by \(P\). Since this class is exactly the class of graphs \(H\) satisfying
+\[
+\minClases_{\{P\}}(H)=1,
+\]
+we obtain
+\[
+\minClases_{\{P\}}(G)\ge M(G).
+\]
+
+It remains to prove the reverse inequality. Let
+\[
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\]
+be a partition such that
+\[
+\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
+\qquad
+\text{for every } i=1,\dots,k.
+\]
+For each \(i\), choose an order \(\prec_i\) of \(V_i\) such that the one-part solution
+\[
+(\prec_i,\{V_i\})
+\]
+avoids \(P\) in \(G[V_i]\).
+
+Now define a global order \(\prec\) by putting the parts in blocks:
+\[
+V_1\prec V_2\prec\cdots\prec V_k,
+\]
+and using the order \(\prec_i\) inside each block \(V_i\). We claim that
+\[
+S=(\prec,\{V_1,\dots,V_k\})
+\]
+avoids \(P\).
+
+Let \(\varphi:\{r,s,t\}\to V(G)\) be an ordered occurrence, so
+\[
+\varphi(r)\prec \varphi(s)\prec \varphi(t).
+\]
+If \(\varphi(r)\) and \(\varphi(t)\) lie in different parts of the partition, then the color condition
+\(C=\{r,t\}\) fails, and therefore \(\varphi\) avoids \(P\).
+
+Suppose then that \(\varphi(r)\) and \(\varphi(t)\) lie in the same part \(V_i\). Since the global order is by
+blocks and
+\[
+\varphi(r)\prec \varphi(s)\prec \varphi(t),
+\]
+we also have \(\varphi(s)\in V_i\). Thus the whole occurrence lies inside \(G[V_i]\). By the choice of
+\(\prec_i\), the one-part solution \((\prec_i,\{V_i\})\) avoids \(P\), so this occurrence avoids \(P\).
+
+Hence every ordered occurrence avoids \(P\), and therefore \(S\) avoids \(P\). This gives
+\[
+\minClases_{\{P\}}(G)\le k.
+\]
+Taking the minimum over all such partitions gives
+\[
+\minClases_{\{P\}}(G)\le M(G).
+\]
+
+Combining both inequalities, we conclude that
+\[
+\minClases_{\{P\}}(G)=M(G).
+\]
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:minclases-one-class}
+Let \(P=(A,N,\varnothing)\) be a pattern with no color constraint. Then, for every graph \(G\),
+\[
+\minClases_P(G)=1
+\quad\Longleftrightarrow\quad
+G\in \mathcal C_P.
+\]
+\end{theorem}
+
+\begin{proof}
+First suppose that
+\[
+\minClases_P(G)=1.
+\]
+Then there exists a partition of \(V(G)\) into one part,
+\[
+V(G)=V_1,
+\]
+such that
+\[
+G[V_1]\in \mathcal C_P.
+\]
+Since \(V_1=V(G)\), we have \(G[V_1]=G\). Therefore,
+\[
+G\in \mathcal C_P.
+\]
+
+Conversely, suppose that
+\[
+G\in \mathcal C_P.
+\]
+Consider the trivial partition
+\[
+V_1:=V(G).
+\]
+Then
+\[
+G[V_1]=G\in \mathcal C_P.
+\]
+Hence \(G\) admits a partition into one part satisfying the definition of \(\minClases_P(G)\), so
+\[
+\minClases_P(G)\le 1.
+\]
+Since every partition has at least one part, we conclude that
+\[
+\minClases_P(G)=1.
+\]
+
+Thus,
+\[
+\minClases_P(G)=1
+\quad\Longleftrightarrow\quad
+G\in \mathcal C_P.
+\]
+\end{proof}
+
+
+In words, when \(C=\varnothing\), the parameter \(\minClases_P\) is the partition version of the original
+class \(\mathcal C_P\). Having value \(1\) means exactly that no partition is needed: the whole graph already
+belongs to the class characterized by \(P\).
+\medskip
+
+
+aca termina el lio, sigo
+
+
+
+
+
+\begin{lemma}\label{lem:forrt-given-partition-forest}
+Let \(G=(V,E)\) be a graph and let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V\). There exists an order \(\prec\) such that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids \(\forrt\) if and only if \(G[V_i]\) is a forest for every \(i=1,\dots,k\).
+\end{lemma}
+
+\begin{proof}
+This is a direct consequence of Theorem~\ref{thm:rt-pattern-partition}, applied to the forest pattern
+with required edges \(rt\) and \(st\).
+
+Indeed, if \(S=(\prec,\mathcal Q)\) avoids \(\forrt\), then restricting \(\prec\) to each part \(V_i\)
+gives an order of \(G[V_i]\) avoiding the corresponding uncolored forest pattern. Hence \(G[V_i]\) is a forest.
+
+Conversely, if every \(G[V_i]\) is a forest, then each \(G[V_i]\) admits an order avoiding the uncolored forest pattern.
+Putting these orders together by blocks gives a global order \(\prec\) such that
+\((\prec,\mathcal Q)\) avoids \(\forrt\).
+\end{proof}
+
+
+
+\begin{theorem}\label{thm:forrt-given-partition-poly}
+The \(\forrt\)-Avoidance problem with a given partition can be solved in polynomial time.
+\end{theorem}
+
+\begin{proof}
+ACA PODEMOS PONER EL ALGORITMO QUE YA HICIMOS 
+By Lemma~\ref{lem:forrt-given-partition-forest}, it is enough to check whether \(G[V_i]\) is a forest for every
+part \(V_i\in\mathcal Q\).
+
+This can be done in polynomial time by running a DFS or BFS on each induced subgraph \(G[V_i]\) and checking whether
+it is acyclic. Equivalently, one checks whether every connected component of \(G[V_i]\) has one fewer edge than
+vertices.
+
+Therefore, the algorithm returns \textbf{YES} if and only if each \(G[V_i]\) is a forest, which is equivalent to the
+existence of an order \(\prec\) such that \((\prec,\mathcal Q)\) avoids \(\forrt\).
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:forrs-st-given-order-np-complete}
+The \(\mathcal F_{rs\text{-}st}\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids both \(\forrs\) and \(\forst\) with respect to a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\[
+V(X)=\{x_1,\dots,x_n\}.
+\]
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent exactly to
+\(x_i\) and \(x_j\), and do not keep the original edge \(x_i x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
+\]
+The given order is
+\[
+x_1\prec x_2\prec \cdots \prec x_n \prec \text{all vertices } w_{ij},
+\]
+where the witnesses are ordered arbitrarily.
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices.
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), assign the witness \(w_{ij}\) the color of \(x_i\).
+We use the fixed order
+\[
+x_1\prec x_2\prec\cdots\prec x_n\prec \text{all vertices }w_{ij}.
+\]
+
+We claim that the resulting solution avoids both \(\forrs\) and \(\forst\).
+Indeed, the only possible relevant triples are of the form
+\[
+x_i\prec x_j\prec w_{ij},
+\]
+with
+\[
+x_i\sim w_{ij}
+\qquad\text{and}\qquad
+x_j\sim w_{ij}.
+\]
+Since \(x_i x_j\in E(X)\), the proper coloring of \(X\) gives that \(x_i\) and \(x_j\) lie in different parts.
+Thus the triple avoids \(\forrs\).
+Moreover, \(w_{ij}\) was assigned the color of \(x_i\), so \(w_{ij}\) and \(x_j\) also lie in different parts.
+Thus the triple avoids \(\forst\).
+Therefore the constructed solution avoids \(\mathcal F_{rs\text{-}st}\).
+Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forst\) with at most \(k\) parts.
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), we have
+\[
+x_i\prec x_j\prec w_{ij},
+\qquad
+x_i\sim w_{ij},
+\qquad
+x_j\sim w_{ij}.
+\]
+Avoiding \(\forrs\) forces \(x_i\) and \(x_j\) to lie in different parts. Therefore, the restriction of the
+partition to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+\begin{theorem}\label{thm:forrs-st-general-np-complete}
+The \(\mathcal F_{rs\text{-}st}\)-Avoidance problem is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a solution with at most \(k\) parts
+that avoids both \(\forrs\) and \(\forst\) is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Fix an arbitrary order of the vertices of \(X\). For each edge
+\(xy\in E(X)\), with \(x\) before \(y\) in this order, we add \(k+1\) common witnesses
+\[
+W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
+\]
+each adjacent exactly to \(x\) and \(y\). The original edge \(xy\) is not kept. Thus
+\[
+V(G)=V(X)\cup \bigcup_{xy\in E(X)} W_{xy},
+\]
+and
+\[
+E(G)=\{xw^i_{xy},yw^i_{xy}: xy\in E(X),\ 1\le i\le k+1\}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on \(V(X)\). Choose an order with all original vertices first
+and all witnesses afterwards. For each edge \(xy\), with \(x\) before \(y\), assign every witness \(w^i_{xy}\) the
+color of \(x\). Then the triple \(x\prec y\prec w^i_{xy}\) avoids \(\forrs\) because \(x\) and \(y\) have different
+colors, and avoids \(\forst\) because \(y\) and \(w^i_{xy}\) have different colors.
+
+Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forst\) with at most \(k\) parts.
+If two adjacent original vertices \(x,y\) were in the same part, assume \(x\prec y\). Then no witness \(w^i_{xy}\)
+can appear after \(y\), since \(x\prec y\prec w^i_{xy}\) would realize \(\forrs\). Hence all \(k+1\) witnesses for
+\(xy\) appear before \(y\). By the pigeonhole principle, two of them lie in the same part; together with \(y\), they
+realize \(\forrs\), a contradiction. Therefore adjacent vertices of \(X\) lie in different parts, and the restriction
+to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+bajaaaaaaaa
+
+\medskip
+
+\begin{theorem}\label{thm:forrs-st-given-partition-np-complete}
+The \(\mathcal F_{rs\text{-}st}\)-Avoidance problem with a given partition is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from the following NP-complete variant of \textsc{Betweenness with precedence constraints}:
+an instance is \((A,B,T)\), where \(A\) is a set of elements, \(B\) is a set of precedence constraints
+\((u,v)\) requiring \(u\prec v\), and \(T\) is a set of disjoint triples \((a,b,c)\) requiring \(b\) to lie
+between \(a\) and \(c\), that is, either \(a\prec b\prec c\) or \(c\prec b\prec a\).
+
+First, for each \((u,v)\in B\), add a new element \(z_{uv}\) and replace \(u\prec v\) by
+\[
+u\prec z_{uv},
+\qquad
+z_{uv}\prec v.
+\]
+Let \((A',B',T)\) be the resulting instance.
+
+We construct a graph \(G\) and a fixed partition \(\mathcal Q\).
+
+The base vertices of \(G\) are the elements of \(A'\). For every pair \((u,v)\in B'\), add two auxiliary vertices
+\(p_{uv}\) and \(q_{uv}\). Thus
+\[
+V(G)=A'\cup \{p_{uv},q_{uv}:(u,v)\in B'\}.
+\]
+
+The partition \(\mathcal Q\) is defined as follows. For every triple \((a,b,c)\in T\), put \(a\) and \(c\) in the
+same part, and put \(b\) in a different part. Since the triples are disjoint, this creates no conflicts.
+Every base vertex not appearing in a triple is put in its own part. Finally, for each \((u,v)\in B'\), put
+\(p_{uv}\) and \(q_{uv}\) in the same part as \(u\).
+
+The edges of \(G\) are the following. For every triple \((a,b,c)\in T\), add the triangle
+\[
+ab,\quad bc,\quad ac.
+\]
+For every pair \((u,v)\in B'\), add
+\[
+up_{uv},\quad vp_{uv},\quad uq_{uv},\quad vq_{uv}.
+\]
+No other edges are added.
+
+The triple gadgets force betweenness: since \(a\) and \(c\) are in the same part and \(a,b,c\) form a triangle,
+placing \(b\) after both \(a,c\) creates an occurrence of \(\forrs\), while placing \(b\) before both \(a,c\)
+creates an occurrence of \(\forst\). Hence \(b\) must lie between \(a\) and \(c\).
+
+The pair gadgets force precedence. For \((u,v)\in B'\), the vertices \(p_{uv},q_{uv}\) are in the part of \(u\) and
+are common neighbors of \(u\) and \(v\). If an order had \(v\prec u\), then either one auxiliary appears after \(u\),
+creating an occurrence of \(\forst\), or both auxiliaries appear before \(u\), in which case the two auxiliaries together
+with \(u\) create an occurrence of \(\forrs\). Therefore every valid order must satisfy \(u\prec v\).
+
+Conversely, any order satisfying \((A',B',T)\) can be extended to the auxiliary vertices by placing, for each
+\((u,v)\in B'\),
+\[
+u\prec \cdots \prec v \prec p_{uv}\prec q_{uv}.
+\]
+The subdivision step ensures that \(u\) and \(v\) are in different parts of \(\mathcal Q\), so the pair gadgets do not
+create occurrences of either \(\forrs\) or \(\forst\). The triple gadgets are valid because each \(b\) lies between
+the corresponding \(a\) and \(c\).
+
+Thus the original instance is satisfiable if and only if the constructed instance \((G,\mathcal Q)\) admits an order
+avoiding both \(\forrs\) and \(\forst\). The construction is polynomial, and the problem is in NP because an order can
+be checked in polynomial time. Hence the problem is NP-complete.
+\end{proof}
+
+
+
+
+
+
+\begin{theorem}\label{thm:forrs-rt-given-order-np-complete}
+The \(\mathcal F_{rs\text{-}rt}\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids both \(\forrs\) and \(\forrt\) with respect to a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\[
+V(X)=\{x_1,\dots,x_n\}.
+\]
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent exactly to
+\(x_i\) and \(x_j\), and do not keep the original edge \(x_i x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
+\]
+The given order is
+\[
+x_1\prec x_2\prec \cdots \prec x_n \prec \text{all vertices } w_{ij},
+\]
+where the witnesses are ordered arbitrarily.
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices.
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), assign \(w_{ij}\) the color of \(x_j\).
+Then, in the only relevant triples
+\[
+x_i\prec x_j\prec w_{ij},
+\]
+the pattern \(\forrs\) is avoided because \(x_i\) and \(x_j\) have different colors, and \(\forrt\) is avoided
+because \(x_i\) and \(w_{ij}\) have different colors.
+
+Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forrt\) with at most \(k\) parts.
+For every edge \(x_i x_j\in E(X)\), with \(i<j\), the triple
+\[
+x_i\prec x_j\prec w_{ij}
+\]
+has
+\[
+x_i\sim w_{ij},
+\qquad
+x_j\sim w_{ij}.
+\]
+Avoiding \(\forrs\) forces \(x_i\) and \(x_j\) to lie in different parts. Hence the restriction of the partition
+to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+
+\node (x) at (0,0) {$x_i$};
+\node (y) at (2.2,0) {$x_j$};
+\node (w) at (4.4,0) {$w_{ij}$};
+
+\draw[bend left=35] (x) to (w);
+\draw (y)--(w);
+
+\node[draw=none, font=\small] at (2.2,-1.1) {$x_i\prec x_j\prec w_{ij}$};
+
+\end{tikzpicture}
+\caption{Gadget used in the reduction for \(\mathcal F_{rs\text{-}rt}\) with a given order.}
+\label{fig:forrs-rt-given-order-gadget}
+\end{figure}
+
+
+
+
+\begin{theorem}\label{thm:forrs-rt-general-np-complete}
+The \(\mathcal F_{rs\text{-}rt}\)-Avoidance problem is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a solution with at most \(k\) parts
+that avoids both \(\forrs\) and \(\forrt\) is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), for every edge
+\(xy\in E(X)\) we add \(k+1\) common witnesses
+\[
+W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
+\]
+each adjacent exactly to \(x\) and \(y\). The original edge \(xy\) is not kept. Thus
+\[
+V(G)=V(X)\cup \bigcup_{xy\in E(X)} W_{xy},
+\]
+and
+\[
+E(G)=\{xw^i_{xy},yw^i_{xy}: xy\in E(X),\ 1\le i\le k+1\}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, order first the original vertices and then all witnesses. For each edge
+\(xy\in E(X)\), let \(x\prec y\) in this chosen order, and assign every witness in \(W_{xy}\) the color of \(y\).
+Then the relevant triples \(x\prec y\prec w^i_{xy}\) avoid \(\forrs\) because \(x\) and \(y\) have different colors,
+and avoid \(\forrt\) because \(x\) and \(w^i_{xy}\) have different colors.
+
+Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forrt\) with at most \(k\) parts.
+If two adjacent original vertices \(x,y\) were in the same part, assume \(x\prec y\). No witness \(w^i_{xy}\) can appear
+after \(y\), because \(x\prec y\prec w^i_{xy}\) would realize \(\forrs\). Hence all \(k+1\) witnesses of \(W_{xy}\)
+appear before \(y\). Since there are at most \(k\) parts, two of them lie in the same part; together with \(y\), they
+realize \(\forrs\), a contradiction. Therefore adjacent vertices of \(X\) lie in different parts, and the restriction
+to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+\end{proof}
+
+
+
+
+
+
+
+
+
+\begin{lemma}\label{lem:forD-given-order-rs-np-hard}
+Let
+\[
+D\subseteq \{rs,rt,st\}
+\]
+with \(rs\in D\). Let
+\[
+\mathcal F_D
+:=
+\{\forrs:rs\in D\}\cup \{\forrt:rt\in D\}\cup \{\forst:st\in D\}.
+\]
+Then, for every fixed \(k\ge 3\), the \(\mathcal F_D\)-Avoidance problem with a given order is NP-hard.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\[
+V(X)=\{x_1,\dots,x_n\}.
+\]
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent exactly to
+\(x_i\) and \(x_j\), and do not keep the original edge \(x_i x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
+\]
+The given order is
+\[
+x_1\prec x_2\prec \cdots \prec x_n \prec \text{all witnesses } w_{ij},
+\]
+where the witnesses are ordered arbitrarily. Hence, for every edge \(x_i x_j\in E(X)\), with \(i<j\),
+\[
+x_i\prec x_j\prec w_{ij}.
+\]
+
+Suppose first that \(X\) has a proper \(k\)-coloring \(\varphi\). We keep the colors of the original vertices:
+\[
+c(x_i)=\varphi(x_i).
+\]
+For each witness \(w_{ij}\), we assign its color according to the following table:
+\[
+\begin{array}{c|c}
+D & c(w_{ij}) \\ \hline
+\{rs\} & \text{any color} \\
+\{rs,rt\} & \varphi(x_j) \\
+\{rs,st\} & \varphi(x_i) \\
+\{rs,rt,st\} & \text{any color different from }\varphi(x_i)\text{ and }\varphi(x_j).
+\end{array}
+\]
+The last choice is possible because \(k\ge 3\), and since \(x_i x_j\in E(X)\), we have
+\(\varphi(x_i)\neq \varphi(x_j)\).
+
+The only relevant triples are of the form
+\[
+x_i\prec x_j\prec w_{ij}.
+\]
+Such a triple avoids every pattern in \(\mathcal F_D\): it avoids \(\forrs\) because \(x_i\) and \(x_j\) have
+different colors; it avoids \(\forrt\), when required, because \(x_i\) and \(w_{ij}\) have different colors; and it
+avoids \(\forst\), when required, because \(x_j\) and \(w_{ij}\) have different colors.
+
+Conversely, suppose that there is a partition into at most \(k\) parts that avoids every pattern in \(\mathcal F_D\).
+Since \(rs\in D\), the pattern \(\forrs\) is avoided. For every edge \(x_i x_j\in E(X)\), with \(i<j\), the triple
+\[
+x_i\prec x_j\prec w_{ij}
+\]
+has both required edges to \(w_{ij}\). Therefore avoiding \(\forrs\) forces \(x_i\) and \(x_j\) to lie in different
+parts. Hence the restriction of the partition to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+
+Thus \(X\) is \(k\)-colorable if and only if the constructed ordered graph admits a solution with at most \(k\)
+parts avoiding \(\mathcal F_D\). Therefore the problem is NP-hard, moreover is NP-Complete.
+\end{proof}
+
+
+
+
+
+
+\begin{lemma}\label{lem:forD-general-rs-np-hard}
+Let
+\[
+D\subseteq \{rs,rt,st\}
+\]
+with \(rs\in D\), and let
+\[
+\mathcal F_D
+:=
+\{\forrs:rs\in D\}\cup \{\forrt:rt\in D\}\cup \{\forst:st\in D\}.
+\]
+Then, for every fixed \(k\ge 3\), the \(\mathcal F_D\)-Avoidance problem is NP-hard.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance. For every edge
+\(xy\in E(X)\), we add \(k+1\) common witnesses
+\[
+W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
+\]
+each adjacent exactly to \(x\) and \(y\). The original edge \(xy\) is not kept. Thus
+\[
+V(G)=V(X)\cup \{w^a_{xy}: xy\in E(X),\ a=1,\dots,k+1\},
+\]
+and
+\[
+E(G)=\{xw^a_{xy},yw^a_{xy}: xy\in E(X),\ a=1,\dots,k+1\}.
+\]
+
+Suppose first that \(X\) has a proper \(k\)-coloring \(\varphi\). Choose an arbitrary order of the original
+vertices. For each edge \(xy\in E(X)\), write \(x\prec y\) if \(x\) appears before \(y\) in this order.
+We order all original vertices first, and then all witnesses. We keep the coloring \(\varphi\) on \(V(X)\), and
+assign colors to the witnesses according to the following table:
+\[
+\begin{array}{c|c}
+D & c(w^a_{xy}) \text{ when } x\prec y \\ \hline
+\{rs\} & \text{any color} \\
+\{rs,rt\} & \varphi(y) \\
+\{rs,st\} & \varphi(x) \\
+\{rs,rt,st\} & \text{any color not in } \{\varphi(x),\varphi(y)\}.
+\end{array}
+\]
+The last choice is possible because \(k\ge 3\), and \(\varphi(x)\neq \varphi(y)\) whenever \(xy\in E(X)\).
+
+The only relevant triples are of the form
+\[
+x\prec y\prec w^a_{xy}.
+\]
+Such a triple avoids every pattern in \(\mathcal F_D\): it avoids \(\forrs\) because \(x\) and \(y\) have different
+colors; it avoids \(\forrt\), when required, because \(x\) and \(w^a_{xy}\) have different colors; and it avoids
+\(\forst\), when required, because \(y\) and \(w^a_{xy}\) have different colors.
+
+Conversely, suppose that \(G\) has a solution avoiding \(\mathcal F_D\) with at most \(k\) parts. Since \(rs\in D\),
+the pattern \(\forrs\) is avoided. Let \(xy\in E(X)\), and suppose for contradiction that \(x\) and \(y\) lie in
+the same part. Assume, without loss of generality, that
+\[
+x\prec y.
+\]
+No witness \(w^a_{xy}\) can appear after \(y\), because then
+\[
+x\prec y\prec w^a_{xy}
+\]
+would realize \(\forrs\). Hence all \(k+1\) witnesses of \(W_{xy}\) appear before \(y\). Since there are at most
+\(k\) parts, two of them lie in the same part. If these two witnesses are ordered as
+\[
+w^a_{xy}\prec w^b_{xy}\prec y,
+\]
+then this triple realizes \(\forrs\), again a contradiction. Therefore \(x\) and \(y\) must lie in different parts.
+
+Thus the restriction of the partition to \(V(X)\) is a proper \(k\)-coloring of \(X\). Hence \(X\) is \(k\)-colorable
+if and only if \(G\) admits a solution with at most \(k\) parts avoiding \(\mathcal F_D\).
+\end{proof}
+
+
+
+
+
+
+
+
 
 
 \end{document}
-
-
-
