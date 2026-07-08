@@ -20,10 +20,11 @@
 \usepackage{subcaption} % para subfiguras lado a lado
 \usetikzlibrary{calc}
 
+
 % ---------- Entornos de teoremas ----------
 \theoremstyle{plain} % estilo "teorema" (itálica)
 \newtheorem{theorem}{Teorema}[section]
-\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{Claim}[theorem]{Claim}
 \newtheorem{corollary}[theorem]{Corolario}
 
@@ -34,7 +35,30 @@
 \theoremstyle{remark} % estilo "observación" (normal + título distinto)
 \newtheorem{remark}[theorem]{Observación}
 
-\newtheorem{problem}{Problem}
+%\newtheorem{problem}{Problem}
+
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+
+\newtcolorbox{problem}[1][]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=black,
+  boxrule=0.6pt,
+  arc=1mm,
+  left=7pt,
+  right=7pt,
+  top=7pt,
+  bottom=7pt,
+  title={#1},
+  fonttitle=\bfseries
+}
+
+
+
+
+
 
 % ---------- Notación útil de grafos ----------
 \newcommand{\adj}{\sim}
@@ -88,6 +112,7 @@
 \newcommand{\forrs}{\operatorname{for}_{rs}}
 \newcommand{\forrt}{\operatorname{for}_{rt}}
 \newcommand{\forst}{\operatorname{for}_{st}}
+
 
 \newcommand{\mathcalFrsst}{\mathcal F_{rs\text{-}st}}
 \newcommand{\mathcalFrsrt}{\mathcal F_{rs\text{-}rt}}
@@ -147,6 +172,76 @@ and \(C\) specifies the pair of vertices that must lie in the same part of the p
 
 
 
+
+\eric{mepa que esto que viene es una observation o un lemma OK}
+
+\begin{lemma}\label{thm:minclases-one-class}
+Let P = (A,N) be a pattern. Then, for every graph \(G\),
+\[
+\minClases_P(G)=1
+\quad\Longleftrightarrow\quad
+G\in \mathcal C_P.
+\]
+\end{lemma}
+
+\begin{proof}
+First suppose that
+\[
+\minClases_P(G)=1.
+\]
+Then there exists a partition of \(V(G)\) into one part,
+\[
+V(G)=V_1,
+\]
+such that
+\[
+G[V_1]\in \mathcal C_P.
+\]
+Since \(V_1=V(G)\), we have \(G[V_1]=G\). Therefore,
+\[
+G\in \mathcal C_P.
+\]
+
+Conversely, suppose that
+\[
+G\in \mathcal C_P.
+\]
+Consider the trivial partition
+\[
+V_1:=V(G).
+\]
+Then
+\[
+G[V_1]=G\in \mathcal C_P.
+\]
+Hence \(G\) admits a partition into one part satisfying the definition of \(\minClases_P(G)\), so
+\[
+\minClases_P(G)\le 1.
+\]
+Since every partition has at least one part, we conclude that
+\[
+\minClases_P(G)=1.
+\]
+
+Thus,
+\[
+\minClases_P(G)=1
+\quad\Longleftrightarrow\quad
+G\in \mathcal C_P.
+\]
+\end{proof}
+
+
+In words, when \(C=\varnothing\), the parameter \(\minClases_P\) is the partition version of the original
+class \(\mathcal C_P\). Having value \(1\) means exactly that no partition is needed: the whole graph already
+belongs to the class characterized by \(P\).
+\medskip
+
+
+
+
+
+
 \begin{definition}[Solution and value]
 Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
 and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
@@ -194,7 +289,7 @@ of a solution for \(G\) that avoids \(\mathcal P\).
 
 \begin{definition}[Solución óptima]\label{def:sol-optima}
 Sea \(G\) un grafo y sea \(\mathcal P\) una familia de patrones coloreados.
-Una solución \(S=(\prec,\mathcal Q)\)\eric{para $G$} se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
+Una solución \(S=(\prec,\mathcal Q)\) para $G$ se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
 \[
 |\mathcal S|=\minClases_{\mathcal P}(G).
 \]
@@ -2572,10 +2667,126 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 
+\begin{definition}[Forest colored patterns]
+Let \(r\prec s\prec t\) be three ordered vertices. For each
+\[
+ab\in\{rs,rt,st\},
+\]
+we define the colored pattern
+\[
+\operatorname{for}_{ab}=(A,N,C_{ab}),
+\]
+where
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing,
+\]
+and
+\[
+C_{rs}:=\{r,s\},\qquad
+C_{rt}:=\{r,t\},\qquad
+C_{st}:=\{s,t\}.
+\]
+Thus, all three patterns have the same required edges \(rt\) and \(st\), and differ only in the pair of vertices
+required to lie in the same part of the partition.
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node       (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\caption{\(\forrs\)}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node       (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\caption{\(\forrt\)}
+\end{figure}
+
+
+\begin{figure}[]
+\begin{center}
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node       (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\end{center}
+\caption{\(\forst\)}
+\end{figure}
+\end{definition}
+
+
+
+
+
+\begin{definition}[Forest colored patterns]
+Let \(r\prec s\prec t\) be three ordered vertices. We define the three forest colored patterns
+\[
+\forrs=(A,N,\{r,s\}),\qquad
+\forrt=(A,N,\{r,t\}),\qquad
+\forst=(A,N,\{s,t\}),
+\]
+where
+\[
+A=\bigl\{\{r,t\},\{s,t\}\bigr\},
+\qquad
+N=\varnothing.
+\]
+Thus, the three patterns have the same required edges \(rt\) and \(st\), and differ only in the pair of vertices that must lie in the same part of the partition.
+\end{definition}
+
+\begin{definition}[Families of forest colored patterns]
+We define the following families of forest colored patterns:
+\[
+\mathcal F_{rs\text{-}st}:=\{\forrs,\forst\},
+\qquad
+\mathcal F_{rs\text{-}rt}:=\{\forrs,\forrt\},
+\qquad
+\mathcal F_{rt\text{-}st}:=\{\forrt,\forst\},
+\]
+and
+\[
+\mathcal F_{rs\text{-}st\text{-}rt}:=\{\forrs,\forst,\forrt\}.
+\]
+A solution avoids one of these families if it avoids every colored pattern in the family.
+\end{definition}
+
+
 
 
 \begin{definition}[\(\forrs\)]
-Let \(r\prec s\prec t\) be three ordered positions\eric{Mepa que mejor usemos vertices en todos lados en vez de positions, porque no estoy seguro de qué sea una position}. The colored pattern \(\forrs\) is
+Let \(r\prec s\prec t\) be three ordered vertices\eric{Mepa que mejor usemos vertices en todos lados en vez de positions, porque no estoy seguro de qué sea una position DONE}. The colored pattern \(\forrs\) is
 \[
 \forrs=(A,N,C),
 \]
@@ -2627,6 +2838,7 @@ Thus, \(\forrt\) forbids an ordered triple \(r\prec s\prec t\)
 such that \(r\sim t\), \(s\sim t\), and \(r\) and \(t\) lie in the same part of
 the partition.
 
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[
   scale=1,
@@ -2640,6 +2852,7 @@ the partition.
 \draw (s)--(t);
 \end{tikzpicture}
 \end{center}
+\end{figure}
 \end{definition}
 
 
@@ -2682,7 +2895,7 @@ the partition.
 
 \eric{Comprimir estas 3 defs en una sola. Quizá hacer lo mismo con est y bip}
 
-
+Decidir cual version preferimos, estas no las borre, agregue arriba la version comprimida
 
 
 
@@ -2733,54 +2946,52 @@ A solution avoids \(\mathcal F_{rs\text{-}st\text{-}rt}\) if it avoids the three
 
 Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision variants.
 
-\eric{Poner los problemas en cajitas que queda mas lindo}
-\eric{Usar textsc en cada nombre de problema}  
+\eric{Poner los problemas en cajitas que queda mas lindo DONE}
+\eric{Usar textsc en cada nombre de problema DONE}  
 \begin{problem}[\textsc{\(\mathcal P\)-Avoidance}]
-\textbf{Input:} A graph \(G=(V,E)\) and an integer \(k\).
+\textbf{Input:} A graph \(G=(V(G),E)\) and an integer \(k\).
 
 \textbf{Question:} Does there exist a solution
 \[
 S=(\prec,\mathcal Q),
 \qquad
-\mathcal Q=\{V_1,\dots,V_q\},
-\qquad
-q\le k,
+\mathcal Q=\{V_1,\dots,V_k\},
 \]
-such that \(S\) avoids every colored pattern in \(\mathcal P\)?
+for \(G\) such that \(S\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
-\eric{Cada vez que digamos "solution" hay que decir para que grafo es.}
+\eric{Cada vez que digamos "solution" hay que decir para que grafo es. OK}
 
-\eric{Si las partes de la partición pueden ser vacías, podemos poner $\{V_1,\dots,V_k\}$ en cambio.}
+\eric{Si las partes de la partición pueden ser vacías, podemos poner $\{V_1,\dots,V_k\}$ en cambio. OK}
 
-\begin{problem}[\(\mathcal P\)-Avoidance with a given order]
-\textbf{Input:} A graph \(G=(V,E)\) \eric{Usemos siempre o $V(G)$ o $V$}, a total order \(\prec\) of \(V\), and an integer \(k\).
+\begin{problem}[\textsc{\(\mathcal P\)-Avoidance with a given order}]
+\textbf{Input:} A graph \(G=(V(G),E)\) \eric{Usemos siempre o $V(G)$ o $V$ oK}, a total order \(\prec\) of \(V\), and an integer \(k\).
 
 \textbf{Question:} Does there exist a partition
 \[
-\mathcal Q=\{V_1,\dots,V_q\},
-\qquad
-q\le k,
+\mathcal Q=\{V_1,\dots,V_k\},
 \]
 such that the solution
 \[
 S=(\prec,\mathcal Q)
 \]
-avoids every colored pattern in \(\mathcal P\)?
+for \(G\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
+
+
 \begin{problem}[\(\mathcal P\)-Avoidance with a given partition]
-\textbf{Input:} A graph \(G=(V,E)\) and a partition
+\textbf{Input:} A graph \(G=(V(G),E)\) and a partition
 \[
 \mathcal Q=\{V_1,\dots,V_k\}
 \]
 of \(V\).
 
-\textbf{Question:} Does there exist a total order \(\prec\) of \(V\) such that the solution
+\textbf{Question:} Does there exist a total order \(\prec\) of \(V(G)\) such that the solution
 \[
 S=(\prec,\mathcal Q)
 \]
-avoids every colored pattern in \(\mathcal P\)?
+for \(G\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
 When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \(P\)-Avoidance instead of
@@ -2927,7 +3138,7 @@ that avoids \(\forrs\) with respect to a given order is NP-complete.
 
 \begin{proof}[Proof sketch]
 Reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
-\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\)\eric{Consistencia en como representamos aristas tambien}, with \(i<j\),
+\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\), with \(i<j\),
 add a witness vertex \(w_{ij}\), adjacent only to \(x_i\) and \(x_j\), and do
 not keep the original edge \(x_i x_j\). Thus,
 \[
@@ -3001,114 +3212,147 @@ of \(\forrs\), a contradiction. Hence the restriction to \(V(X)\) is a proper
 
 
 
-
-\begin{definition}[Removable vertex]
-Let \(G=(V,E)\) be a graph and let
+\begin{definition}[\(\mathcal P\)-removable vertex]
+Let \(G\) be a graph, let
 \[
 \mathcal Q=\{V_1,\dots,V_k\}
 \]
-be a fixed partition of \(V\). Let \(H=G[A]\) be an induced subgraph of \(G\), with \(A\subseteq V\).
+be a fixed partition of \(V(G)\), and let \(H=G[A]\) be an induced subgraph of \(G\), with
+\(A\subseteq V(G)\). Let \(\mathcal P\) be a family of colored patterns.
 
-A vertex \(v\in A\) is called \emph{removable} in \(H\) with respect to \(\mathcal Q\) if
+A vertex \(v\in V(H)\) is called \emph{\(\mathcal P\)-removable} in \(H\) with respect to \(\mathcal Q\) if no pattern
+in \(\mathcal P\) can be realized with \(v\) playing the role of the last vertex \(t\).
+
+More formally, \(v\) is \(\mathcal P\)-removable if, for every pattern
+\[
+P\in\mathcal P
+\]
+and every injective map
+\[
+\varphi:\{r,s,t\}\to V(H)
+\]
+such that \(\varphi(t)=v\), the map \(\varphi\) avoids \(P\).
+
+Equivalently, placing \(v\) at the end of the current induced subgraph \(H\) does not create any forbidden occurrence
+whose last vertex is \(v\). \eric{esta ok esto?}
+\end{definition}
+
+
+\begin{lemma}\label{lem:removable-forrs}
+Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
+and let \(H\) be an induced subgraph of \(G\).
+A vertex \(v\in V(H)\) is \(\mathcal F_{rs}\)-removable in \(H\) if and only if
 \[
 |N_H(v)\cap V_i|\le 1
 \qquad\text{for every } i=1,\dots,k.
 \]
-
-In other words, \(v\) is removable if, in the current induced subgraph \(H\), it has no two neighbors lying in the
-same part of the partition. Thus, if \(v\) is placed last among the vertices of \(H\), it cannot be the last vertex
-of an occurrence of \(\forrs\).
-\end{definition}
+In other words, \(v\) is removable if it has no two neighbors in the same part of the partition.
+\end{lemma}
 
 
-
-\begin{theorem}\label{thm:forrs-given-partition-poly}
-  There exists an [comlpejidad] algorithm that decides whether a given graph \(G\) admits a \(\forrs\)-avoiding solution with respect to a given partition \(\mathcal Q\). Moreover, if such a solution exists, the algorithm constructs a valid order \(\prec\) of \(V(G)\) such that
+\begin{lemma}\label{lem:removable-forrt-st}
+Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
+and let \(H\) be an induced subgraph of \(G\).
+For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) containing \(v\).
+Then \(v\) is \(\mathcal F_{rt\text{-}st}\)-removable in \(H\) if and only if
 \[
-S=(\prec,\mathcal Q)
+\deg_H(v)\le 1
+\qquad\text{or}\qquad
+N_H(v)\cap \mathcal Q(v)=\varnothing.
 \]
-avoids \(\forrs\).
-% The \(\forrs\)-Avoidance problem with a given partition can be solved in polynomial time. \eric{Digamos la comple} 
-\end{theorem}
+That is, \(v\) is removable if it has at most one neighbor in the current graph, or if none of its current neighbors
+lies in its own part.
+\end{lemma}
+
+\begin{lemma}\label{lem:removable-forrs-st-rt}
+Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
+and let \(H\) be an induced subgraph of \(G\).
+For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) containing \(v\).
+Then \(v\) is \(\mathcal F_{rs\text{-}st\text{-}rt}\)-removable in \(H\) if and only if either
+\[
+\deg_H(v)\le 1,
+\]
+or both of the following conditions hold:
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing
+\]
+and
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+Equivalently, if \(v\) has at least two neighbors, then all its neighbors must lie in parts different from
+\(\mathcal Q(v)\), and no two of them may lie in the same part.
+\end{lemma}
+
+
+
+
+
+\begin{algorithm}[ht]
+\caption{\textsc{Given-Partition-\(\mathcal P\)}}
+\label{alg:generic-given-partition}
+\begin{algorithmic}[1]
+\Require A graph \(G=(V(G),E(G))\), a partition \(\mathcal Q=\{V_1,\dots,V_k\}\) of \(V(G)\), and a family of colored patterns \(\mathcal P\).
+\Ensure \textbf{YES} and an order \(\prec\) if such an order exists; otherwise \textbf{NO}.
+
+\State \(A \gets V(G)\)
+\State \(L \gets [\,]\) \Comment{\(L\) stores the vertices in deletion order}
+
+\While{\(A\neq\varnothing\)}
+    \If{there exists a \(\mathcal P\)-removable vertex \(v\in A\) in \(G[A]\) with respect to \(\mathcal Q\)}
+        \State append \(v\) to \(L\)
+        \State \(A\gets A\setminus\{v\}\)
+    \Else
+        \State \Return \textbf{NO}
+    \EndIf
+\EndWhile
+
+\State Let \(\prec\) be the order obtained by reading \(L\) from right to left
+\State \Return \((\textbf{YES},\prec)\)
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+\begin{lemma}[Correctness of the deletion algorithm]\label{lem:generic-deletion-correctness}
+Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\), and let
+\(\mathcal P\) be a family of colored patterns.
+
+Assume that the following property holds for \(\mathcal P\): for every induced subgraph \(H\) of \(G\), if there exists
+an order \(\prec\) of \(V(H)\) such that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) in \(H\), then \(H\) contains a
+\(\mathcal P\)-removable vertex.
+
+Then Algorithm~\ref{alg:generic-given-partition} returns \textbf{YES} if and only if there exists an order \(\prec\)
+of \(V(G)\) such that \((\prec,\mathcal Q)\) avoids \(\mathcal P\).
+\end{lemma}
 
 \begin{proof}
-Let \(G=(V,E)\) be a graph and let
-\[
-\mathcal Q=\{V_1,\dots,V_k\}
-\]
-be the given partition of \(V\). We use the following greedy algorithm.
+First suppose that the algorithm returns \textbf{YES}. Let \(L\) be the deletion list produced by the algorithm, and let
+\(\prec\) be the order obtained by reading \(L\) from right to left.
 
-\begin{center}
-\begin{tabbing}
-\hspace{1cm}\=\hspace{1cm}\=\hspace{1cm}\=\kill
-\textsc{Given-Partition-ForRS}\((G,\mathcal Q)\) \\
-\> \(A \leftarrow V(G)\) \\
-\> \(L \leftarrow\) empty list \\
-\> \textbf{while} \(A\neq\varnothing\) \textbf{do} \\
-\>\> \textbf{if} there exists a removable vertex \(v\in A\) in \(G[A]\) \textbf{then} \\
-\>\>\> append \(v\) to \(L\) \\
-\>\>\> \(A\leftarrow A\setminus\{v\}\) \\
-\>\> \textbf{else} \\
-\>\>\> return \textbf{NO} \\
-\> orden \(\leftarrow\) the reverse of \(L\) \\ 
-\> return \textbf{YES}
-\end{tabbing}
-\eric{Usar el package algorithm o algo así. Fijarse en overleaf}
+We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\). Consider any ordered occurrence whose last vertex is \(v\).
+When \(v\) was deleted by the algorithm, all vertices that appear before \(v\) in the final order were still active.
+Since \(v\) was \(\mathcal P\)-removable in the current induced subgraph, this occurrence avoids every pattern in
+\(\mathcal P\). Therefore every ordered occurrence avoids \(\mathcal P\), and hence \((\prec,\mathcal Q)\) avoids
+\(\mathcal P\).
 
-\eric{Armar el orden en el algoritmo.}
-\end{center}
+Conversely, suppose that there exists an order \(\prec\) of \(V(G)\) such that \((\prec,\mathcal Q)\) avoids
+\(\mathcal P\). We show that the algorithm cannot get stuck.
 
-We prove correctness.
+At any step, let \(H=G[A]\) be the current induced subgraph. Since deleting vertices cannot create a forbidden
+occurrence, the restriction of the valid order \(\prec\) to \(A\) still avoids \(\mathcal P\) in \(H\).
+By the hypothesis of the lemma, \(H\) contains a \(\mathcal P\)-removable vertex. Thus the algorithm always has a
+valid choice and cannot return \textbf{NO}.
 
-First suppose that the algorithm returns \textbf{YES}. Let
-\[
-d_n\prec d_{n-1}\prec \cdots \prec d_1
-\]
-be the order of the vertices in \(V(G)\) constructed by the algorithm.
-We claim that \(S=(\prec,\mathcal Q)\) avoids \(\forrs\).
-
-Let \(r\prec s\prec t\). In order to realize \(\forrs\), we would need
-\[
-r\sim t,\qquad s\sim t,
-\]
-and \(r\) and \(s\) in the same part of \(\mathcal Q\). Write \(t=d_j\). The vertices before \(t\) in the order
-\(\prec\) are precisely the vertices that were still active when \(d_j\) was deleted. Since \(d_j\) was removable
-in the current induced subgraph, it had at most one neighbor in each part of \(\mathcal Q\) among those active
-vertices. Hence \(t\) cannot have two earlier neighbors in the same part. Therefore no ordered triple realizes
-\(\forrs\), and \(S\) avoids \(\forrs\).
-
-Conversely, suppose that there exists an order \(\prec\) such that
-\[
-S=(\prec,\mathcal Q)
-\]
-avoids \(\forrs\). Consider any current induced subgraph \(H=G[A]\) during the algorithm, and restrict \(\prec\) to
-\(A\). Let \(v\) be the last vertex of \(A\) in this restricted order. We claim that \(v\) is removable in \(H\).
-
-Indeed, if \(v\) had two neighbors \(r,s\in A\) in the same part of \(\mathcal Q\), then both \(r\) and \(s\)
-would precede \(v\). Assuming \(r\prec s\), the triple
-\[
-r\prec s\prec v
-\]
-would realize \(\forrs\), a contradiction. Thus \(v\) is removable.
-
-Therefore, whenever a valid order exists for the current induced subgraph, at least one removable vertex exists.
-Moreover, deleting vertices cannot create a forbidden ordered triple in the remaining graph. Hence the greedy
-algorithm gets stuck if and only if no valid order exists.
-
-Thus the algorithm returns \textbf{YES} if and only if there exists an order \(\prec\) such that
-\[
-(\prec,\mathcal Q)
-\]
-avoids \(\forrs\).
-
-Finally, the algorithm is polynomial. A direct implementation runs in polynomial time. Moreover, by maintaining the
-values
-\[
-c(v,i):=|N_{G[A]}(v)\cap V_i|
-\]
-for every active vertex \(v\) and every part \(V_i\), the algorithm can be implemented in time \(O(nk+m)\), where
-\(n=|V(G)|\), \(m=|E(G)|\), and \(k=|\mathcal Q|\).  ERIC que me ayude con esta parte!!!
+Therefore the algorithm returns \textbf{YES} exactly when a valid order exists.
 \end{proof}
+
+
+
+
+
 
 
 
@@ -3246,7 +3490,7 @@ The \(\forst\)-Avoidance problem with a given partition is NP-complete.
 \end{theorem}
 
 \begin{proof}[Proof idea]
-We reduce from \textsc{NAE-3SAT}\eric{Definirlo citando}. Let \(\Phi\) be an instance of \textsc{NAE-3SAT}.
+We reduce from \textsc{NAE-3SAT}\eric{Definirlo citando. cuando hagamos lo de references bib}. Let \(\Phi\) be an instance of \textsc{NAE-3SAT}.
 A \emph{place} of \(\Phi\) is a pair
 \[
 p=(i,j),
@@ -3405,25 +3649,27 @@ forces \(x_i\) and \(x_j\) to lie in different parts. Therefore, the restriction
 
 aca empieza el lio
 
-\begin{definition}[Uncolored pattern on three vertices]
-An \emph{uncolored pattern} on three ordered positions \(r\prec s\prec t\) is a triple
+\begin{definition}[Pattern on three vertices]
+A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a pair
 \[
-P=(A,N,\varnothing),
+P=(A,N),
 \]
 where
 \[
-A,N \subseteq \binom{\{r,s,t\}}{2}.
+A,N\subseteq \binom{\{r,s,t\}}{2}
+\qquad\text{and}\qquad
+A\cap N=\varnothing.
 \]
-The set \(A\) specifies the pairs that must be edges, while \(N\) specifies the pairs that must be non-edges.
-The symbol \(\varnothing\) indicates that the pattern imposes no condition on the parts of a partition.
+The set \(A\) indicates the pairs of vertices that are required to be edges, while \(N\) indicates the pairs of vertices that are required to be non-edges.
+Pairs that do not belong to \(A\cup N\) are left unrestricted.
 \end{definition}
-\eric{Uncolored pattern en realidad es un pattern, y lo vamos a definir antes que los colored patterns, así que mejor si no ponemos el vacio al final. Patron = (A, N)}
+\eric{Uncolored pattern en realidad es un pattern, y lo vamos a definir antes que los colored patterns, así que mejor si no ponemos el vacio al final. Patron = (A, N). DONE}
 
 
 
 
 \begin{definition}[\(P\)-partition number]
-Let \(P=(A,N,\varnothing)\) be a pattern with no color constraint. We define
+Let \(P=(A,N)\) be a pattern on three vertices. We define
 \[
 \minClases_P(G)
 \]
@@ -3436,11 +3682,9 @@ satisfying
 G[V_i]\in \mathcal C_P
 \qquad\text{for every } i=1,\dots,k.
 \]
-
-esta es parecida a la de min clases de arriba de todo, no se si unificarlas, ERIC help me \eric{$C_P$ está definido después recién.}
 \end{definition}
 
-\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro.}
+\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro. OK todavia no me meti en el lio de las citas}
 
 
 
@@ -3450,43 +3694,39 @@ esta es parecida a la de min clases de arriba de todo, no se si unificarlas, ERI
 
 
 
-\begin{definition}[Class associated with a pattern with no color constraint]
+\begin{definition}[Class associated with a pattern on three vertices]
 Let
 \[
-P=(A,N,\varnothing) ojo, aca no se si C acepta ser vacio como lo defini
+P=(A,N)
 \]
-be a pattern with no color constraint. We denote by \(\mathcal C_P\) the class of graphs characterized by \(P\);
+be a pattern. We denote by \(\mathcal C_P\) the class of graphs characterized by \(P\);
 that is,
 \[
 G\in \mathcal C_P
 \]
 if and only if there exists a total order \(\prec\) of \(V(G)\) such that every ordered triple of vertices of \(G\)
 avoids the pattern \(P\).
-\end{definition}\eric{Esto probablemente haya que ponerlo al principio.}
+\end{definition}\eric{Esto probablemente haya que ponerlo al principio. OK, pero despues}
+
+
 
 
 
 
 
 \begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
-Let \(P=(A,N,C)\) be a colored pattern, and let \(\mathcal C_P\) \eric{Definir un $P' = (A,N)$.} be the graph class obtained by forgetting \eric{"forgetting" no está definido} the color constraint of \(P\).
+Let \(P=(A,N,C)\) be a colored pattern, and let $P' = (A,N)$ be a pattern. \eric{Definir un $P' = (A,N)$. OK}
 
 Then, for every graph \(G\),
 \[
-\minClases_{\{P\}}(G)
+\minClases_P(G)
 \;\ge\;
-\min\left\{
-k:\ 
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\text{ and }
-G[V_i]\in \mathcal C_P
-\text{ for every } i
-\right\}.
+\minClases_{P'}(G)
+.
 \]
 \end{theorem}
-\eric{Creo que antes dijiste que ibas a usar minclases sin llavecitas si es un solo patron.}
 
-\eric{Usar minClases P' en vez de el min este.}
+\eric{Usar minClases P' en vez de el min este. DONE}
 
 \begin{proof}
 Let
@@ -3495,131 +3735,98 @@ S=(\prec,\mathcal Q),
 \qquad
 \mathcal Q=\{V_1,\dots,V_k\},
 \]
-be a solution that avoids \(P\). We show that every induced subgraph \(G[V_i]\) belongs to \(\mathcal C_P\).
+be a solution that avoids \(P\).
 
-Fix a part \(V_i\), and restrict the order \(\prec\) to \(V_i\). Consider any ordered triple
-\[
-r\prec s\prec t
-\]
-of vertices in \(V_i\). Since all three vertices lie in the same part, the color constraint of \(P\) cannot be the reason why the triple avoids \(P\). Therefore, the triple must avoid \(P\) because one of the required edges in \(A\) is missing, or because one of the forbidden edges in \(N\) is present. Equivalently, the triple avoids the uncolored pattern \((A,N,\varnothing)\).
+Fix a part \(V_i\), and restrict the order \(\prec\) to \(V_i\). We claim that this restricted order avoids
+\(P'\) in \(G[V_i]\). Indeed, if an ordered triple inside \(V_i\) realized \(P'\), then the required edge and
+non-edge conditions of \(P\) would be satisfied. Moreover, since all three vertices lie in the same part \(V_i\),
+the color condition \(C\) would also be satisfied. Hence the same triple would realize \(P\), contradicting that
+\(S\) avoids \(P\).
 
-Thus the restricted order witnesses that
+Therefore,
 \[
-G[V_i]\in \mathcal C_P.
+G[V_i]\in \mathcal C_{P'}
+\qquad\text{for every } i=1,\dots,k.
 \]
-Since this holds for every part \(V_i\), every solution avoiding \(P\) with \(k\) parts gives a partition of \(V(G)\) into \(k\) parts, each inducing a graph in \(\mathcal C_P\). Taking the minimum over all such solutions gives the desired inequality.
+Thus the partition \(\mathcal Q\) witnesses that
+\[
+\minClases_{P'}(G)\le k.
+\]
+Taking the minimum over all solutions avoiding \(P\), we obtain
+\[
+\minClases_{P'}(G)\le \minClases_P(G),
+\]
+as desired.
 \end{proof}
 
 
 
 
-
-
-
-\begin{theorem}\label{thm:rt-pattern-partition}
+\begin{theorem}\label{thm:rt-colored-equals-uncolored}
 Let
 \[
-P=(A,\varnothing,\{r,t\})
+P=(A,N,\{r,t\})
 \]
-be a colored pattern. Then, for every graph \(G\),
+be a colored pattern, and let
 \[
-\minClases_{\{P\}}(G)
-=
-\min\left\{
-k:\ 
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\text{ and }
-\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
-\text{ for every } i
-\right\}.
+P'=(A,N)
+\] 
+be a pattern. Then, for every graph \(G\),
+\[
+\minClases_P(G)=\minClases_{P'}(G).
 \]
 \end{theorem}
 
-\eric{Lo mismo con este min.}
-
-\eric{Como bien dijo germancito no hace falta que sea vacio el N.}
-
 \begin{proof}
-Let
+The inequality
 \[
-M(G):=
-\min\left\{
-k:\ 
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\text{ and }
-\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
-\text{ for every } i
-\right\}.
+\minClases_P(G)\ge \minClases_{P'}(G)
 \]
-
-We first prove
-\[
-\minClases_{\{P\}}(G)\ge M(G).
-\]
-This follows directly from Theorem~\ref{thm:colored-lower-bound-by-class-partition}. Indeed, every solution
-that avoids \(P\) induces a partition of \(V(G)\) into parts such that each part belongs to the class generalized
-by \(P\). Since this class is exactly the class of graphs \(H\) satisfying
-\[
-\minClases_{\{P\}}(H)=1,
-\]
-we obtain
-\[
-\minClases_{\{P\}}(G)\ge M(G).
-\]
+follows from Theorem~\ref{thm:colored-lower-bound-by-class-partition}.
 
 It remains to prove the reverse inequality. Let
 \[
+k=\minClases_{P'}(G).
+\]
+By definition of \(\minClases_{P'}\), there exists a partition
+\[
 V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
 \]
-be a partition such that
-\[
-\minClases_{\{P\}}\bigl(G[V_i]\bigr)=1
-\qquad
-\text{for every } i=1,\dots,k.
-\]
-For each \(i\), choose an order \(\prec_i\) of \(V_i\) such that the one-part solution
-\[
-(\prec_i,\{V_i\})
-\]
-avoids \(P\) in \(G[V_i]\).
+such that, for every \(i=1,\dots,k\), the graph \(G[V_i]\) belongs to the class associated with \(P'\).
+Equivalently, for each \(i\), there exists an order \(\prec_i\) of \(V_i\) such that \(G[V_i]\) avoids the pattern
+\(P'=(A,N)\).
 
-Now define a global order \(\prec\) by putting the parts in blocks:
+We define a global order \(\prec\) by blocks:
 \[
 V_1\prec V_2\prec\cdots\prec V_k,
 \]
-and using the order \(\prec_i\) inside each block \(V_i\). We claim that
+using the order \(\prec_i\) inside each block \(V_i\). Consider the solution
 \[
-S=(\prec,\{V_1,\dots,V_k\})
+S=(\prec,\{V_1,\dots,V_k\}).
 \]
-avoids \(P\).
+We show that \(S\) avoids \(P\).
 
 Let \(\varphi:\{r,s,t\}\to V(G)\) be an ordered occurrence, so
 \[
 \varphi(r)\prec \varphi(s)\prec \varphi(t).
 \]
-If \(\varphi(r)\) and \(\varphi(t)\) lie in different parts of the partition, then the color condition
-\(C=\{r,t\}\) fails, and therefore \(\varphi\) avoids \(P\).
 
-Suppose then that \(\varphi(r)\) and \(\varphi(t)\) lie in the same part \(V_i\). Since the global order is by
+Suppose that \(\varphi(r)\) and \(\varphi(t)\) lie in the same part \(V_i\). Since the order \(\prec\) is by
 blocks and
 \[
 \varphi(r)\prec \varphi(s)\prec \varphi(t),
 \]
-we also have \(\varphi(s)\in V_i\). Thus the whole occurrence lies inside \(G[V_i]\). By the choice of
-\(\prec_i\), the one-part solution \((\prec_i,\{V_i\})\) avoids \(P\), so this occurrence avoids \(P\).
+we also have \(\varphi(s)\in V_i\). Thus the whole occurrence lies inside \(G[V_i]\). But the order
+\(\prec_i\) was chosen so that \(G[V_i]\) avoids \(P'\). Hence the occurrence fails one of the edge/non-edge
+conditions of \(P'\), and therefore it also avoids \(P\).
 
-Hence every ordered occurrence avoids \(P\), and therefore \(S\) avoids \(P\). This gives
+Thus \(S\) avoids \(P\), and it has \(k\) parts. Hence
 \[
-\minClases_{\{P\}}(G)\le k.
+\minClases_P(G)\le k=\minClases_{P'}(G).
 \]
-Taking the minimum over all such partitions gives
+Combining both inequalities, we obtain
 \[
-\minClases_{\{P\}}(G)\le M(G).
-\]
-
-Combining both inequalities, we conclude that
-\[
-\minClases_{\{P\}}(G)=M(G).
+\minClases_P(G)=\minClases_{P'}(G).
 \]
 \end{proof}
 
@@ -3630,78 +3837,10 @@ Combining both inequalities, we conclude that
 
 
 
-\eric{mepa que esto que viene es una observation o un lemma}
-
-\begin{theorem}\label{thm:minclases-one-class}
-Let \(P=(A,N,\varnothing)\) be a pattern with no color constraint. Then, for every graph \(G\),
-\[
-\minClases_P(G)=1
-\quad\Longleftrightarrow\quad
-G\in \mathcal C_P.
-\]
-\end{theorem}
-
-\begin{proof}
-First suppose that
-\[
-\minClases_P(G)=1.
-\]
-Then there exists a partition of \(V(G)\) into one part,
-\[
-V(G)=V_1,
-\]
-such that
-\[
-G[V_1]\in \mathcal C_P.
-\]
-Since \(V_1=V(G)\), we have \(G[V_1]=G\). Therefore,
-\[
-G\in \mathcal C_P.
-\]
-
-Conversely, suppose that
-\[
-G\in \mathcal C_P.
-\]
-Consider the trivial partition
-\[
-V_1:=V(G).
-\]
-Then
-\[
-G[V_1]=G\in \mathcal C_P.
-\]
-Hence \(G\) admits a partition into one part satisfying the definition of \(\minClases_P(G)\), so
-\[
-\minClases_P(G)\le 1.
-\]
-Since every partition has at least one part, we conclude that
-\[
-\minClases_P(G)=1.
-\]
-
-Thus,
-\[
-\minClases_P(G)=1
-\quad\Longleftrightarrow\quad
-G\in \mathcal C_P.
-\]
-\end{proof}
-
-
-In words, when \(C=\varnothing\), the parameter \(\minClases_P\) is the partition version of the original
-class \(\mathcal C_P\). Having value \(1\) means exactly that no partition is needed: the whole graph already
-belongs to the class characterized by \(P\).
-\medskip
-
-
-aca termina el lio, sigo
 
 
 
-
-
-\begin{lemma}\label{lem:forrt-given-partition-forest}
+\begin{corollary}\label{lem:forrt-given-partition-forest}
 Let \(G=(V,E)\) be a graph and let
 \[
 \mathcal Q=\{V_1,\dots,V_k\}
@@ -3711,22 +3850,14 @@ be a fixed partition of \(V\). There exists an order \(\prec\) such that
 S=(\prec,\mathcal Q)
 \]
 avoids \(\forrt\) if and only if \(G[V_i]\) is a forest for every \(i=1,\dots,k\).
-\end{lemma}
+\end{corollary}
 
-\eric{Corolario de lo de antes, no necesita demo.}
+\eric{Corolario de lo de antes, no necesita demo. ahi esta ok? }
 
-\begin{proof}
-This is a direct consequence of Theorem~\ref{thm:rt-pattern-partition}, applied to the forest pattern
-with required edges \(rt\) and \(st\).
 
-Indeed, if \(S=(\prec,\mathcal Q)\) avoids \(\forrt\), then restricting \(\prec\) to each part \(V_i\)
-gives an order of \(G[V_i]\) avoiding the corresponding uncolored forest pattern. Hence \(G[V_i]\) is a forest.
 
-Conversely, if every \(G[V_i]\) is a forest, then each \(G[V_i]\) admits an order avoiding the uncolored forest pattern.
-Putting these orders together by blocks gives a global order \(\prec\) such that
-\((\prec,\mathcal Q)\) avoids \(\forrt\).
-\end{proof}
 
+CREO que hay que seguir chequeando desde aca
 
 
 \begin{theorem}\label{thm:forrt-given-partition-poly}
@@ -4195,6 +4326,352 @@ if and only if \(G\) admits a solution with at most \(k\) parts avoiding \(\math
 
 
 
+
+
+\begin{theorem}\label{thm:forrs-rt-given-partition-np-complete}
+The \(\mathcal F_{rs\text{-}rt}\)-Avoidance problem with a given partition is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from the following NP-complete ordering problem. An instance is a triple
+\[
+(A,B,T),
+\]
+where \(A\) is a set of elements, \(B\) is a set of precedence constraints \((u,v)\), requiring
+\(u\prec v\), and \(T\) is a family of disjoint triples \((a,b,c)\), requiring that the order
+\(a\prec b\prec c\) does \emph{not} occur. In the notation of Guttmann--Maucher, this corresponds to family \(4\) with
+\[
+P=S_3\setminus\{(123)\}.
+\]
+
+First, we subdivide the precedence constraints. For every \((u,v)\in B\), add a new element \(z_{uv}\) and replace
+\(u\prec v\) by the two constraints
+\[
+u\prec z_{uv},
+\qquad
+z_{uv}\prec v.
+\]
+Let \((A',B',T)\) be the resulting instance. This transformation preserves satisfiability.
+
+We now construct a graph \(G\) and a fixed partition \(\mathcal Q\). The base vertices of \(G\) are the elements of
+\(A'\). For every pair \((u,v)\in B'\), add two auxiliary vertices \(p_{uv}\) and \(q_{uv}\). Thus
+\[
+V(G)=A'\cup \{p_{uv},q_{uv}:(u,v)\in B'\}.
+\]
+
+The partition \(\mathcal Q\) is defined as follows. For every triple \((a,b,c)\in T\), put \(a\) and \(c\) in the
+same part, and put \(b\) in a different part. Since the triples are disjoint, this creates no conflicts. Every base
+vertex not appearing in a triple is put in its own part. Finally, for each \((u,v)\in B'\), put \(p_{uv}\) and
+\(q_{uv}\) in the same part as \(v\).
+
+The edges of \(G\) are the following. For every triple \((a,b,c)\in T\), add
+\[
+ac,\qquad bc,
+\]
+and do not add the edge \(ab\). For every pair \((u,v)\in B'\), add
+\[
+up_{uv},\quad vp_{uv},\quad uq_{uv},\quad vq_{uv}.
+\]
+No other edges are added.
+
+The triple gadget forbids the order \(a\prec b\prec c\): if this order occurred, then the triple
+\(a\prec b\prec c\) would have the required edges \(ac\) and \(bc\), and \(a,c\) would lie in the same part, giving an
+occurrence of \(\forrt\).
+
+The pair gadget forces \(u\prec v\). Indeed, suppose that a valid order had \(v\prec u\). If one of the auxiliaries
+appears after \(u\), say
+\[
+v\prec u\prec p_{uv},
+\]
+then this triple realizes \(\forrt\), since \(v\sim p_{uv}\), \(u\sim p_{uv}\), and \(v,p_{uv}\) lie in the same part.
+If both auxiliaries appear before \(u\), then two of them are ordered, say
+\[
+p_{uv}\prec q_{uv}\prec u,
+\]
+and this triple realizes \(\forrs\), since \(p_{uv},q_{uv}\) lie in the same part and both are adjacent to \(u\).
+Thus every valid order must satisfy \(u\prec v\).
+
+Conversely, assume that the ordering instance \((A',B',T)\) is satisfiable. Extend a satisfying order to the auxiliary
+vertices by placing, for every \((u,v)\in B'\),
+\[
+u\prec \cdots \prec v \prec p_{uv}\prec q_{uv}.
+\]
+The subdivision step ensures that the endpoints \(u\) and \(v\) of every pair in \(B'\) lie in different parts of
+\(\mathcal Q\). With this extension, the pair gadgets do not create occurrences of either \(\forrs\) or \(\forrt\),
+and the triple gadgets are valid because the order \(a\prec b\prec c\) is avoided for every \((a,b,c)\in T\).
+
+Therefore, the original ordering instance is satisfiable if and only if the constructed instance \((G,\mathcal Q)\)
+admits an order avoiding both \(\forrs\) and \(\forrt\). The construction is polynomial. The problem is in NP because
+a certificate is an order \(\prec\), and checking whether \((\prec,\mathcal Q)\) avoids both patterns can be done in
+polynomial time. Hence the problem is NP-complete.
+\end{proof}
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:forrt-st-given-order-np-complete}
+The \(\mathcal F_{rt\text{-}st}\)-Avoidance problem with a given order is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
+that avoids both \(\forrt\) and \(\forst\) with respect to a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+\[
+V(X)=\{x_1,\dots,x_n\},
+\]
+ordered arbitrarily as
+\[
+x_1\prec x_2\prec\cdots\prec x_n.
+\]
+For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent only to \(x_j\).
+We keep the original edge \(x_i x_j\). Thus,
+\[
+V(G)=V(X)\cup \{w_{ij}:x_i x_j\in E(X),\ i<j\},
+\]
+and
+\[
+E(G)=E(X)\cup \{w_{ij}x_j:x_i x_j\in E(X),\ i<j\}.
+\]
+The given order puts all witnesses first, in arbitrary order, and then the original vertices:
+\[
+\text{all } w_{ij}\prec x_1\prec x_2\prec\cdots\prec x_n.
+\]
+In particular, for every edge \(x_i x_j\in E(X)\), with \(i<j\), we have
+\[
+w_{ij}\prec x_i\prec x_j,
+\qquad
+w_{ij}\sim x_j,
+\qquad
+x_i\sim x_j.
+\]
+
+If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices and assign each witness
+\(w_{ij}\) the color of \(x_i\). Then every earlier neighbor of an original vertex has color different from it,
+so no ordered triple realizes either \(\forrt\) or \(\forst\).
+
+Conversely, suppose that a partition avoiding both \(\forrt\) and \(\forst\) exists. For each edge
+\(x_i x_j\in E(X)\), with \(i<j\), the triple
+\[
+w_{ij}\prec x_i\prec x_j
+\]
+has the required edges to \(x_j\). Since \(\forst\) is avoided, \(x_i\) and \(x_j\) must lie in different parts.
+Therefore, the restriction of the partition to \(V(X)\) is a proper \(k\)-coloring of \(X\).
+
+Thus \(X\) is \(k\)-colorable if and only if the constructed ordered graph admits a partition into at most \(k\)
+parts avoiding \(\mathcal F_{rt\text{-}st}\). The problem is in NP, so it is NP-complete.
+\end{proof}
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:forrt-st-general-np-complete}
+The \(\mathcal F_{rt\text{-}st}\)-Avoidance problem is NP-complete.
+More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a solution with at most \(k\) parts
+that avoids both \(\forrt\) and \(\forst\) is NP-complete.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), we construct \(G\) by adding one new vertex \(F\)
+adjacent to every vertex of \(X\), while keeping all edges of \(X\). That is,
+\[
+V(G)=V(X)\cup\{F\},
+\qquad
+E(G)=E(X)\cup \{Fx:x\in V(X)\}.
+\]
+
+If \(X\) has a proper \(k\)-coloring, choose one color \(\alpha\), assign color \(\alpha\) to \(F\), and order the vertices as
+\[
+F \prec \text{vertices of color }\alpha \prec \text{all remaining vertices}.
+\]
+Then no vertex has two earlier neighbors one of which lies in its own part, so the solution avoids both
+\(\forrt\) and \(\forst\).
+
+Conversely, suppose that \(G\) has a solution avoiding both \(\forrt\) and \(\forst\), with at most \(k\) parts.
+Let \(\alpha\) be the part containing \(F\), and write
+\[
+A:=\{x\in V(X):x\prec F\},
+\qquad
+B:=\{x\in V(X):F\prec x\}.
+\]
+The key observation is the following: if a vertex \(t\) has at least two earlier neighbors, then all its earlier
+neighbors must lie in parts different from the part of \(t\).
+
+From this observation, the coloring induced by the solution is already proper on \(B\), and also on the edges between
+\(A\) and \(B\). The only possible monochromatic edges of \(X\) lie inside \(A\). Moreover, for each part \(\beta\),
+the subgraph induced by the vertices of \(A\) in part \(\beta\) is a forest: if it contained a cycle, the last vertex
+of the cycle in the order would have two earlier neighbors in its own part, contradicting the observation.
+
+We now recolor the monochromatic forest components inside \(A\). For each part \(\beta\neq \alpha\), root every tree
+of the forest induced by \(A\cap \beta\), keep one side of the bipartition in color \(\beta\), and recolor the other
+side with the auxiliary color \(\alpha\). The vertices recolored with \(\alpha\) form an independent set, again by the
+observation above. Thus this recoloring destroys all monochromatic edges inside \(A\), and creates no new monochromatic
+edges.
+
+Hence we obtain a proper \(k\)-coloring of \(X\). Therefore \(X\) is \(k\)-colorable if and only if \(G\) admits a
+solution with at most \(k\) parts avoiding \(\mathcal F_{rt\text{-}st}\). The construction is polynomial, and the
+problem is in NP, so it is NP-complete.
+\end{proof}
+
+
+
+
+
+
+
+% In the preamble, if not already included:
+% \usepackage{algorithm}
+% \usepackage{algpseudocode}
+
+\begin{definition}[Removable vertex for \(\mathcal F_{rt\text{-}st}\)]
+Let \(G=(V,E)\) be a graph and let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V(G)\). For a vertex \(v\in V(G)\), we denote by
+\(\mathcal Q(v)\) the unique part of \(\mathcal Q\) that contains \(v\).
+
+Let \(H\) be an induced subgraph of \(G\). A vertex \(v\in V(H)\) is called
+\emph{removable} in \(H\) with respect to \(\mathcal Q\) if at least one of the following holds:
+\[
+\deg_H(v)\le 1,
+\]
+or
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing.
+\]
+In other words, \(v\) is removable if, in the current induced subgraph, either it has at most one neighbor,
+or none of its current neighbors belongs to its own part of the partition.
+\end{definition}
+
+\begin{theorem}\label{thm:forrt-st-given-partition-poly}
+The \(\mathcal F_{rt\text{-}st}\)-Avoidance problem with a given partition can be solved in polynomial time.
+\end{theorem}
+
+\begin{proof}
+Let \(G=(V,E)\) be a graph and let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be the given partition of \(V(G)\). We use the following greedy algorithm.
+
+\begin{algorithm}[ht]
+\caption{\textsc{Given-Partition-\(\mathcal F_{rt\text{-}st}\)}}
+\label{alg:forrt-st-given-partition}
+\begin{algorithmic}[1]
+\Require A graph \(G=(V,E)\) and a partition \(\mathcal Q=\{V_1,\dots,V_k\}\) of \(V(G)\).
+\Ensure \textbf{YES} and an order \(\prec\) if such an order exists; otherwise \textbf{NO}.
+
+\State \(A \gets V(G)\)
+\State \(L \gets [\,]\) \Comment{\(L\) stores the vertices in deletion order}
+
+\While{\(A\neq\varnothing\)}
+    \If{there exists a removable vertex \(v\in A\) in \(G[A]\) with respect to \(\mathcal Q\)}
+        \State append \(v\) to \(L\)
+        \State \(A\gets A\setminus\{v\}\)
+    \Else
+        \State \Return \textbf{NO}
+    \EndIf
+\EndWhile
+
+\State Let \(\prec\) be the order obtained by reading \(L\) from right to left
+\State \Return \((\textbf{YES},\prec)\)
+\end{algorithmic}
+\end{algorithm}
+
+We prove correctness.
+
+\medskip
+\noindent\textbf{Key observation.}
+Suppose that \(H\) is an induced subgraph of \(G\), and that there exists an order \(\prec\) of \(V(H)\)
+such that \((\prec,\mathcal Q)\) avoids both \(\forrt\) and \(\forst\) in \(H\).
+Then the last vertex of this order is removable in \(H\).
+
+Indeed, let \(v\) be the last vertex of the order. All neighbors of \(v\) in \(H\) lie to the left of \(v\).
+If \(\deg_H(v)\le 1\), then \(v\) is removable. Assume then that \(\deg_H(v)\ge 2\).
+We claim that \(v\) has no neighbor in its own part.
+
+Suppose, towards a contradiction, that there exists
+\[
+x\in N_H(v)\cap \mathcal Q(v).
+\]
+Since \(\deg_H(v)\ge 2\), there is another neighbor \(y\in N_H(v)\), with \(y\neq x\).
+Both \(x\) and \(y\) appear before \(v\).
+
+If
+\[
+x\prec y\prec v,
+\]
+then the triple \((x,y,v)\) realizes \(\forrt\), because \(x\sim v\), \(y\sim v\), and \(x\) and \(v\)
+lie in the same part.
+
+If instead
+\[
+y\prec x\prec v,
+\]
+then the triple \((y,x,v)\) realizes \(\forst\), because \(y\sim v\), \(x\sim v\), and \(x\) and \(v\)
+lie in the same part.
+
+Both cases contradict the assumption that the order avoids \(\forrt\) and \(\forst\). Therefore
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing,
+\]
+and \(v\) is removable.
+
+\medskip
+\noindent\textbf{If the algorithm returns \textbf{YES}.}
+Let \(\prec\) be the order returned by the algorithm; that is, the reverse of the deletion order.
+We show that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids both \(\forrt\) and \(\forst\).
+
+Consider an ordered triple
+\[
+r\prec s\prec t.
+\]
+When \(t\) was deleted by the algorithm, the vertices \(r\) and \(s\) were still active, because they appear before
+\(t\) in the final order. Thus, \(r\) and \(s\) belonged to the current induced subgraph at the moment \(t\) was deleted.
+
+Since \(t\) was removable at that moment, one of the following occurred:
+
+\begin{itemize}
+\item \(t\) had at most one neighbor among the active vertices. Then \(t\) cannot be adjacent to both \(r\) and \(s\), so
+the triple cannot realize either \(\forrt\) or \(\forst\).
+
+\item \(t\) had no active neighbor in its own part \(\mathcal Q(t)\). Then neither \(r\) nor \(s\), if adjacent to \(t\),
+lies in the same part as \(t\). Hence the color condition of both \(\forrt\) and \(\forst\) fails.
+\end{itemize}
+
+Therefore no ordered triple realizes \(\forrt\) or \(\forst\), and \(S\) avoids
+\(\mathcal F_{rt\text{-}st}\).
+
+\medskip
+\noindent\textbf{If there exists a valid order.}
+Assume that there exists an order \(\prec\) such that
+\[
+(\prec,\mathcal Q)
+\]
+avoids both \(\forrt\) and \(\forst\). We show that the algorithm cannot get stuck.
+
+At any step, let \(H=G[A]\) be the current induced subgraph. The restriction of a valid order to \(A\) still avoids
+\(\forrt\) and \(\forst\) in \(H\), since deleting vertices cannot create a forbidden ordered triple.
+By the key observation, the last vertex of this restricted order is removable in \(H\). Hence, whenever a valid order
+exists for the current subgraph, at least one removable vertex exists.
+
+Thus the algorithm returns \textbf{NO} only if no valid order exists. Therefore, the algorithm returns \textbf{YES}
+if and only if there exists an order \(\prec\) such that \((\prec,\mathcal Q)\) avoids both \(\forrt\) and \(\forst\).
+
+Finally, the algorithm runs in polynomial time: at each step we can test removability of all remaining vertices in
+polynomial time, and there are at most \(|V(G)|\) deletion steps.
+\end{proof}
 
 
 
