@@ -51,7 +51,7 @@
   right=7pt,
   top=7pt,
   bottom=7pt,
-  title={#1},
+  title={Problem: \textsc{#1}},
   fonttitle=\bfseries
 }
 
@@ -96,7 +96,8 @@
 \newcommand{\estone}{\operatorname{est}_{1}}
 \newcommand{\EStone}{E_1}
 
-\newcommand{\eric}[1]{\textcolor{green}{#1}}
+\newcommand{\eric}[1]{\textcolor{green}{Eric: #1}}
+\newcommand{\german}[1]{\textcolor{blue}{German: #1}}
 
 \newcommand{\tauvc}{\tau}
 
@@ -136,13 +137,13 @@
 \begin{definition}[Colored pattern on three vertices]
 A \emph{colored pattern} is a triple \(P=(A,N,C)\) where
 \[
-A,N \subseteq \binom{\{r,s,t\}}{2},
+A,N \subseteq \binom{\{1,2,3\}}{2},
 \qquad
-C \in \binom{\{r,s,t\}}{2}.
+C \in \binom{\{1,2,3\}}{2}.
 \]
-Here \(r,s,t\) denote the vertices of an ordered triple \(r\prec s\prec t\), and
+Here \(1,2,3\) denote positions of an ordered triple, and
 \[
-\binom{\{r,s,t\}}{2}=\{\{r,s\},\{r,t\},\{s,t\}\}.
+\binom{\{1,2,3\}}{2}=\{\{1,2\},\{1,3\},\{2,3\}\}.
 \]
 The set \(A\) specifies the pairs that must be edges, \(N\) specifies the pairs that must be non-edges,
 and \(C\) specifies the pair of vertices that must lie in the same part of the partition.
@@ -156,15 +157,15 @@ and \(C\) specifies the pair of vertices that must lie in the same part of the p
   every node/.style={circle, draw, inner sep=1.4pt},
   >=latex
 ]
-\node[draw=red, very thick, fill=red!12] (pr) at (0,0) {$r$};
-\node (ps) at (1.7,0) {$s$};
-\node[draw=red, very thick, fill=red!12] (pt) at (3.4,0) {$t$};
+\node[draw=red, very thick, fill=red!12] (p1) at (0,0) {$1$};
+\node (p2) at (1.7,0) {$2$};
+\node[draw=red, very thick, fill=red!12] (p3) at (3.4,0) {$3$};
 
-\draw[line width=0.6pt] (pr)--(ps);
-\draw[densely dashed, line width=0.6pt] (ps)--(pt);
+\draw[line width=0.6pt] (p1)--(p2);
+\draw[densely dashed, line width=0.6pt] (p2)--(p3);
 
 \end{tikzpicture}
-\caption{The forbidden colored pattern \(P=(A,N,C)\), where \(A=\{\{r,s\}\}\), \(N=\{\{s,t\}\}\), and \(C=\{r,t\}\). Solid lines represent required edges, dashed lines represent required non-edges, and red vertices represent the pair required to lie in the same part.}
+\caption{The forbidden colored pattern \(P=(A,N,C)\), where \(A=\{\{1,2\}\}\), \(N=\{\{2,3\}\}\), and \(C=\{1,3\}\). Solid lines represent required edges, dashed lines represent required non-edges, and red vertices represent the pair required to lie in the same part.}
 \label{fig:tiny-pattern}
 \end{figure}
 
@@ -176,7 +177,7 @@ and \(C\) specifies the pair of vertices that must lie in the same part of the p
 \eric{mepa que esto que viene es una observation o un lemma OK}
 
 \begin{lemma}\label{thm:minclases-one-class}
-Let P = (A,N) be a pattern. Then, for every graph \(G\),
+Let \(P = (A,N)\) be a pattern. Then, for every graph \(G\),
 \[
 \minClases_P(G)=1
 \quad\Longleftrightarrow\quad
@@ -251,31 +252,50 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 
 
 
-
 \begin{definition}[Avoiding a pattern]
-Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
-Let \(P=(A,N,C)\) be a colored pattern on the ordered vertices \(r\prec s\prec t\).
+Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
+Let \(P=(A,N,C)\) be a colored pattern.
 
-An \emph{ordered occurrence} of the three vertices in \(G\) is an injective map
-\[
-\varphi:\{r,s,t\}\to V
-\]
-such that
-\[
-\varphi(r)\prec \varphi(s)\prec \varphi(t).
-\]
+An \emph{ordered triple} of the three vertices in \(G\) is a triple of vertices \(v_1 \prec v_2 \prec v_3\) in \(V(G)\).
 
-We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
+We say that the ordered triple \((v_1, v_2, v_3)\) \emph{avoids} \(P\) if at least one of the following conditions holds:
 \begin{enumerate}
-\item There exists \(\{a,b\}\in A\) such that \(\{\varphi(a),\varphi(b)\}\notin E\).
-\item There exists \(\{a,b\}\in N\) such that \(\{\varphi(a),\varphi(b)\}\in E\).
-\item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
+\item There exists \(\{a,b\}\in A\) such that \(\{v_a, v_b\}\notin E(G)\).
+\item There exists \(\{a,b\}\in N\) such that \(\{v_a, v_b\}\in E(G)\).
+\item If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
 
-The solution \(S\) \emph{avoids} \(P\) if every ordered occurrence \(\varphi:\{r,s,t\}\to V\) avoids \(P\).
+The solution \(S\) \emph{avoids} \(P\) if every ordered triple avoids \(P\).
 For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
 \(P\in\mathcal P\).
 \end{definition}
+
+% \begin{definition}[Avoiding a pattern]
+% Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
+% Let \(P=(A,N,C)\) be a colored pattern on the ordered vertices \(r\prec s\prec t\).
+
+% An \emph{ordered occurrence} of the three vertices in \(G\) is an injective map
+% \[
+% \varphi:\{r,s,t\}\to V
+% \]
+% such that
+% \[
+% \varphi(r)\prec \varphi(s)\prec \varphi(t).
+% \]
+
+% We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
+% \begin{enumerate}
+% \item There exists \(\{a,b\}\in A\) such that \(\{\varphi(a),\varphi(b)\}\notin E\).
+% \item There exists \(\{a,b\}\in N\) such that \(\{\varphi(a),\varphi(b)\}\in E\).
+% \item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
+% \end{enumerate}
+
+% The solution \(S\) \emph{avoids} \(P\) if every ordered occurrence \(\varphi:\{r,s,t\}\to V\) avoids \(P\).
+% For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
+% \(P\in\mathcal P\).
+% \end{definition}
+\eric{ojo de cambiar en todos lados para no usar un injective map.}
+
 
 \begin{definition}[Parameter induced by forbidden patterns]
 For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
@@ -2670,23 +2690,17 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 \begin{definition}[Forest colored patterns]
 Let \(r\prec s\prec t\) be three ordered vertices. For each
 \[
-ab\in\{rs,rt,st\},
+\{a, b\}\in\binom{\{r,s,t\}}{2},
 \]
 we define the colored pattern
 \[
-\operatorname{for}_{ab}=(A,N,C_{ab}),
+\operatorname{for}_{ab}=(A,N,\{a, b\}),
 \]
 where
 \[
 A=\bigl\{\{r,t\},\{s,t\}\bigr\},
 \qquad
-N=\varnothing,
-\]
-and
-\[
-C_{rs}:=\{r,s\},\qquad
-C_{rt}:=\{r,t\},\qquad
-C_{st}:=\{s,t\}.
+N=\varnothing.
 \]
 Thus, all three patterns have the same required edges \(rt\) and \(st\), and differ only in the pair of vertices
 required to lie in the same part of the partition.
@@ -2728,7 +2742,7 @@ required to lie in the same part of the partition.
 \end{figure}
 
 
-\begin{figure}[]
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[
   scale=1,
@@ -2746,7 +2760,7 @@ required to lie in the same part of the partition.
 \end{figure}
 \end{definition}
 
-
+\eric{Poner estas tres como subfigures de la misma figure por ej.}
 
 
 
@@ -2783,173 +2797,14 @@ A solution avoids one of these families if it avoids every colored pattern in th
 \end{definition}
 
 
-
-
-\begin{definition}[\(\forrs\)]
-Let \(r\prec s\prec t\) be three ordered vertices\eric{Mepa que mejor usemos vertices en todos lados en vez de positions, porque no estoy seguro de qué sea una position DONE}. The colored pattern \(\forrs\) is
-\[
-\forrs=(A,N,C),
-\]
-where
-\[
-A=\bigl\{\{r,t\},\{s,t\}\bigr\},
-\qquad
-N=\varnothing,
-\qquad
-C=\{r,s\}.
-\]
-Thus, \(\forrs\) forbids an ordered triple \(r\prec s\prec t\)
-such that \(r\sim t\), \(s\sim t\), and \(r\) and \(s\) lie in the same part of
-the partition.
-
-\begin{figure}[h]
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node[same] (r) at (0,0) {$r$};
-\node[same] (s) at (1.5,0) {$s$};
-\node       (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\caption{asdasasasd}
-\end{figure}
-\end{definition}
-
-
-\begin{definition}[\(\forrt\)]
-Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forrt\) is
-\[
-\forrt=(A,N,C),
-\]
-where
-\[
-A=\bigl\{\{r,t\},\{s,t\}\bigr\},
-\qquad
-N=\varnothing,
-\qquad
-C=\{r,t\}.
-\]
-Thus, \(\forrt\) forbids an ordered triple \(r\prec s\prec t\)
-such that \(r\sim t\), \(s\sim t\), and \(r\) and \(t\) lie in the same part of
-the partition.
-
-\begin{figure}[h]
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node[same] (r) at (0,0) {$r$};
-\node       (s) at (1.5,0) {$s$};
-\node[same] (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\end{figure}
-\end{definition}
-
-
-
-
-
-
-
-\begin{definition}[\(\forst\)]
-Let \(r\prec s\prec t\) be three ordered positions. The colored pattern \(\forst\) is
-\[
-\forst=(A,N,C),
-\]
-where
-\[
-A=\bigl\{\{r,t\},\{s,t\}\bigr\},
-\qquad
-N=\varnothing,
-\qquad
-C=\{s,t\}.
-\]
-Thus, \(\forst\) forbids an ordered triple \(r\prec s\prec t\)
-such that \(r\sim t\), \(s\sim t\), and \(s\) and \(t\) lie in the same part of
-the partition.
-
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node       (r) at (0,0) {$r$};
-\node[same] (s) at (1.5,0) {$s$};
-\node[same] (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\end{definition}
-
-\eric{Comprimir estas 3 defs en una sola. Quizá hacer lo mismo con est y bip}
-
-Decidir cual version preferimos, estas no las borre, agregue arriba la version comprimida
-
-
-
-
-\begin{definition}[\(\mathcal F_{rs\text{-}st}\)]
-We define
-\[
-\mathcal F_{rs\text{-}st}:=\{\forrs,\forst\}.
-\]
-A solution avoids \(\mathcal F_{rs\text{-}st}\) if it avoids both colored patterns
-\(\forrs\) and \(\forst\).
-\end{definition}
-
-\begin{definition}[\(\mathcal F_{rs\text{-}rt}\)]
-We define
-\[
-\mathcal F_{rs\text{-}rt}:=\{\forrs,\forrt\}.
-\]
-A solution avoids \(\mathcal F_{rs\text{-}rt}\) if it avoids both colored patterns
-\(\forrs\) and \(\forrt\).
-\end{definition}
-
-\begin{definition}[\(\mathcal F_{rt\text{-}st}\)]
-We define
-\[
-\mathcal F_{rt\text{-}st}:=\{\forrt,\forst\}.
-\]
-A solution avoids \(\mathcal F_{rt\text{-}st}\) if it avoids both colored patterns
-\(\forrt\) and \(\forst\).
-\end{definition}
-
-\begin{definition}[\(\mathcal F_{rs\text{-}st\text{-}rt}\)]
-We define
-\[
-\mathcal F_{rs\text{-}st\text{-}rt}:=\{\forrs,\forst,\forrt\}.
-\]
-A solution avoids \(\mathcal F_{rs\text{-}st\text{-}rt}\) if it avoids the three colored patterns
-\(\forrs\), \(\forst\), and \(\forrt\).
-\end{definition}
-
-\eric{Lo mismo con esto}
-
-
-
-
-
 \subsection{Decision variants}
 
-Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision variants.
+Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision problems.
 
 \eric{Poner los problemas en cajitas que queda mas lindo DONE}
 \eric{Usar textsc en cada nombre de problema DONE}  
-\begin{problem}[\textsc{\(\mathcal P\)-Avoidance}]
-\textbf{Input:} A graph \(G=(V(G),E)\) and an integer \(k\).
+\begin{problem}[\(\mathcal P\)-Avoidance]
+\textbf{Input:} A graph \(G\) and an integer \(k\).
 
 \textbf{Question:} Does there exist a solution
 \[
@@ -2964,13 +2819,14 @@ for \(G\) such that \(S\) avoids every colored pattern in \(\mathcal P\)?
 
 \eric{Si las partes de la partición pueden ser vacías, podemos poner $\{V_1,\dots,V_k\}$ en cambio. OK}
 
-\begin{problem}[\textsc{\(\mathcal P\)-Avoidance with a given order}]
-\textbf{Input:} A graph \(G=(V(G),E)\) \eric{Usemos siempre o $V(G)$ o $V$ oK}, a total order \(\prec\) of \(V\), and an integer \(k\).
+\begin{problem}[\(\mathcal P\)-Avoidance with a given order]
+\textbf{Input:} A graph \(G\) \eric{Usemos siempre o $V(G)$ o $V$ oK}, a total order \(\prec\) of \(V(G)\), and an integer \(k\).
 
 \textbf{Question:} Does there exist a partition
 \[
 \mathcal Q=\{V_1,\dots,V_k\},
 \]
+of \(V(G)\)
 such that the solution
 \[
 S=(\prec,\mathcal Q)
@@ -2981,11 +2837,11 @@ for \(G\) avoids every colored pattern in \(\mathcal P\)?
 
 
 \begin{problem}[\(\mathcal P\)-Avoidance with a given partition]
-\textbf{Input:} A graph \(G=(V(G),E)\) and a partition
+\textbf{Input:} A graph \(G\) and a partition
 \[
 \mathcal Q=\{V_1,\dots,V_k\}
 \]
-of \(V\).
+of \(V(G)\).
 
 \textbf{Question:} Does there exist a total order \(\prec\) of \(V(G)\) such that the solution
 \[
@@ -2994,7 +2850,7 @@ S=(\prec,\mathcal Q)
 for \(G\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
-When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \(P\)-Avoidance instead of
+When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \(P\)-Avoidance \eric{usar textsc} instead of
 \(\{P\}\)-Avoidance.
 
 
@@ -3217,8 +3073,7 @@ Let \(G\) be a graph, let
 \[
 \mathcal Q=\{V_1,\dots,V_k\}
 \]
-be a fixed partition of \(V(G)\), and let \(H=G[A]\) be an induced subgraph of \(G\), with
-\(A\subseteq V(G)\). Let \(\mathcal P\) be a family of colored patterns.
+be a fixed partition of \(V(G)\), and let \(H\) be an induced subgraph of \(G\). Let \(\mathcal P\) be a family of colored patterns.
 
 A vertex \(v\in V(H)\) is called \emph{\(\mathcal P\)-removable} in \(H\) with respect to \(\mathcal Q\) if no pattern
 in \(\mathcal P\) can be realized with \(v\) playing the role of the last vertex \(t\).
@@ -3233,10 +3088,10 @@ and every injective map
 \]
 such that \(\varphi(t)=v\), the map \(\varphi\) avoids \(P\).
 
-Equivalently, placing \(v\) at the end of the current induced subgraph \(H\) does not create any forbidden occurrence
-whose last vertex is \(v\). \eric{esta ok esto?}
 \end{definition}
 
+Equivalently, placing \(v\) at the end of the current induced subgraph \(H\) does not create any forbidden occurrence
+whose last vertex is \(v\). \german{esta ok esto?}
 
 \begin{lemma}\label{lem:removable-forrs}
 Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
@@ -3314,7 +3169,13 @@ Equivalently, if \(v\) has at least two neighbors, then all its neighbors must l
 \end{algorithm}
 
 
+\eric{Me gustó la idea de sacar factor común, podemos quizá sacar la property para afuera y simplemente que la property sea "si no importa el orden de los dos primeros vertices de la tripla, entonces el algoritmo 1 es correcto." asdf}
 
+\eric{1. Decir la property: "no me importa el orden de los dos primeros vertices de la tripla."
+2. presentas el algoritmo 1 diciendo que lo vas a usar para ....
+3. Decir el lema que si tenes la property, entonces el algoritmo 1 es correcto.
+4. Decir que las tres familias de patrones tienen la property.
+5. Corolario: las tres familias de patrones tienen algoritmo poli. Pones la complejidad de instanciar el algoritmo 1 para cada uno en particular.}
 
 \begin{lemma}[Correctness of the deletion algorithm]\label{lem:generic-deletion-correctness}
 Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\), and let
@@ -3715,7 +3576,7 @@ avoids the pattern \(P\).
 
 
 \begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
-Let \(P=(A,N,C)\) be a colored pattern, and let $P' = (A,N)$ be a pattern. \eric{Definir un $P' = (A,N)$. OK}
+Let \(P=(A,N,C)\) be a colored pattern, and consider the pattern $P' = (A,N)$.
 
 Then, for every graph \(G\),
 \[
@@ -3725,8 +3586,6 @@ Then, for every graph \(G\),
 .
 \]
 \end{theorem}
-
-\eric{Usar minClases P' en vez de el min este. DONE}
 
 \begin{proof}
 Let
@@ -3767,11 +3626,11 @@ Let
 \[
 P=(A,N,\{r,t\})
 \]
-be a colored pattern, and let
+be a colored pattern, and consider the pattern
 \[
-P'=(A,N)
-\] 
-be a pattern. Then, for every graph \(G\),
+P'=(A,N).
+\]
+Then, for every graph \(G\),
 \[
 \minClases_P(G)=\minClases_{P'}(G).
 \]
@@ -3859,6 +3718,7 @@ avoids \(\forrt\) if and only if \(G[V_i]\) is a forest for every \(i=1,\dots,k\
 
 CREO que hay que seguir chequeando desde aca
 
+\eric{El siguiente teorema es general para cualquier patron P que sea polinomial de calcular la clase (que creo que son todos).}
 
 \begin{theorem}\label{thm:forrt-given-partition-poly}
 The \(\forrt\)-Avoidance problem with a given partition can be solved in polynomial time.
