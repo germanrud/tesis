@@ -9,6 +9,7 @@
 \usepackage{mathtools} % Para \coloneq
 
 \usepackage[hidelinks]{hyperref}
+\usepackage{varioref, cleveref}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{tikz}
@@ -25,7 +26,6 @@
 \theoremstyle{plain} % estilo "teorema" (itálica)
 \newtheorem{theorem}{Teorema}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{Claim}[theorem]{Claim}
 \newtheorem{corollary}[theorem]{Corolario}
 
 \theoremstyle{definition} % estilo "definición" (normal)
@@ -33,6 +33,7 @@
 \newtheorem{example}[theorem]{Ejemplo}
 
 \theoremstyle{remark} % estilo "observación" (normal + título distinto)
+\newtheorem{Claim}[theorem]{Claim}
 \newtheorem{remark}[theorem]{Observación}
 
 %\newtheorem{problem}{Problem}
@@ -216,7 +217,7 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 \end{definition}
 
 
-
+\eric{Definir avoid a pattern, y definir avoid colored pattern en base a eso.}
 
 \begin{definition}[Avoiding a pattern]
 Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
@@ -228,10 +229,11 @@ We say that the ordered triple \((v_1, v_2, v_3)\) \emph{avoids} \(P\) in \(G\) 
 \begin{enumerate}
 \item There exists \(\{a,b\}\in A\) such that \(\{v_a, v_b\}\notin E(G)\).
 \item There exists \(\{a,b\}\in N\) such that \(\{v_a, v_b\}\in E(G)\).
-\item If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
+\item[(color)]\label{def:avoid:cond:color} If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
 \end{enumerate}
 
-The solution \(S\) \emph{avoids} \(P\) in \(G\) if every ordered triple avoids \(P\) \german{in G (?}.
+
+The solution \(S\) \emph{avoids} \(P\) in \(G\) if every ordered triple avoids \(P\) in \(G\) \german{in G (?}.
 For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) in \(G\) if it avoids every pattern
 \(P\in\mathcal P\).
 \end{definition}
@@ -245,7 +247,7 @@ For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\ma
 of a solution for \(G\) that avoids \(\mathcal P\) in \(G\).
 \end{definition}
 \german{1.5 y 1.8 son parecidas peor una de color y otra de uncolored, esta bien?}
-
+\eric{O unirlas o poner la 1.8 antes de la 1.5}
 
 
 
@@ -368,7 +370,8 @@ We first introduce the uncolored patterns associated with the graph classes that
 
 \begin{definition}[Basic uncolored patterns]
 We define the following uncolored patterns on the ordered vertices \(1\prec 2\prec 3\).
-\german{pongo A sub eso A sub bip aca?}
+\german{pongo A sub eso A sub bip aca?}\eric{Sip}
+\eric{Llamar directamente star, bip, for a los patrones}
 \begin{itemize}
     \item The \emph{star pattern} is
     \[
@@ -753,7 +756,6 @@ A solution avoids one of these families if it avoids every colored pattern in th
 \end{definition}
 
 
-
 \begin{definition}[Families of forest colored patterns]
 We define the following families of forest colored patterns:
 \[
@@ -883,6 +885,7 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) 
 \eric{Acá poner todos los patrones de bip, y decir que vamos a estar analizando los parámetros resultantes de las combinaciones entre ellos. Después la observación de que cada clase en una solución que evita los patrones induce un bipartito. Decir después que esto implica que $bip1(G) = 1 \iff \chi(G) = 2$, y decir que generalizamos esto con el teorema que viene despues, que dice $bip1(G) = \chi(G) - 1$.}
 
 
+\eric{Este es un resultado ya conocido en el paper de patrones. Si querés lo podemos dejar en la tesis, por ejemplo en un apéndice, para decir que lo probaste de nuevo. En el paper definitivamente no iría.}
 \begin{theorem}\label{thm:seg1-bip}
 Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si \(\segone(G)=1\).
 \end{theorem}
@@ -3507,8 +3510,8 @@ vertices \(x,y\in V(H)\setminus\{v\}\), both ordered triples
 \qquad\text{and}\qquad
 (y,x,v)
 \]
-avoid \(P\) in \(H\). \german{importante agregar in H no? tmb lo cambie en la def de arriba de todo}.
-\german{hace falta poner las dos triplas? con poner (x,y,z) alcanza no? pq intercambian el papel}
+avoid \(P\) in \(H\). \german{importante agregar in H no? tmb lo cambie en la def de arriba de todo}\eric{Sip}.
+\german{hace falta poner las dos triplas? con poner (x,y,z) alcanza no? pq intercambian el papel}\eric{No hace falta, tenes razon}
 \end{definition}
 
 
@@ -3684,10 +3687,10 @@ lie in the same part. This contradicts removability. Therefore
 
 
 
-
-\begin{definition}[First-two symmetric family]
+\eric{Pensar si poner un guion despues de two o no}
+\begin{definition}[First-two-symmetric family]
 Let \(\mathcal P\) be a family of colored patterns. We say that \(\mathcal P\) is
-\emph{first-two symmetric} if, for every graph \(H\), every partition \(\mathcal Q\) of \(V(H)\),
+\emph{first-two-symmetric} if, for every graph \(H\), every partition \(\mathcal Q\) of \(V(H)\),
 and every three distinct vertices \(x,y,z\in V(H)\), the ordered triple
 \[
 (x,y,z)
@@ -3698,7 +3701,7 @@ avoids \(\mathcal P\) in \(H\) if and only if the ordered triple
 \]
 avoids \(\mathcal P\) in \(H\).
 
-In words, once the last vertex of the ordered triple is fixed, the order of the first two vertices does not matter.
+In other words, once the last vertex of the ordered triple is fixed, the order of the first two vertices does not matter.
 \end{definition}
 
 
@@ -3741,10 +3744,9 @@ avoids every pattern in \(\mathcal P\) in \(G\).
 \end{lemma}
 
 
-
 \begin{proof}
 First suppose that the algorithm returns \textbf{YES}. Let \(\prec\) be the order obtained by reading the deletion
-list \(L\) from right to left. We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) \german{seguro agregar que si es obvio en que grafo, se omite el in G no?}.
+list \(L\) from right to left. We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) \german{seguro agregar que si es obvio en que grafo, se omite el in G no?}\eric{Me parece bien ponerlo en la def de avoids}.
 
 Consider any ordered triple
 \[
@@ -3779,9 +3781,9 @@ Thus, whenever a valid order exists for the current induced subgraph, a \(\mathc
 Therefore the algorithm cannot return \textbf{NO}.
 \end{proof}
 
-\begin{lemma}\label{lem:swap-first-two}
+\begin{remark}\label{lem:swap-first-two}
 Let \(\mathcal P\) be a family of colored patterns. Suppose that whenever \(P\in\mathcal P\), the pattern obtained from \(P\) by swapping positions \(1\) and \(2\) also belongs to \(\mathcal P\). Then \(\mathcal P\) is first-two symmetric.
-\end{lemma}
+\end{remark}
 
 
 \begin{lemma}\label{lem:families-first-two-symmetric}
@@ -3793,7 +3795,7 @@ The families
 \qquad
 \mathcal F_{12\text{-}23\text{-}13}
 \]
-are first-two symmetric.
+are first-two symmetric.\eric{$\mathcal{F}_{12}$ no existe, o definirla o usar $\{for_{12}\}$.}
 \end{lemma}
 
 \begin{proof}
@@ -3806,7 +3808,7 @@ For \(\mathcal F_{13\text{-}23}\), swapping the first two vertices exchanges the
 family is unchanged.
 
 Finally, \(\mathcal F_{12\text{-}23\text{-}13}\) contains all three patterns, and is therefore also invariant under
-swapping the first two vertices. \german{dudo de si esta demo tiene q ser mas formal}
+swapping the first two vertices. \german{dudo de si esta demo tiene q ser mas formal}\eric{como quieras, esta bien ahora}
 \end{proof}
 
 
@@ -4553,7 +4555,7 @@ Fix \(k\ge 3\), and let \(X\) be an instance of \(k\)-\textsc{Coloring}, with
 \[
 V(X)=\{x_1,\dots,x_n\}.
 \]
-\german{queda claro que estan ordenados?}
+\german{queda claro que estan ordenados?}\eric{Sip}
 For every edge \(x_i x_j\in E(X)\), with \(i<j\), we add one witness vertex \(w_{ij}\), adjacent exactly to
 \(x_i\) and \(x_j\). We do not keep the original edge \(x_i x_j\). Thus,
 \[
@@ -4607,7 +4609,7 @@ for some edge \(x_i x_j\in E(X)\), with \(i<j\).
 
 
 
-
+\eric{Te permito que sea un lema}
 \begin{remark}\label{obs:common-12-given-order-triples} \german{puede q esto se use en mas lados}
 In the common construction above, let
 \[
@@ -4734,7 +4736,7 @@ Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts
 
 Moreover, \(w_{ij}\) is assigned to the part \(\varphi(x_j)\), while \(x_i\) is assigned to the part
 \(\varphi(x_i)\). Since \(\varphi(x_i)\neq\varphi(x_j)\), the vertices \(x_i\) and \(w_{ij}\) are assigned to
-different parts. Hence the color condition \(C=\{1,3\}\) of \(\operatorname{for}_{13}\) fails. \german{o prferis asi lo del C}
+different parts. Hence the color condition \(C=\{1,3\}\) of \(\operatorname{for}_{13}\) fails. \german{o prferis asi lo del C}\eric{Lo que podes hacer es 1. ponerle un nombre a la condicion. Tipo }
 
 Thus the solution avoids \(\mathcal F_{12\text{-}13}\).
 
