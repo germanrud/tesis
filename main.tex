@@ -19,7 +19,7 @@
 \usepackage{float}      % para poder usar [H] si querés fijar la figura
 \usepackage{subcaption} % para subfiguras lado a lado
 \usetikzlibrary{calc}
-
+\usepackage{subcaption}
 
 % ---------- Entornos de teoremas ----------
 \theoremstyle{plain} % estilo "teorema" (itálica)
@@ -134,6 +134,45 @@
 \section{Preliminares}
 
 
+
+
+
+\begin{definition}[Pattern on three vertices]
+A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a pair
+\[
+P=(A,N),
+\]
+where
+\[
+A,N\subseteq \binom{\{r,s,t\}}{2}
+\qquad\text{and}\qquad
+A\cap N=\varnothing.
+\]
+The set \(A\) indicates the pairs of vertices that are required to be edges, while \(N\) indicates the pairs of vertices that are required to be non-edges.
+Pairs that do not belong to \(A\cup N\) are left unrestricted.
+\end{definition}
+
+
+\begin{figure}[h] 
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  every node/.style={circle, draw, inner sep=1.4pt},
+  >=latex
+]
+\node (p1) at (0,0) {$1$};
+\node (p2) at (1.7,0) {$2$};
+\node (p3) at (3.4,0) {$3$};
+
+\draw[line width=0.6pt] (p1)--(p2);
+\draw[densely dashed, line width=0.6pt] (p2)--(p3);
+
+\end{tikzpicture}
+\caption{The pattern \(P=(A,N)\), where \(A=\{\{1,2\}\}\) and \(N=\{\{2,3\}\}\). Solid lines represent required edges, and dashed lines represent required non-edges.}
+\label{fig:tiny-pattern-uncolored}
+\end{figure}
+\medskip
+
 \begin{definition}[Colored pattern on three vertices]
 A \emph{colored pattern} is a triple \(P=(A,N,C)\) where
 \[
@@ -170,11 +209,576 @@ and \(C\) specifies the pair of vertices that must lie in the same part of the p
 \end{figure}
 
 
+\begin{definition}[Solution and value]
+Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
+and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
+The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
+\end{definition}
 
 
 
 
-\eric{mepa que esto que viene es una observation o un lemma OK}
+\begin{definition}[Avoiding a pattern]
+Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
+Let \(P=(A,N,C)\) be a colored pattern.
+
+An \emph{ordered triple} of the three vertices in \(G\) is a triple of vertices \(v_1 \prec v_2 \prec v_3\) in \(V(G)\).
+
+We say that the ordered triple \((v_1, v_2, v_3)\) \emph{avoids} \(P\) in \(G\) \german{esta bien in G?, mas q nada por removable vertex} if at least one of the following conditions holds:
+\begin{enumerate}
+\item There exists \(\{a,b\}\in A\) such that \(\{v_a, v_b\}\notin E(G)\).
+\item There exists \(\{a,b\}\in N\) such that \(\{v_a, v_b\}\in E(G)\).
+\item If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
+\end{enumerate}
+
+The solution \(S\) \emph{avoids} \(P\) in \(G\) if every ordered triple avoids \(P\) \german{in G (?}.
+For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) in \(G\) if it avoids every pattern
+\(P\in\mathcal P\).
+\end{definition}
+
+
+\eric{ojo de cambiar en todos lados para no usar un injective map.}
+
+
+\begin{definition}[Parameter induced by forbidden patterns]
+For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
+of a solution for \(G\) that avoids \(\mathcal P\) in \(G\).
+\end{definition}
+\german{1.5 y 1.8 son parecidas peor una de color y otra de uncolored, esta bien?}
+
+
+
+
+
+\begin{definition}[Solución óptima]\label{def:sol-optima}
+Sea \(G\) un grafo y sea \(\mathcal P\) una familia de patrones coloreados.
+Una solución \(S=(\prec,\mathcal Q)\) para $G$ se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) in \(G\) y
+\[
+|\mathcal Q|=\minClases_{\mathcal P}(G).
+\]
+\end{definition}
+
+
+\begin{definition}[Class associated with a pattern on three vertices]
+Let
+\[
+P=(A,N)
+\]
+be a pattern. We denote by \(\mathcal C_P\) the class of graphs characterized by \(P\);
+that is,
+\[
+G\in \mathcal C_P
+\]
+if and only if there exists a total order \(\prec\) of \(V(G)\) such that every ordered triple of vertices of \(G\)
+avoids the pattern \(P\).
+\end{definition}
+
+
+
+
+\begin{definition}[\(P\)-partition number]
+Let \(P=(A,N)\) be a pattern on three vertices. We define
+\[
+\minClases_P(G)
+\]
+as the minimum \(k\) such that there exists a partition
+\[
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\]
+satisfying
+\[
+G[V_i]\in \mathcal C_P
+\qquad\text{for every } i=1,\dots,k.
+\]
+\end{definition}
+
+\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro. OK todavia no me meti en el lio de las citas}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
+Let \(P=(A,N,C)\) be a colored pattern, and consider the pattern $P' = (A,N)$.
+
+Then, for every graph \(G\),
+\[
+\minClases_P(G)
+\;\ge\;
+\minClases_{P'}(G)
+.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+S=(\prec,\mathcal Q),
+\qquad
+\mathcal Q=\{V_1,\dots,V_k\},
+\]
+be a solution that avoids \(P\).
+
+Fix a part \(V_i\), and restrict the order \(\prec\) to \(V_i\). We claim that this restricted order avoids
+\(P'\) in \(G[V_i]\). Indeed, if an ordered triple inside \(V_i\) realized \(P'\), then the required edge and
+non-edge conditions of \(P\) would be satisfied. Moreover, since all three vertices lie in the same part \(V_i\),
+the color condition \(C\) would also be satisfied. Hence the same triple would realize \(P\), contradicting that
+\(S\) avoids \(P\).
+
+Therefore,
+\[
+G[V_i]\in \mathcal C_{P'}
+\qquad\text{for every } i=1,\dots,k.
+\]
+Thus the partition \(\mathcal Q\) witnesses that
+\[
+\minClases_{P'}(G)\le k.
+\]
+Taking the minimum over all solutions avoiding \(P\), we obtain
+\[
+\minClases_{P'}(G)\le \minClases_P(G),
+\]
+as desired.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Base uncolored patterns}
+
+We first introduce the uncolored patterns associated with the graph classes that we want to generalize.
+
+
+\begin{definition}[Basic uncolored patterns]
+We define the following uncolored patterns on the ordered vertices \(1\prec 2\prec 3\).
+\german{pongo A sub eso A sub bip aca?}
+\begin{itemize}
+    \item The \emph{star pattern} is
+    \[
+    P_{\mathrm{star}}=(A,N),
+    \qquad
+    A=\bigl\{\{1,2\}\bigr\},
+    \qquad
+    N=\varnothing.
+    \]
+
+    \item The \emph{bipartite pattern} is
+    \[
+    P_{\mathrm{bip}}=(A,N),
+    \qquad
+    A=\bigl\{\{1,2\},\{2,3\}\bigr\},
+    \qquad
+    N=\varnothing.
+    \]
+
+    \item The \emph{forest pattern} is
+    \[
+    P_{\mathrm{for}}=(A,N),
+    \qquad
+    A=\bigl\{\{1,3\},\{2,3\}\bigr\},
+    \qquad
+    N=\varnothing.
+    \]
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (a) at (0,0) {$1$};
+\node (b) at (1.5,0) {$2$};
+\node (c) at (3,0) {$3$};
+\draw (a)--(b);
+\end{tikzpicture}
+\caption{The pattern \(P_{\mathrm{star}}\).}
+\label{fig:star-uncolored}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (a) at (0,0) {$1$};
+\node (b) at (1.5,0) {$2$};
+\node (c) at (3,0) {$3$};
+\draw (a)--(b);
+\draw (b)--(c);
+\end{tikzpicture}
+\caption{The pattern \(P_{\mathrm{bip}}\).}
+\label{fig:bip-uncolored}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+\node (a) at (0,0) {$1$};
+\node (b) at (1.5,0) {$2$};
+\node (c) at (3,0) {$3$};
+\draw[bend left=35] (a) to (c);
+\draw (b)--(c);
+\end{tikzpicture}
+\caption{The pattern \(P_{\mathrm{for}}\).}
+\label{fig:forest-uncolored}
+\end{subfigure}
+
+\caption{The three basic uncolored patterns.}
+\label{fig:basic-uncolored-patterns}
+\end{figure}
+\end{definition}
+
+
+
+
+
+\begin{remark}
+The associated classes \(\mathcal C_{P_{\mathrm{est}}}\), \(\mathcal C_{P_{\mathrm{bip}}}\), and
+\(\mathcal C_{P_{\mathrm{for}}}\) are, respectively, stars possibly with isolated vertices, bipartite graphs, and forests.
+Thus, the uncolored parameters
+\[
+\minClases_{P_{\mathrm{est}}},
+\qquad
+\minClases_{P_{\mathrm{bip}}},
+\qquad
+\minClases_{P_{\mathrm{for}}}
+\]
+are the corresponding partition parameters into these graph classes.
+\end{remark}
+
+
+
+
+\subsection{Colored versions}
+
+
+
+\begin{definition}[Bipartite colored patterns]
+For each
+\[
+\{a,b\}\in\binom{\{1,2,3\}}{2},
+\]
+we define the colored pattern
+\[
+\operatorname{bip}_{ab}:=(A_{\mathrm{bip}},N_{\mathrm{bip}},\{a,b\}).
+\]
+In other words, the three bipartite colored patterns are
+\[
+\operatorname{bip}_{12},\qquad
+\operatorname{bip}_{13},\qquad
+\operatorname{bip}_{23}.
+\]
+They all have the same required edges \(12\) and \(23\), and differ only in the pair of positions required to lie in the same part.
+
+\begin{figure}[h]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (v1) at (0,0) {$1$};
+\node[same] (v2) at (1.5,0) {$2$};
+\node       (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\draw (v2)--(v3);
+\end{tikzpicture}
+\caption{\(\operatorname{bip}_{12}\)}
+\label{fig:bip12}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (v1) at (0,0) {$1$};
+\node       (v2) at (1.5,0) {$2$};
+\node[same] (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\draw (v2)--(v3);
+\end{tikzpicture}
+\caption{\(\operatorname{bip}_{13}\)}
+\label{fig:bip13}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node       (v1) at (0,0) {$1$};
+\node[same] (v2) at (1.5,0) {$2$};
+\node[same] (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\draw (v2)--(v3);
+\end{tikzpicture}
+\caption{\(\operatorname{bip}_{23}\)}
+\label{fig:bip23}
+\end{subfigure}
+
+\caption{The three basic colored bipartite patterns.}
+\label{fig:bip-basic-patterns}
+\end{figure}
+
+\end{definition}
+
+
+
+
+\begin{definition}[Star colored patterns]
+For each
+\[
+\{a,b\}\in\binom{\{1,2,3\}}{2},
+\]
+we define the colored pattern
+\[
+\operatorname{est}_{ab}:=(A_{\mathrm{est}},N_{\mathrm{est}},\{a,b\}).
+\]
+In other words, the three star colored patterns are
+\[
+\operatorname{est}_{12},\qquad
+\operatorname{est}_{13},\qquad
+\operatorname{est}_{23}.
+\]
+They all have the same required edge \(12\), and differ only in the pair of positions required to lie in the same part.
+
+\begin{figure}[h]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (v1) at (0,0) {$1$};
+\node[same] (v2) at (1.5,0) {$2$};
+\node       (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\end{tikzpicture}
+\caption{\(\operatorname{est}_{12}\)}
+\label{fig:est12}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (v1) at (0,0) {$1$};
+\node       (v2) at (1.5,0) {$2$};
+\node[same] (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\end{tikzpicture}
+\caption{\(\operatorname{est}_{13}\)}
+\label{fig:est13}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node       (v1) at (0,0) {$1$};
+\node[same] (v2) at (1.5,0) {$2$};
+\node[same] (v3) at (3,0) {$3$};
+\draw (v1)--(v2);
+\end{tikzpicture}
+\caption{\(\operatorname{est}_{23}\)}
+\label{fig:est23}
+\end{subfigure}
+
+\caption{The three basic colored star patterns.}
+\label{fig:est-basic-patterns}
+\end{figure}
+\end{definition}
+
+
+
+\begin{definition}[Forest colored patterns]
+For each
+\[
+\{a,b\}\in\binom{\{1,2,3\}}{2},
+\]
+we define the colored pattern
+\[
+\operatorname{for}_{ab}:=(A_{\mathrm{for}},N_{\mathrm{for}},\{a,b\}).
+\]
+In other words, the three forest colored patterns are
+\[
+\operatorname{for}_{12},\qquad
+\operatorname{for}_{13},\qquad
+\operatorname{for}_{23}.
+\]
+They all have the same required edges \(13\) and \(23\), and differ only in the pair of positions required to lie in the same part.
+
+\begin{figure}[h]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node       (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\caption{\(\forrs\)}
+\label{fig:forrs}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node[same] (r) at (0,0) {$r$};
+\node       (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\caption{\(\forrt\)}
+\label{fig:forrt}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
+  same/.style={draw=red, very thick, fill=red!12}
+]
+\node       (r) at (0,0) {$r$};
+\node[same] (s) at (1.5,0) {$s$};
+\node[same] (t) at (3,0) {$t$};
+\draw[bend left=35] (r) to (t);
+\draw (s)--(t);
+\end{tikzpicture}
+\caption{\(\forst\)}
+\label{fig:forst}
+\end{subfigure}
+
+\caption{The three basic colored forest patterns.}
+\label{fig:for-basic-patterns}
+\end{figure}
+
+\end{definition}
+
+
+
+
+\begin{definition}[Families of star colored patterns]
+We define the following families of star colored patterns:
+\[
+\mathcal E_{12\text{-}23}:=
+\{\operatorname{est}_{12},\operatorname{est}_{23}\},
+\qquad
+\mathcal E_{12\text{-}13}:=
+\{\operatorname{est}_{12},\operatorname{est}_{13}\},
+\]
+\[
+\mathcal E_{13\text{-}23}:=
+\{\operatorname{est}_{13},\operatorname{est}_{23}\},
+\qquad
+\mathcal E_{12\text{-}23\text{-}13}:=
+\{\operatorname{est}_{12},\operatorname{est}_{23},\operatorname{est}_{13}\}.
+\]
+A solution avoids one of these families if it avoids every colored pattern in the family.
+\end{definition}
+
+
+\begin{definition}[Families of bipartite colored patterns]
+We define the following families of bipartite colored patterns:
+\[
+\mathcal B_{12\text{-}23}:=
+\{\operatorname{bip}_{12},\operatorname{bip}_{23}\},
+\qquad
+\mathcal B_{12\text{-}13}:=
+\{\operatorname{bip}_{12},\operatorname{bip}_{13}\},
+\]
+\[
+\mathcal B_{13\text{-}23}:=
+\{\operatorname{bip}_{13},\operatorname{bip}_{23}\},
+\qquad
+\mathcal B_{12\text{-}23\text{-}13}:=
+\{\operatorname{bip}_{12},\operatorname{bip}_{23},\operatorname{bip}_{13}\}.
+\]
+A solution avoids one of these families if it avoids every colored pattern in the family.
+\end{definition}
+
+
+
+\begin{definition}[Families of forest colored patterns]
+We define the following families of forest colored patterns:
+\[
+\mathcal F_{12\text{-}23}:=
+\{\operatorname{for}_{12},\operatorname{for}_{23}\},
+\qquad
+\mathcal F_{12\text{-}13}:=
+\{\operatorname{for}_{12},\operatorname{for}_{13}\},
+\]
+\[
+\mathcal F_{13\text{-}23}:=
+\{\operatorname{for}_{13},\operatorname{for}_{23}\},
+\qquad
+\mathcal F_{12\text{-}23\text{-}13}:=
+\{\operatorname{for}_{12},\operatorname{for}_{23},\operatorname{for}_{13}\}.
+\]
+A solution avoids one of these families if it avoids every colored pattern in the family.
+\end{definition}
+
+
+
+
+
+
+
 
 \begin{lemma}\label{thm:minclases-one-class}
 Let \(P = (A,N)\) be a pattern. Then, for every graph \(G\),
@@ -243,81 +847,7 @@ belongs to the class characterized by \(P\).
 
 
 
-\begin{definition}[Solution and value]
-Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
-and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
-The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
-\end{definition}
-
-
-
-
-\begin{definition}[Avoiding a pattern]
-Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
-Let \(P=(A,N,C)\) be a colored pattern.
-
-An \emph{ordered triple} of the three vertices in \(G\) is a triple of vertices \(v_1 \prec v_2 \prec v_3\) in \(V(G)\).
-
-We say that the ordered triple \((v_1, v_2, v_3)\) \emph{avoids} \(P\) if at least one of the following conditions holds:
-\begin{enumerate}
-\item There exists \(\{a,b\}\in A\) such that \(\{v_a, v_b\}\notin E(G)\).
-\item There exists \(\{a,b\}\in N\) such that \(\{v_a, v_b\}\in E(G)\).
-\item If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
-\end{enumerate}
-
-The solution \(S\) \emph{avoids} \(P\) if every ordered triple avoids \(P\).
-For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
-\(P\in\mathcal P\).
-\end{definition}
-
-% \begin{definition}[Avoiding a pattern]
-% Fix a graph \(G=(V,E)\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
-% Let \(P=(A,N,C)\) be a colored pattern on the ordered vertices \(r\prec s\prec t\).
-
-% An \emph{ordered occurrence} of the three vertices in \(G\) is an injective map
-% \[
-% \varphi:\{r,s,t\}\to V
-% \]
-% such that
-% \[
-% \varphi(r)\prec \varphi(s)\prec \varphi(t).
-% \]
-
-% We say that \(\varphi\) \emph{avoids} \(P\) if at least one of the following conditions holds:
-% \begin{enumerate}
-% \item There exists \(\{a,b\}\in A\) such that \(\{\varphi(a),\varphi(b)\}\notin E\).
-% \item There exists \(\{a,b\}\in N\) such that \(\{\varphi(a),\varphi(b)\}\in E\).
-% \item If \(C=\{a,b\}\), then \(\varphi(a)\) and \(\varphi(b)\) lie in different parts of \(\mathcal Q\).
-% \end{enumerate}
-
-% The solution \(S\) \emph{avoids} \(P\) if every ordered occurrence \(\varphi:\{r,s,t\}\to V\) avoids \(P\).
-% For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) if it avoids every pattern
-% \(P\in\mathcal P\).
-% \end{definition}
-\eric{ojo de cambiar en todos lados para no usar un injective map.}
-
-
-\begin{definition}[Parameter induced by forbidden patterns]
-For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
-of a solution for \(G\) that avoids \(\mathcal P\).
-\end{definition}
-
-
-
-
-
-
-\begin{definition}[Solución óptima]\label{def:sol-optima}
-Sea \(G\) un grafo y sea \(\mathcal P\) una familia de patrones coloreados.
-Una solución \(S=(\prec,\mathcal Q)\) para $G$ se dice \emph{óptima (para \(\mathcal P\))} si \(S\) evita \(\mathcal P\) y
-\[
-|\mathcal S|=\minClases_{\mathcal P}(G).
-\]
-\end{definition}
-
-
-
-
+\german{fijate si borras esto}
 \begin{definition}[Patrón prohibido para \(\segone\)]
 Se fija el patrón coloreado
 \[
@@ -418,7 +948,7 @@ los vértices aislados no afectan la independencia, y pueden asignarse al final 
 Luego obtuvimos una partición de \(V\) en dos conjuntos independientes, y por lo tanto \(G\) es bipartito.
 \end{proof}
 
-
+\german{supongo esto hay que borrarlo, lo de arriba}
 
 
 
@@ -628,7 +1158,7 @@ Sea \(G\) un grafo y sean \(\mathcal P,\mathcal P'\) dos familias de patrones co
 Si \(\mathcal P\subseteq \mathcal P'\), entonces
 \[
 \minClases_{\mathcal P}(G)\;\le\;\minClases_{\mathcal P'}(G).
-\]
+x\]
 \end{lemma}
 
 \begin{proof}
@@ -2687,117 +3217,9 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 
 
 
-\begin{definition}[Forest colored patterns]
-Let \(r\prec s\prec t\) be three ordered vertices. For each
-\[
-\{a, b\}\in\binom{\{r,s,t\}}{2},
-\]
-we define the colored pattern
-\[
-\operatorname{for}_{ab}=(A,N,\{a, b\}),
-\]
-where
-\[
-A=\bigl\{\{r,t\},\{s,t\}\bigr\},
-\qquad
-N=\varnothing.
-\]
-Thus, all three patterns have the same required edges \(rt\) and \(st\), and differ only in the pair of vertices
-required to lie in the same part of the partition.
-
-\begin{figure}[h]
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node[same] (r) at (0,0) {$r$};
-\node[same] (s) at (1.5,0) {$s$};
-\node       (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\caption{\(\forrs\)}
-\end{figure}
 
 
-
-\begin{figure}[h]
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node[same] (r) at (0,0) {$r$};
-\node       (s) at (1.5,0) {$s$};
-\node[same] (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\caption{\(\forrt\)}
-\end{figure}
-
-
-\begin{figure}[h]
-\begin{center}
-\begin{tikzpicture}[
-  scale=1,
-  every node/.style={circle, draw, inner sep=1.4pt, font=\small},
-  same/.style={draw=red, very thick, fill=red!12}
-]
-\node       (r) at (0,0) {$r$};
-\node[same] (s) at (1.5,0) {$s$};
-\node[same] (t) at (3,0) {$t$};
-\draw[bend left=35] (r) to (t);
-\draw (s)--(t);
-\end{tikzpicture}
-\end{center}
-\caption{\(\forst\)}
-\end{figure}
-\end{definition}
-
-\eric{Poner estas tres como subfigures de la misma figure por ej.}
-
-
-
-\begin{definition}[Forest colored patterns]
-Let \(r\prec s\prec t\) be three ordered vertices. We define the three forest colored patterns
-\[
-\forrs=(A,N,\{r,s\}),\qquad
-\forrt=(A,N,\{r,t\}),\qquad
-\forst=(A,N,\{s,t\}),
-\]
-where
-\[
-A=\bigl\{\{r,t\},\{s,t\}\bigr\},
-\qquad
-N=\varnothing.
-\]
-Thus, the three patterns have the same required edges \(rt\) and \(st\), and differ only in the pair of vertices that must lie in the same part of the partition.
-\end{definition}
-
-\begin{definition}[Families of forest colored patterns]
-We define the following families of forest colored patterns:
-\[
-\mathcal F_{rs\text{-}st}:=\{\forrs,\forst\},
-\qquad
-\mathcal F_{rs\text{-}rt}:=\{\forrs,\forrt\},
-\qquad
-\mathcal F_{rt\text{-}st}:=\{\forrt,\forst\},
-\]
-and
-\[
-\mathcal F_{rs\text{-}st\text{-}rt}:=\{\forrs,\forst,\forrt\}.
-\]
-A solution avoids one of these families if it avoids every colored pattern in the family.
-\end{definition}
-
-
-\subsection{Decision variants}
+\subsection{Decision problems}
 
 Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision problems.
 
@@ -2850,8 +3272,8 @@ S=(\prec,\mathcal Q)
 for \(G\) avoids every colored pattern in \(\mathcal P\)?
 \end{problem}
 
-When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \(P\)-Avoidance \eric{usar textsc} instead of
-\(\{P\}\)-Avoidance.
+When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \textsc{\(P\)-Avoidance} instead of
+\textsc{\(\{P\}\)-Avoidance}.
 
 
 
@@ -3076,54 +3498,124 @@ Let \(G\) be a graph, let
 be a fixed partition of \(V(G)\), and let \(H\) be an induced subgraph of \(G\). Let \(\mathcal P\) be a family of colored patterns.
 
 A vertex \(v\in V(H)\) is called \emph{\(\mathcal P\)-removable} in \(H\) with respect to \(\mathcal Q\) if no pattern
-in \(\mathcal P\) can be realized with \(v\) playing the role of the last vertex \(t\).
+in \(\mathcal P\) can be realized with \(v\) playing the role of the last vertex of the ordered triple.
 
-More formally, \(v\) is \(\mathcal P\)-removable if, for every pattern
+More explicitly, \(v\) is \(\mathcal P\)-removable if, for every pattern \(P\in\mathcal P\), and for every two distinct
+vertices \(x,y\in V(H)\setminus\{v\}\), both ordered triples
 \[
-P\in\mathcal P
+(x,y,v)
+\qquad\text{and}\qquad
+(y,x,v)
 \]
-and every injective map
-\[
-\varphi:\{r,s,t\}\to V(H)
-\]
-such that \(\varphi(t)=v\), the map \(\varphi\) avoids \(P\).
-
+avoid \(P\) in \(H\). \german{importante agregar in H no? tmb lo cambie en la def de arriba de todo}.
+\german{hace falta poner las dos triplas? con poner (x,y,z) alcanza no? pq intercambian el papel}
 \end{definition}
+
+
 
 Equivalently, placing \(v\) at the end of the current induced subgraph \(H\) does not create any forbidden occurrence
 whose last vertex is \(v\). \german{esta ok esto?}
 
-\begin{lemma}\label{lem:removable-forrs}
-Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
-and let \(H\) be an induced subgraph of \(G\).
-A vertex \(v\in V(H)\) is \(\mathcal F_{rs}\)-removable in \(H\) if and only if
+
+
+
+\begin{lemma}\label{lem:removable-for12}
+Let \(G\) be a graph, let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V(G)\), and let \(H\) be an induced subgraph of \(G\).
+A vertex \(v\in V(H)\) is \(\mathcal F_{12}\)-removable in \(H\) with respect to \(\mathcal Q\) if and only if
 \[
 |N_H(v)\cap V_i|\le 1
 \qquad\text{for every } i=1,\dots,k.
 \]
+
 In other words, \(v\) is removable if it has no two neighbors in the same part of the partition.
+
 \end{lemma}
 
+\begin{proof}
 
-\begin{lemma}\label{lem:removable-forrt-st}
-Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
-and let \(H\) be an induced subgraph of \(G\).
-For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) containing \(v\).
-Then \(v\) is \(\mathcal F_{rt\text{-}st}\)-removable in \(H\) if and only if
+Suppose that
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+Let \(x,y\in V(H)\setminus\{v\}\) be two distinct vertices adjacents to \(v\), then by the assumption they lie in different
+parts of \(\mathcal Q\). Hence the color condition for \(\operatorname{for}_{12}\) fails, and the triples avoid the
+pattern. Therefore \(v\) is \(\mathcal F_{12}\)-removable.
+
+Conversely, suppose that there exists a part \(V_i\) such that
+\[
+|N_H(v)\cap V_i|\ge 2.
+\]
+Choose two distinct vertices \(x,y\in N_H(v)\cap V_i\). Then \(x\sim v\), \(y\sim v\), and \(x,y\) lie in the same
+part. Thus the ordered triple \((x,y,v)\) realizes \(\operatorname{for}_{12}\). Therefore \(v\) is not
+\(\mathcal F_{12}\)-removable.
+
+\end{proof}
+
+
+\begin{lemma}\label{lem:removable-for13-23}
+Let \(G\) be a graph, let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V(G)\), and let \(H\) be an induced subgraph of \(G\).
+For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) that contains \(v\).
+Then \(v\) is \(\mathcal F_{13\text{-}23}\)-removable in \(H\) with respect to \(\mathcal Q\) if and only if
 \[
 \deg_H(v)\le 1
 \qquad\text{or}\qquad
 N_H(v)\cap \mathcal Q(v)=\varnothing.
 \]
-That is, \(v\) is removable if it has at most one neighbor in the current graph, or if none of its current neighbors
-lies in its own part.
 \end{lemma}
 
-\begin{lemma}\label{lem:removable-forrs-st-rt}
-Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\),
-and let \(H\) be an induced subgraph of \(G\).
-For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) containing \(v\).
-Then \(v\) is \(\mathcal F_{rs\text{-}st\text{-}rt}\)-removable in \(H\) if and only if either
+That is, \(v\) is removable if it has at most one neighbor in the current graph, or if none of its current neighbors
+lies in its own part. \german{esto va afuera o adentro del lemma?}
+
+
+\begin{proof}
+Suppose that \(\deg_H(v)\le 1\). Then no pair of distinct vertices \(x,y\in V(H)\setminus\{v\}\) can both be
+adjacent to \(v\). Hence every ordered triple ending at \(v\) misses one of the required edges, and therefore avoids
+both \(\operatorname{for}_{13}\) and \(\operatorname{for}_{23}\).
+
+Now suppose instead that
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing.
+\]
+Let \(x,y\in V(H)\setminus\{v\}\) be two distinct vertices adjacents to \(v\). Then neither of them lies in the same part as \(v\).
+Thus the color condition fails for both \(\operatorname{for}_{13}\) and \(\operatorname{for}_{23}\). Hence \(v\) is
+\(\mathcal F_{13\text{-}23}\)-removable.
+
+Conversely, suppose that
+\[
+\deg_H(v)\ge 2
+\]
+and that \(v\) has a neighbor \(x\in N_H(v)\cap \mathcal Q(v)\). Since \(\deg_H(v)\ge 2\), choose another neighbor
+\(y\in N_H(v)\), with \(y\neq x\). Then the ordered triple \((x,y,v)\) realizes \(\operatorname{for}_{13}\): both
+\(x\) and \(y\) are adjacent to \(v\), and \(x\) lies in the same part as \(v\). Therefore \(v\) is not
+\(\mathcal F_{13\text{-}23}\)-removable.
+
+
+\end{proof}
+
+
+
+
+
+
+
+\begin{lemma}\label{lem:removable-for12-23-13}
+Let \(G\) be a graph, let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V(G)\), and let \(H\) be an induced subgraph of \(G\).
+For a vertex \(v\in V(H)\), let \(\mathcal Q(v)\) denote the part of \(\mathcal Q\) that contains \(v\).
+Then \(v\) is \(\mathcal F_{12\text{-}23\text{-}13}\)-removable in \(H\) with respect to \(\mathcal Q\) if and only if
+either
 \[
 \deg_H(v)\le 1,
 \]
@@ -3136,10 +3628,78 @@ and
 |N_H(v)\cap V_i|\le 1
 \qquad\text{for every } i=1,\dots,k.
 \]
+
 Equivalently, if \(v\) has at least two neighbors, then all its neighbors must lie in parts different from
 \(\mathcal Q(v)\), and no two of them may lie in the same part.
 \end{lemma}
 
+
+
+\begin{proof}
+Suppose that \(\deg_H(v)\le 1\). Then no ordered triple ending at \(v\) can contain two required edges incident
+with \(v\). Hence \(v\) is removable.
+
+Now suppose that
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing
+\]
+and
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+
+Let \(x,y\in V(H)\setminus\{v\}\) be two distinct vertices adjacents to \(v\), then \(x\) and \(y\)
+lie in different parts, and neither lies in the same part as \(v\). Therefore the color condition fails for each of
+\(\operatorname{for}_{12}\), \(\operatorname{for}_{13}\), and \(\operatorname{for}_{23}\). Hence \(v\) is
+\(\mathcal F_{12\text{-}23\text{-}13}\)-removable.
+
+Conversely, suppose that \(v\) is \(\mathcal F_{12\text{-}23\text{-}13}\)-removable and that \(\deg_H(v)\ge 2\).
+We prove the two conditions.
+
+First, \(v\) cannot have a neighbor in its own part. Indeed, if
+\[
+x\in N_H(v)\cap \mathcal Q(v),
+\]
+then, since \(\deg_H(v)\ge 2\), we can choose another neighbor \(y\in N_H(v)\), with \(y\neq x\). The ordered triple
+\((x,y,v)\) realizes \(\operatorname{for}_{13}\), contradicting removability. Thus
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing.
+\]
+
+Second, no part can contain two neighbors of \(v\). If for some \(i\) there exist distinct vertices
+\[
+x,y\in N_H(v)\cap V_i,
+\]
+then the ordered triple \((x,y,v)\) realizes \(\operatorname{for}_{12}\), since \(x\sim v\), \(y\sim v\), and \(x,y\)
+lie in the same part. This contradicts removability. Therefore
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+
+\end{proof}
+
+
+
+
+
+
+\begin{definition}[First-two symmetric family]
+Let \(\mathcal P\) be a family of colored patterns. We say that \(\mathcal P\) is
+\emph{first-two symmetric} if, for every graph \(H\), every partition \(\mathcal Q\) of \(V(H)\),
+and every three distinct vertices \(x,y,z\in V(H)\), the ordered triple
+\[
+(x,y,z)
+\]
+avoids \(\mathcal P\) in \(H\) if and only if the ordered triple
+\[
+(y,x,z)
+\]
+avoids \(\mathcal P\) in \(H\).
+
+In words, once the last vertex of the ordered triple is fixed, the order of the first two vertices does not matter.
+\end{definition}
 
 
 
@@ -3169,6 +3729,215 @@ Equivalently, if \(v\) has at least two neighbors, then all its neighbors must l
 \end{algorithm}
 
 
+\begin{lemma}[Correctness of Algorithm~\ref{alg:generic-given-partition}]
+\label{lem:generic-given-partition-correctness}
+Let \(\mathcal P\) be a first-two symmetric family of colored patterns and let \(G\) be a graph.
+Then Algorithm~\ref{alg:generic-given-partition} returns \textbf{YES} if and only if there exists an order
+\(\prec\) of \(V(G)\) such that
+\[
+(\prec,\mathcal Q)
+\]
+avoids every pattern in \(\mathcal P\) in \(G\).
+\end{lemma}
+
+
+
+\begin{proof}
+First suppose that the algorithm returns \textbf{YES}. Let \(\prec\) be the order obtained by reading the deletion
+list \(L\) from right to left. We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) \german{seguro agregar que si es obvio en que grafo, se omite el in G no?}.
+
+Consider any ordered triple
+\[
+x\prec y\prec z
+\]
+in the final order. When \(z\) was deleted by the algorithm, both \(x\) and \(y\) were still active, because they
+appear before \(z\) in the final order. Since \(z\) was \(\mathcal P\)-removable in the current induced subgraph,
+the triple \((x,y,z)\) avoids every pattern in \(\mathcal P\). Therefore every ordered triple avoids \(\mathcal P\),
+and so \((\prec,\mathcal Q)\) is a valid solution.
+
+Conversely, suppose that there exists an order \(\prec\) of \(V(G)\) such that \((\prec,\mathcal Q)\) avoids
+\(\mathcal P\). We prove that the algorithm returns \textbf{YES}.
+
+At any step, let \(H=G[A]\) be the current induced subgraph. The restriction of \(\prec\) to \(A\) still avoids
+\(\mathcal P\), because deleting vertices cannot create a forbidden ordered triple. Let \(v\) be the last vertex of
+this restricted order.
+
+We claim that \(v\) is \(\mathcal P\)-removable in \(H\). Take any two distinct vertices
+\(x,y\in V(H)\setminus\{v\}\). In the restricted order, either
+\[
+x\prec y\prec v
+\]
+or
+\[
+y\prec x\prec v.
+\]
+The corresponding ordered triple avoids \(\mathcal P\), because the restricted order is valid. Since \(\mathcal P\)
+is first-two symmetric, the other ordering of the first two vertices also avoids \(\mathcal P\). Hence \((x,y,v)\)
+avoids \(\mathcal P\) for every pair \(x,y\), so \(v\) is \(\mathcal P\)-removable.
+
+Thus, whenever a valid order exists for the current induced subgraph, a \(\mathcal P\)-removable vertex exists.
+Therefore the algorithm cannot return \textbf{NO}.
+\end{proof}
+
+\begin{lemma}\label{lem:swap-first-two}
+Let \(\mathcal P\) be a family of colored patterns. Suppose that whenever \(P\in\mathcal P\), the pattern obtained from \(P\) by swapping positions \(1\) and \(2\) also belongs to \(\mathcal P\). Then \(\mathcal P\) is first-two symmetric.
+\end{lemma}
+
+
+\begin{lemma}\label{lem:families-first-two-symmetric}
+The families
+\[
+\mathcal F_{12},
+\qquad
+\mathcal F_{13\text{-}23},
+\qquad
+\mathcal F_{12\text{-}23\text{-}13}
+\]
+are first-two symmetric.
+\end{lemma}
+
+\begin{proof}
+For \(\mathcal F_{12}\), swapping the first two vertices preserves the pattern \(\operatorname{for}_{12}\):
+the required edges are still the two edges incident with the third vertex, and the colored pair \(\{1,2\}\)
+is unchanged.
+
+For \(\mathcal F_{13\text{-}23}\), swapping the first two vertices exchanges the two patterns
+\(\operatorname{for}_{13}\) and \(\operatorname{for}_{23}\). Since both patterns belong to the family, avoidance of the
+family is unchanged.
+
+Finally, \(\mathcal F_{12\text{-}23\text{-}13}\) contains all three patterns, and is therefore also invariant under
+swapping the first two vertices. \german{dudo de si esta demo tiene q ser mas formal}
+\end{proof}
+
+
+
+
+
+\begin{corollary}\label{cor:given-partition-poly-cases}
+Let \(G=(V(G),E(G))\) be a graph, let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be a fixed partition of \(V(G)\), and set
+\[
+n:=|V(G)|,
+\qquad
+m:=|E(G)|.
+\]
+The given-partition avoidance problem is polynomial-time solvable for the following families:
+\[
+\mathcal F_{12},
+\qquad
+\mathcal F_{13\text{-}23},
+\qquad
+\mathcal F_{12\text{-}23\text{-}13}.
+\]
+\german{esto verlo bien con eric pq ni idea si esta bien}
+More precisely, Algorithm~\ref{alg:generic-given-partition} can be implemented in time
+\[
+O(nk+m)
+\]
+for \(\mathcal F_{12}\), in time
+\[
+O(n+m)
+\]
+for \(\mathcal F_{13\text{-}23}\), and in time
+\[
+O(nk+m) \german{este segun eric es O(n + mlog(n)) asi que dudo de todos jaja}
+\]
+for \(\mathcal F_{12\text{-}23\text{-}13}\).
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:families-first-two-symmetric}, the families
+\[
+\mathcal F_{12},
+\qquad
+\mathcal F_{13\text{-}23},
+\qquad
+\mathcal F_{12\text{-}23\text{-}13}
+\]
+are first-two symmetric. Therefore, by Lemma~\ref{lem:generic-given-partition-correctness},
+Algorithm~\ref{alg:generic-given-partition} is correct for each of these families.
+
+It remains to justify the running times.
+
+\medskip
+\noindent\textbf{The family \(\mathcal F_{12}\).}
+By Lemma~\ref{lem:removable-for12}, a vertex \(v\) is \(\mathcal F_{12}\)-removable in the current induced subgraph
+\(H\) if and only if
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+We maintain counters
+\[
+c(v,i):=|N_H(v)\cap V_i|
+\]
+for every active vertex \(v\) and every part \(V_i\), together with the number of parts \(V_i\) for which
+\(c(v,i)\ge 2\). Then \(v\) is removable exactly when this number is zero.
+
+The counters can be initialized in time \(O(nk+m)\). When a vertex \(u\in V_j\) is deleted, only the counters
+\(c(v,j)\) for active neighbors \(v\) of \(u\) change. Thus each edge is processed at most once during the deletion
+process. Using a queue of currently removable vertices, the total running time is
+\[
+O(nk+m).
+\]
+
+\medskip
+\noindent\textbf{The family \(\mathcal F_{13\text{-}23}\).}
+By Lemma~\ref{lem:removable-for13-23}, a vertex \(v\) is \(\mathcal F_{13\text{-}23}\)-removable in the current
+induced subgraph \(H\) if and only if
+\[
+\deg_H(v)\le 1
+\qquad\text{or}\qquad
+N_H(v)\cap \mathcal Q(v)=\varnothing,
+\]
+where \(\mathcal Q(v)\) denotes the part of \(\mathcal Q\) containing \(v\).
+
+We maintain the current degree \(\deg_H(v)\) of each active vertex \(v\), and also the number
+\[
+s(v):=|N_H(v)\cap \mathcal Q(v)|
+\]
+of active neighbors of \(v\) in its own part. When a vertex is deleted, these quantities are updated only for its
+active neighbors. Hence each edge is processed at most once, and the total running time is
+\[
+O(n+m).
+\]
+
+\medskip
+\noindent\textbf{The family \(\mathcal F_{12\text{-}23\text{-}13}\).}
+By Lemma~\ref{lem:removable-for12-23-13}, a vertex \(v\) is \(\mathcal F_{12\text{-}23\text{-}13}\)-removable in
+the current induced subgraph \(H\) if and only if either
+\[
+\deg_H(v)\le 1,
+\]
+or both
+\[
+N_H(v)\cap \mathcal Q(v)=\varnothing
+\]
+and
+\[
+|N_H(v)\cap V_i|\le 1
+\qquad\text{for every } i=1,\dots,k.
+\]
+Thus we combine the counters used in the previous two cases: the degree \(\deg_H(v)\), the same-part counter
+\(s(v)=|N_H(v)\cap \mathcal Q(v)|\), and the counters
+\[
+c(v,i):=|N_H(v)\cap V_i|.
+\]
+Again, these can be initialized in time \(O(nk+m)\), and each edge is processed at most once during the deletion
+process. Hence the total running time is
+\[
+O(nk+m).
+\]
+
+Therefore the given-partition avoidance problem is polynomial-time solvable for all three families, with the stated
+running times.
+\end{proof}
+
+
+
 \eric{Me gustó la idea de sacar factor común, podemos quizá sacar la property para afuera y simplemente que la property sea "si no importa el orden de los dos primeros vertices de la tripla, entonces el algoritmo 1 es correcto." asdf}
 
 \eric{1. Decir la property: "no me importa el orden de los dos primeros vertices de la tripla."
@@ -3176,44 +3945,7 @@ Equivalently, if \(v\) has at least two neighbors, then all its neighbors must l
 3. Decir el lema que si tenes la property, entonces el algoritmo 1 es correcto.
 4. Decir que las tres familias de patrones tienen la property.
 5. Corolario: las tres familias de patrones tienen algoritmo poli. Pones la complejidad de instanciar el algoritmo 1 para cada uno en particular.}
-
-\begin{lemma}[Correctness of the deletion algorithm]\label{lem:generic-deletion-correctness}
-Let \(G\) be a graph, let \(\mathcal Q=\{V_1,\dots,V_k\}\) be a fixed partition of \(V(G)\), and let
-\(\mathcal P\) be a family of colored patterns.
-
-Assume that the following property holds for \(\mathcal P\): for every induced subgraph \(H\) of \(G\), if there exists
-an order \(\prec\) of \(V(H)\) such that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) in \(H\), then \(H\) contains a
-\(\mathcal P\)-removable vertex.
-
-Then Algorithm~\ref{alg:generic-given-partition} returns \textbf{YES} if and only if there exists an order \(\prec\)
-of \(V(G)\) such that \((\prec,\mathcal Q)\) avoids \(\mathcal P\).
-\end{lemma}
-
-\begin{proof}
-First suppose that the algorithm returns \textbf{YES}. Let \(L\) be the deletion list produced by the algorithm, and let
-\(\prec\) be the order obtained by reading \(L\) from right to left.
-
-We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\). Consider any ordered occurrence whose last vertex is \(v\).
-When \(v\) was deleted by the algorithm, all vertices that appear before \(v\) in the final order were still active.
-Since \(v\) was \(\mathcal P\)-removable in the current induced subgraph, this occurrence avoids every pattern in
-\(\mathcal P\). Therefore every ordered occurrence avoids \(\mathcal P\), and hence \((\prec,\mathcal Q)\) avoids
-\(\mathcal P\).
-
-Conversely, suppose that there exists an order \(\prec\) of \(V(G)\) such that \((\prec,\mathcal Q)\) avoids
-\(\mathcal P\). We show that the algorithm cannot get stuck.
-
-At any step, let \(H=G[A]\) be the current induced subgraph. Since deleting vertices cannot create a forbidden
-occurrence, the restriction of the valid order \(\prec\) to \(A\) still avoids \(\mathcal P\) in \(H\).
-By the hypothesis of the lemma, \(H\) contains a \(\mathcal P\)-removable vertex. Thus the algorithm always has a
-valid choice and cannot return \textbf{NO}.
-
-Therefore the algorithm returns \textbf{YES} exactly when a valid order exists.
-\end{proof}
-
-
-
-
-
+\german{OK}
 
 
 
@@ -3508,117 +4240,6 @@ forces \(x_i\) and \(x_j\) to lie in different parts. Therefore, the restriction
 
 
 
-aca empieza el lio
-
-\begin{definition}[Pattern on three vertices]
-A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a pair
-\[
-P=(A,N),
-\]
-where
-\[
-A,N\subseteq \binom{\{r,s,t\}}{2}
-\qquad\text{and}\qquad
-A\cap N=\varnothing.
-\]
-The set \(A\) indicates the pairs of vertices that are required to be edges, while \(N\) indicates the pairs of vertices that are required to be non-edges.
-Pairs that do not belong to \(A\cup N\) are left unrestricted.
-\end{definition}
-\eric{Uncolored pattern en realidad es un pattern, y lo vamos a definir antes que los colored patterns, así que mejor si no ponemos el vacio al final. Patron = (A, N). DONE}
-
-
-
-
-\begin{definition}[\(P\)-partition number]
-Let \(P=(A,N)\) be a pattern on three vertices. We define
-\[
-\minClases_P(G)
-\]
-as the minimum \(k\) such that there exists a partition
-\[
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\]
-satisfying
-\[
-G[V_i]\in \mathcal C_P
-\qquad\text{for every } i=1,\dots,k.
-\]
-\end{definition}
-
-\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro. OK todavia no me meti en el lio de las citas}
-
-
-
-
-
-
-
-
-
-\begin{definition}[Class associated with a pattern on three vertices]
-Let
-\[
-P=(A,N)
-\]
-be a pattern. We denote by \(\mathcal C_P\) the class of graphs characterized by \(P\);
-that is,
-\[
-G\in \mathcal C_P
-\]
-if and only if there exists a total order \(\prec\) of \(V(G)\) such that every ordered triple of vertices of \(G\)
-avoids the pattern \(P\).
-\end{definition}\eric{Esto probablemente haya que ponerlo al principio. OK, pero despues}
-
-
-
-
-
-
-
-\begin{theorem}\label{thm:colored-lower-bound-by-class-partition}
-Let \(P=(A,N,C)\) be a colored pattern, and consider the pattern $P' = (A,N)$.
-
-Then, for every graph \(G\),
-\[
-\minClases_P(G)
-\;\ge\;
-\minClases_{P'}(G)
-.
-\]
-\end{theorem}
-
-\begin{proof}
-Let
-\[
-S=(\prec,\mathcal Q),
-\qquad
-\mathcal Q=\{V_1,\dots,V_k\},
-\]
-be a solution that avoids \(P\).
-
-Fix a part \(V_i\), and restrict the order \(\prec\) to \(V_i\). We claim that this restricted order avoids
-\(P'\) in \(G[V_i]\). Indeed, if an ordered triple inside \(V_i\) realized \(P'\), then the required edge and
-non-edge conditions of \(P\) would be satisfied. Moreover, since all three vertices lie in the same part \(V_i\),
-the color condition \(C\) would also be satisfied. Hence the same triple would realize \(P\), contradicting that
-\(S\) avoids \(P\).
-
-Therefore,
-\[
-G[V_i]\in \mathcal C_{P'}
-\qquad\text{for every } i=1,\dots,k.
-\]
-Thus the partition \(\mathcal Q\) witnesses that
-\[
-\minClases_{P'}(G)\le k.
-\]
-Taking the minimum over all solutions avoiding \(P\), we obtain
-\[
-\minClases_{P'}(G)\le \minClases_P(G),
-\]
-as desired.
-\end{proof}
-
-
 
 
 \begin{theorem}\label{thm:rt-colored-equals-uncolored}
@@ -3716,7 +4337,7 @@ avoids \(\forrt\) if and only if \(G[V_i]\) is a forest for every \(i=1,\dots,k\
 
 
 
-CREO que hay que seguir chequeando desde aca
+\german{CREO que hay que seguir chequeando desde aca}
 
 \eric{El siguiente teorema es general para cualquier patron P que sea polinomial de calcular la clase (que creo que son todos).}
 
@@ -3839,7 +4460,7 @@ realize \(\forrs\), a contradiction. Therefore adjacent vertices of \(X\) lie in
 to \(V(X)\) is a proper \(k\)-coloring of \(X\).
 \end{proof}
 
-bajaaaaaaaa
+
 
 \medskip
 
@@ -3912,55 +4533,48 @@ be checked in polynomial time. Hence the problem is NP-complete.
 
 
 
-\begin{theorem}\label{thm:forrs-rt-given-order-np-complete}
-The \(\mathcal F_{rs\text{-}rt}\)-Avoidance problem with a given order is NP-complete.
-More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
-that avoids both \(\forrs\) and \(\forrt\) with respect to a given order is NP-complete.
-\end{theorem}
 
-\begin{proof}[Proof sketch]
-We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
+
+
+
+
+
+
+\german{aca hay un errpr en amarillo de latex, no quiero gastar tokens en esto, eric }
+\subsubsection{Families containing \(\operatorname{for}_{12}\): given order}
+
+For \(D\subseteq\{12,13,23\}\), we write
+\[
+\mathcal F_D:=\{\operatorname{for}_{ab}:ab\in D\}.
+\]
+
+\paragraph{Common construction.}
+Fix \(k\ge 3\), and let \(X\) be an instance of \(k\)-\textsc{Coloring}, with
 \[
 V(X)=\{x_1,\dots,x_n\}.
 \]
-For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent exactly to
-\(x_i\) and \(x_j\), and do not keep the original edge \(x_i x_j\). Thus,
+\german{queda claro que estan ordenados?}
+For every edge \(x_i x_j\in E(X)\), with \(i<j\), we add one witness vertex \(w_{ij}\), adjacent exactly to
+\(x_i\) and \(x_j\). We do not keep the original edge \(x_i x_j\). Thus,
 \[
-V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
+V(G)=V(X)\cup \{w_{ij}:x_i x_j\in E(X),\ i<j\},
 \]
 and
 \[
-E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
+E(G)=\{x_iw_{ij},x_jw_{ij}:x_i x_j\in E(X),\ i<j\}.
 \]
-The given order is
+The given order \(\prec\) is
 \[
-x_1\prec x_2\prec \cdots \prec x_n \prec \text{all vertices } w_{ij},
+x_1\prec x_2\prec\cdots\prec x_n\prec \text{all witnesses }w_{ij},
 \]
 where the witnesses are ordered arbitrarily.
 
-If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices.
-For each edge \(x_i x_j\in E(X)\), with \(i<j\), assign \(w_{ij}\) the color of \(x_j\).
-Then, in the only relevant triples
-\[
-x_i\prec x_j\prec w_{ij},
-\]
-the pattern \(\forrs\) is avoided because \(x_i\) and \(x_j\) have different colors, and \(\forrt\) is avoided
-because \(x_i\) and \(w_{ij}\) have different colors.
-
-Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forrt\) with at most \(k\) parts.
-For every edge \(x_i x_j\in E(X)\), with \(i<j\), the triple
+In this ordered graph, the only triples with the two required edges of a forest pattern are
 \[
 x_i\prec x_j\prec w_{ij}
 \]
-has
-\[
-x_i\sim w_{ij},
-\qquad
-x_j\sim w_{ij}.
-\]
-Avoiding \(\forrs\) forces \(x_i\) and \(x_j\) to lie in different parts. Hence the restriction of the partition
-to \(V(X)\) is a proper \(k\)-coloring of \(X\).
-\end{proof}
+for some edge \(x_i x_j\in E(X)\), with \(i<j\).
+
 
 
 
@@ -3983,206 +4597,526 @@ to \(V(X)\) is a proper \(k\)-coloring of \(X\).
 \node[draw=none, font=\small] at (2.2,-1.1) {$x_i\prec x_j\prec w_{ij}$};
 
 \end{tikzpicture}
-\caption{Gadget used in the reduction for \(\mathcal F_{rs\text{-}rt}\) with a given order.}
+\caption{Gadget used in the construction of \(G\).}
 \label{fig:forrs-rt-given-order-gadget}
 \end{figure}
 
 
 
 
-\begin{theorem}\label{thm:forrs-rt-general-np-complete}
-The \(\mathcal F_{rs\text{-}rt}\)-Avoidance problem is NP-complete.
-More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a solution with at most \(k\) parts
-that avoids both \(\forrs\) and \(\forrt\) is NP-complete.
+
+
+
+
+\begin{remark}\label{obs:common-12-given-order-triples} \german{puede q esto se use en mas lados}
+In the common construction above, let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that
+\[
+u\sim z
+\qquad\text{and}\qquad
+v\sim z.
+\]
+Then there exists an edge \(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{ij}\) such that
+\[
+(u,v,z)=(x_i,x_j,w_{ij}).
+\]
+
+
+\end{remark}
+
+\begin{proof}
+There are no edges among vertices of \(V(X)\), and there are no edges among witnesses. Moreover, every witness
+comes after all original vertices in the order. Therefore, if \(z\) has two earlier neighbors, then \(z\) must be
+a witness vertex \(w_{ij}\). By construction, the only neighbors of \(w_{ij}\) are \(x_i\) and \(x_j\), and since
+\(i<j\), they appear in the order as
+\[
+x_i\prec x_j\prec w_{ij}.
+\]
+Thus \((u,v,z)=(x_i,x_j,w_{ij})\).
+\end{proof}
+
+
+\begin{lemma}\label{lem:given-order-12-common-converse} \german{la vuelta comun}
+Let \(D\subseteq\{12,13,23\}\) with \(12\in D\). If the ordered graph \((G,\prec)\) constructed above admits a
+partition into at most \(k\) parts avoiding \(\mathcal F_D\), then \(X\) is \(k\)-colorable.
+\end{lemma}
+
+\begin{proof}
+Since \(12\in D\), every solution avoiding \(\mathcal F_D\) also avoids \(\operatorname{for}_{12}\).
+Let
+\[
+S=(\prec,\mathcal Q)
+\]
+be such a solution, with \(|\mathcal Q|\le k\).
+
+We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\).
+Let \(x_i x_j\in E(X)\), with \(i<j\). By construction, there exists a witness \(w_{ij}\) adjacent to both \(x_i\) and \(x_j\), and the order is
+\[
+x_i\prec x_j\prec w_{ij}.
+\]
+If \(x_i\) and \(x_j\) were assigned to the same part of \(\mathcal Q\), then this ordered triple
+
+would not avoid \(\operatorname{for}_{12}\), contradicting the fact that \(S\) avoids
+\(\mathcal F_D\).
+
+Therefore, for every edge \(x_i x_j\in E(X)\), the vertices \(x_i\) and \(x_j\) are assigned to different parts of
+\(\mathcal Q\). Thus the restriction of \(\mathcal Q\) to \(V(X)\) gives a proper coloring of \(X\) with at most
+\(k\) colors.
+\end{proof}
+
+\medskip
+
+
+
+
+\begin{theorem}\label{thm:F12-given-order-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12}\)-Avoidance problem with a given order is NP-complete.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
-We reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), for every edge
-\(xy\in E(X)\) we add \(k+1\) common witnesses
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We define a partition of \(V(G)\) into at most \(k\)
+parts by assigning each original vertex \(x_k\) to the part \(\varphi(x_k)\), and assigning each witness \(w_{ij}\)
+arbitrarily.
+
+We claim that this partition, together with the fixed order \(\prec\), avoids \(\mathcal F_{12}\).
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Observation~\ref{obs:common-12-given-order-triples}, there is an edge
+\(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{ij}\) such that
+\[
+(u,v,z)=(x_i,x_j,w_{ij}).
+\]
+Since \(\varphi\) is a proper coloring of \(X\), the vertices \(x_i\) and \(x_j\) are assigned to different parts.
+Therefore by the color condition \(C=\{1,2\}\) of \(\operatorname{for}_{12}\), the triple avoids
+\(\operatorname{for}_{12}\). \german{te parece bien decirlo asi? lo de C}
+
+Thus the constructed solution avoids \(\mathcal F_{12}\).
+
+The converse follows from Lemma~\ref{lem:given-order-12-common-converse} with \(D=\{12\}\).
+\end{proof}
+
+
+
+\begin{theorem}\label{thm:F12-13-given-order-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}13}\)-Avoidance problem with a given order is NP-complete.
+\end{theorem}
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We assign each original vertex \(x_k\) to the part
+\(\varphi(x_k)\). For each edge \(x_i x_j\in E(X)\), with \(i<j\), we assign the witness \(w_{ij}\) to the part
+\[
+\varphi(x_j).
+\]
+
+We claim that the resulting solution avoids both \(\operatorname{for}_{12}\) and \(\operatorname{for}_{13}\).
+
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Observation~\ref{obs:common-12-given-order-triples}, there is an edge
+\(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{ij}\) such that
+\[
+(u,v,z)=(x_i,x_j,w_{ij}).
+\]
+Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts. Hence the color condition
+\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) fails.
+
+Moreover, \(w_{ij}\) is assigned to the part \(\varphi(x_j)\), while \(x_i\) is assigned to the part
+\(\varphi(x_i)\). Since \(\varphi(x_i)\neq\varphi(x_j)\), the vertices \(x_i\) and \(w_{ij}\) are assigned to
+different parts. Hence the color condition \(C=\{1,3\}\) of \(\operatorname{for}_{13}\) fails. \german{o prferis asi lo del C}
+
+Thus the solution avoids \(\mathcal F_{12\text{-}13}\).
+
+The converse follows from Lemma~\ref{lem:given-order-12-common-converse} with \(D=\{12,13\}\).
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:F12-23-given-order-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}23}\)-Avoidance problem with a given order is NP-complete.
+\end{theorem}
+
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We assign each original vertex \(x_k\) to the part
+\(\varphi(x_k)\). For each edge \(x_i x_j\in E(X)\), with \(i<j\), we assign the witness \(w_{ij}\) to the part
+\[
+\varphi(x_i).
+\]
+
+We claim that the resulting solution avoids both \(\operatorname{for}_{12}\) and \(\operatorname{for}_{23}\).
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Observation~\ref{obs:common-12-given-order-triples}, there is an edge
+\(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{ij}\) such that
+\[
+(u,v,z)=(x_i,x_j,w_{ij}).
+\]
+Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts. Hence the color condition
+\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) activates. \german{o asi??}
+
+Moreover, \(w_{ij}\) is assigned to the part \(\varphi(x_i)\), while \(x_j\) is assigned to the part
+\(\varphi(x_j)\). Since \(\varphi(x_i)\neq\varphi(x_j)\), the vertices \(x_j\) and \(w_{ij}\) are assigned to
+different parts. Hence the color condition \(C=\{2,3\}\) of \(\operatorname{for}_{23}\) fails.
+
+Thus the solution avoids \(\mathcal F_{12\text{-}23}\).
+
+The converse follows from Lemma~\ref{lem:given-order-12-common-converse} with \(D=\{12,23\}\).
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:F12-23-13-given-order-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}23\text{-}13}\)-Avoidance problem with a given order is NP-complete.
+\end{theorem}
+
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We assign each original vertex \(x_k\) to the part
+\(\varphi(x_k)\). For each edge \(x_i x_j\in E(X)\), with \(i<j\), choose a part different from both
+\[
+\varphi(x_i)
+\qquad\text{and}\qquad
+\varphi(x_j),
+\]
+and assign \(w_{ij}\) to that part. This is possible because \(k\ge 3\) and
+\[
+\varphi(x_i)\neq\varphi(x_j).
+\]
+
+We claim that the resulting solution avoids
+\[
+\mathcal F_{12\text{-}23\text{-}13}.
+\]
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Observation~\ref{obs:common-12-given-order-triples}, there is an edge
+\(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{ij}\) such that
+\[
+(u,v,z)=(x_i,x_j,w_{ij}).
+\]
+The choice of the part of \(w_{ij}\), together with the fact that \(\varphi\) is proper, implies that the three
+vertices \(x_i\), \(x_j\), and \(w_{ij}\) are assigned to pairwise different parts. Therefore each of the color
+conditions \(C=\{1,2\}\), \(C=\{1,3\}\), and \(C=\{2,3\}\) activates. Hence the triple avoids
+\(\operatorname{for}_{12}\), \(\operatorname{for}_{13}\), and \(\operatorname{for}_{23}\).
+
+Thus the solution avoids \(\mathcal F_{12\text{-}23\text{-}13}\).
+
+The converse follows from Lemma~\ref{lem:given-order-12-common-converse} with \(D=\{12,23,13\}\).
+\end{proof}
+
+
+
+
+
+
+
+\subsubsection{Families containing \(\operatorname{for}_{12}\): general case}
+
+\paragraph{Common construction.}
+Fix \(k\ge 3\), and let \(X\) be an instance of \(k\)-\textsc{Coloring}.
+For every edge \(xy\in E(X)\), we add \(k+1\) witness vertices
 \[
 W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
 \]
-each adjacent exactly to \(x\) and \(y\). The original edge \(xy\) is not kept. Thus
+each adjacent exactly to \(x\) and \(y\). We do not keep the original edge \(xy\). Thus,
 \[
 V(G)=V(X)\cup \bigcup_{xy\in E(X)} W_{xy},
 \]
 and
 \[
-E(G)=\{xw^i_{xy},yw^i_{xy}: xy\in E(X),\ 1\le i\le k+1\}.
+E(G)=\{xw^a_{xy},yw^a_{xy}:xy\in E(X),\ a=1,\dots,k+1\}.
 \]
 
-If \(X\) has a proper \(k\)-coloring, order first the original vertices and then all witnesses. For each edge
-\(xy\in E(X)\), let \(x\prec y\) in this chosen order, and assign every witness in \(W_{xy}\) the color of \(y\).
-Then the relevant triples \(x\prec y\prec w^i_{xy}\) avoid \(\forrs\) because \(x\) and \(y\) have different colors,
-and avoid \(\forrt\) because \(x\) and \(w^i_{xy}\) have different colors.
-
-Conversely, suppose that there is a solution avoiding both \(\forrs\) and \(\forrt\) with at most \(k\) parts.
-If two adjacent original vertices \(x,y\) were in the same part, assume \(x\prec y\). No witness \(w^i_{xy}\) can appear
-after \(y\), because \(x\prec y\prec w^i_{xy}\) would realize \(\forrs\). Hence all \(k+1\) witnesses of \(W_{xy}\)
-appear before \(y\). Since there are at most \(k\) parts, two of them lie in the same part; together with \(y\), they
-realize \(\forrs\), a contradiction. Therefore adjacent vertices of \(X\) lie in different parts, and the restriction
-to \(V(X)\) is a proper \(k\)-coloring of \(X\).
-\end{proof}
+When \(X\) is properly \(k\)-colored, we will use the following order in the forward direction. We choose an arbitrary
+order of the original vertices, put all original vertices first, and then put all witness vertices.
 
 
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  scale=1,
+  every node/.style={circle, draw, inner sep=1.4pt, font=\small}
+]
+
+\node (x) at (0,0) {$x_i$};
+\node (y) at (2.2,0) {$x_j$};
+
+\node (w1) at (4.8,1.2) {$w^{1}_{ij}$};
+\node (w2) at (4.8,0.2) {$w^{2}_{ij}$};
+\node[draw=none] (vd) at (4.8,-0.8) {$\vdots$};
+\node (wk) at (4.8,-1.8) {$w^{k+1}_{ij}$};
+
+\draw[bend left=20] (x) to (w1);
+\draw (y) -- (w1);
+
+\draw[bend left=10] (x) to (w2);
+\draw (y) -- (w2);
+
+\draw[bend right=10] (x) to (wk);
+\draw (y) -- (wk);
+
+\node[draw=none, font=\small] at (2.6,-3.0)
+{$x_i\prec x_j\prec w^{1}_{ij},w^{2}_{ij},\dots,w^{k+1}_{ij}$};
+
+\end{tikzpicture}
+\caption{Gadget used in the general construction: for each edge \(x_ix_j\), we add \(k+1\) common witnesses.}
+\label{fig:forrs-general-gadget}
+\end{figure}
 
 
 
 
 
-
-
-\begin{lemma}\label{lem:forD-given-order-rs-np-hard}
-Let
+\begin{remark}\label{obs:common-12-general-forward-triples}
+Consider the forward order described above. Let
 \[
-D\subseteq \{rs,rt,st\}
+u\prec v\prec z
 \]
-with \(rs\in D\). Let
+be an ordered triple such that
 \[
-\mathcal F_D
-:=
-\{\forrs:rs\in D\}\cup \{\forrt:rt\in D\}\cup \{\forst:st\in D\}.
+u\sim z
+\qquad\text{and}\qquad
+v\sim z.
 \]
-Then, for every fixed \(k\ge 3\), the \textsc{\(\mathcal F_D\)-Avoidance with a given order} problem is NP-hard.
-\end{lemma}
+Then there exists an edge \(xy\in E(X)\), with \(x\prec y\), and an index \(a\in\{1,\dots,k+1\}\), such that
+\[
+(u,v,z)=(x,y,w^a_{xy}).
+\]
+\end{remark}
 
-\begin{proof}[Proof sketch]
-We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
-\[
-V(X)=\{x_1,\dots,x_n\}.
-\]
-For each edge \(x_i x_j\in E(X)\), with \(i<j\), add one witness vertex \(w_{ij}\), adjacent exactly to
-\(x_i\) and \(x_j\), and do not keep the original edge \(x_i x_j\). Thus,
-\[
-V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
-\]
-and
-\[
-E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
-\]
-The given order is
-\[
-x_1\prec x_2\prec \cdots \prec x_n \prec \text{all witnesses } w_{ij},
-\]
-where the witnesses are ordered arbitrarily. Hence, for every edge \(x_i x_j\in E(X)\), with \(i<j\),
-\[
-x_i\prec x_j\prec w_{ij}.
-\]
-
-Suppose first that \(X\) has a proper \(k\)-coloring \(\varphi\). We keep the colors of the original vertices:
-\[
-c(x_i)=\varphi(x_i).
-\]
-For each witness \(w_{ij}\), we assign its color according to the following table:
-\[
-\begin{array}{c|c}
-D & c(w_{ij}) \\ \hline
-\{rs\} & \text{any color} \\
-\{rs,rt\} & \varphi(x_j) \\
-\{rs,st\} & \varphi(x_i) \\
-\{rs,rt,st\} & \text{any color different from }\varphi(x_i)\text{ and }\varphi(x_j).
-\end{array}
-\]
-The last choice is possible because \(k\ge 3\), and since \(x_i x_j\in E(X)\), we have
-\(\varphi(x_i)\neq \varphi(x_j)\).
-
-The only relevant triples are of the form
-\[
-x_i\prec x_j\prec w_{ij}.
-\]
-Such a triple avoids every pattern in \(\mathcal F_D\): it avoids \(\forrs\) because \(x_i\) and \(x_j\) have
-different colors; it avoids \(\forrt\), when required, because \(x_i\) and \(w_{ij}\) have different colors; and it
-avoids \(\forst\), when required, because \(x_j\) and \(w_{ij}\) have different colors.
-
-Conversely, suppose that there is a partition into at most \(k\) parts that avoids every pattern in \(\mathcal F_D\).
-Since \(rs\in D\), the pattern \(\forrs\) is avoided. For every edge \(x_i x_j\in E(X)\), with \(i<j\), the triple
-\[
-x_i\prec x_j\prec w_{ij}
-\]
-has both required edges to \(w_{ij}\). Therefore avoiding \(\forrs\) forces \(x_i\) and \(x_j\) to lie in different
-parts. Hence the restriction of the partition to \(V(X)\) is a proper \(k\)-coloring of \(X\).
-
-Thus \(X\) is \(k\)-colorable if and only if the constructed ordered graph admits a solution with at most \(k\)
-parts avoiding \(\mathcal F_D\). Therefore the problem is NP-hard, moreover is NP-Complete.
-\end{proof}
-
-
-
-
-
-
-\begin{lemma}\label{lem:forD-general-rs-np-hard}
-Let
-\[
-D\subseteq \{rs,rt,st\}
-\]
-with \(rs\in D\), and let
-\[
-\mathcal F_D
-:=
-\{\forrs:rs\in D\}\cup \{\forrt:rt\in D\}\cup \{\forst:st\in D\}.
-\]
-Then, for every fixed \(k\ge 3\), the \(\mathcal F_D\)-Avoidance problem is NP-hard.
-\end{lemma}
-
-\begin{proof}[Proof sketch]
-We reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance. For every edge
-\(xy\in E(X)\), we add \(k+1\) common witnesses
-\[
-W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
-\]
-each adjacent exactly to \(x\) and \(y\). The original edge \(xy\) is not kept. Thus
-\[
-V(G)=V(X)\cup \{w^a_{xy}: xy\in E(X),\ a=1,\dots,k+1\},
-\]
-and
-\[
-E(G)=\{xw^a_{xy},yw^a_{xy}: xy\in E(X),\ a=1,\dots,k+1\}.
-\]
-
-Suppose first that \(X\) has a proper \(k\)-coloring \(\varphi\). Choose an arbitrary order of the original
-vertices. For each edge \(xy\in E(X)\), write \(x\prec y\) if \(x\) appears before \(y\) in this order.
-We order all original vertices first, and then all witnesses. We keep the coloring \(\varphi\) on \(V(X)\), and
-assign colors to the witnesses according to the following table:
-\[
-\begin{array}{c|c}
-D & c(w^a_{xy}) \text{ when } x\prec y \\ \hline
-\{rs\} & \text{any color} \\
-\{rs,rt\} & \varphi(y) \\
-\{rs,st\} & \varphi(x) \\
-\{rs,rt,st\} & \text{any color not in } \{\varphi(x),\varphi(y)\}.
-\end{array}
-\]
-The last choice is possible because \(k\ge 3\), and \(\varphi(x)\neq \varphi(y)\) whenever \(xy\in E(X)\).
-
-The only relevant triples are of the form
+\begin{proof}
+There are no edges among original vertices and no edges among witness vertices. Moreover, in the forward order all
+witnesses appear after all original vertices. Hence, if \(z\) has two earlier neighbors, then \(z\) must be a witness
+\(w^a_{xy}\). Its only neighbors are \(x\) and \(y\), and these appear before \(w^a_{xy}\) in the chosen order. If
+\(x\prec y\), then the triple is exactly
 \[
 x\prec y\prec w^a_{xy}.
 \]
-Such a triple avoids every pattern in \(\mathcal F_D\): it avoids \(\forrs\) because \(x\) and \(y\) have different
-colors; it avoids \(\forrt\), when required, because \(x\) and \(w^a_{xy}\) have different colors; and it avoids
-\(\forst\), when required, because \(y\) and \(w^a_{xy}\) have different colors.
+\end{proof}
 
-Conversely, suppose that \(G\) has a solution avoiding \(\mathcal F_D\) with at most \(k\) parts. Since \(rs\in D\),
-the pattern \(\forrs\) is avoided. Let \(xy\in E(X)\), and suppose for contradiction that \(x\) and \(y\) lie in
-the same part. Assume, without loss of generality, that
+\begin{lemma}\label{lem:general-12-common-converse}
+Let \(D\subseteq\{12,13,23\}\) with \(12\in D\). If the graph \(G\) constructed above admits a solution with at most
+\(k\) parts avoiding \(\mathcal F_D\), then \(X\) is \(k\)-colorable.
+\end{lemma}
+
+\begin{proof}
+Since \(12\in D\), every solution avoiding \(\mathcal F_D\) also avoids \(\operatorname{for}_{12}\).
+Let
+\[
+S=(\prec,\mathcal Q)
+\]
+be such a solution, with \(|\mathcal Q|\le k\).
+
+We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let \(xy\in E(X)\).
+Suppose, that \(x\) and \(y\) are assigned to the same part of \(\mathcal Q\).
+Without loss of generality, assume
 \[
 x\prec y.
 \]
-No witness \(w^a_{xy}\) can appear after \(y\), because then
-\[
-x\prec y\prec w^a_{xy}
-\]
-would realize \(\forrs\). Hence all \(k+1\) witnesses of \(W_{xy}\) appear before \(y\). Since there are at most
-\(k\) parts, two of them lie in the same part. If these two witnesses are ordered as
-\[
-w^a_{xy}\prec w^b_{xy}\prec y,
-\]
-then this triple realizes \(\forrs\), again a contradiction. Therefore \(x\) and \(y\) must lie in different parts.
 
-Thus the restriction of the partition to \(V(X)\) is a proper \(k\)-coloring of \(X\). Hence \(X\) is \(k\)-colorable
-if and only if \(G\) admits a solution with at most \(k\) parts avoiding \(\mathcal F_D\).
+No witness \(w^a_{xy}\in W_{xy}\) can appear after \(y\). Indeed, if
+\[
+x\prec y\prec w^a_{xy},
+\]
+then the triple \(x\prec y\prec w^a_{xy}\) does not avoid \(\operatorname{for}_{12}\) because \(w^a_{xy}\) is adjacent to both \(x\) and \(y\).
+
+Therefore, all \(k+1\) witnesses in \(W_{xy}\) appear before \(y\). Since there are at most \(k\) parts,  by the pigeonhole principle, two of them,
+say \(w^a_{xy}\) and \(w^b_{xy}\), are assigned to the same part of \(\mathcal Q\). Suppose they appear in the order
+\[
+w^a_{xy}\prec w^b_{xy}\prec y.
+\]
+Both witnesses are adjacent to \(y\), and they are assigned to the same part. Hence the triple
+\[
+w^a_{xy}\prec w^b_{xy}\prec y
+\]
+realizes \(\operatorname{for}_{12}\), again a contradiction.
+
+Thus, for every edge \(xy\in E(X)\), the vertices \(x\) and \(y\) are assigned to different parts. Hence the
+restriction of \(\mathcal Q\) to \(V(X)\) gives a proper coloring of \(X\) with at most \(k\) colors.
 \end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:F12-general-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12}\)-Avoidance problem is NP-complete.
+\end{theorem}
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We choose the forward order described above. We assign
+each original vertex \(x\in V(X)\) to the part \(\varphi(x)\), and we assign each witness vertex arbitrarily.
+
+We claim that the resulting solution avoids \(\mathcal F_{12}\). Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\). By Observation~\ref{obs:common-12-general-forward-triples}, there exist
+\(xy\in E(X)\), with \(x\prec y\), and \(a\in\{1,\dots,k+1\}\), such that
+\[
+(u,v,z)=(x,y,w^a_{xy}).
+\]
+Since \(\varphi\) is a proper coloring of \(X\), the vertices \(x\) and \(y\) are assigned to different parts.
+Therefore the color condition \(C=\{1,2\}\) of \(\operatorname{for}_{12}\) fails, and the triple avoids
+\(\operatorname{for}_{12}\).
+
+Thus the constructed solution avoids \(\mathcal F_{12}\).
+
+The converse follows from Lemma~\ref{lem:general-12-common-converse} with \(D=\{12\}\).
+\end{proof}
+
+
+
+\begin{theorem}\label{thm:F12-13-general-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}13}\)-Avoidance problem is NP-complete.
+\end{theorem}
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We choose the forward order described above. We assign
+each original vertex \(x\in V(X)\) to the part \(\varphi(x)\). For each edge \(xy\in E(X)\), with \(x\prec y\), we
+assign every witness \(w^a_{xy}\in W_{xy}\) to the part
+\[
+\varphi(y).
+\]
+
+We claim that the resulting solution avoids both \(\operatorname{for}_{12}\) and \(\operatorname{for}_{13}\).
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\).
+By Observation~\ref{obs:common-12-general-forward-triples}, there exist \(xy\in E(X)\), with \(x\prec y\),
+and \(a\in\{1,\dots,k+1\}\), such that
+\[
+(u,v,z)=(x,y,w^a_{xy}).
+\]
+Since \(\varphi\) is proper, \(x\) and \(y\) are assigned to different parts, so the color condition \(C=\{1,2\}\)
+of \(\operatorname{for}_{12}\) fails. Moreover, \(w^a_{xy}\) is assigned to the part \(\varphi(y)\), while \(x\) is
+assigned to the part \(\varphi(x)\); hence \(x\) and \(w^a_{xy}\) are assigned to different parts, so the color
+condition \(C=\{1,3\}\) of \(\operatorname{for}_{13}\) fails.
+
+Thus the constructed solution avoids \(\mathcal F_{12\text{-}13}\).
+
+The converse follows from Lemma~\ref{lem:general-12-common-converse} with \(D=\{12,13\}\).
+\end{proof}
+
+
+
+
+
+\begin{theorem}\label{thm:F12-23-general-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}23}\)-Avoidance problem is NP-complete.
+\end{theorem}
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We choose the forward order described above. We assign
+each original vertex \(x\in V(X)\) to the part \(\varphi(x)\). For each edge \(xy\in E(X)\), with \(x\prec y\), we
+assign every witness \(w^a_{xy}\in W_{xy}\) to the part
+\[
+\varphi(x).
+\]
+
+We claim that the resulting solution avoids both \(\operatorname{for}_{12}\) and \(\operatorname{for}_{23}\).
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\).
+By Observation~\ref{obs:common-12-general-forward-triples}, there exist \(xy\in E(X)\), with \(x\prec y\),
+and \(a\in\{1,\dots,k+1\}\), such that
+\[
+(u,v,z)=(x,y,w^a_{xy}).
+\]
+Since \(\varphi\) is proper, \(x\) and \(y\) are assigned to different parts, so the color condition \(C=\{1,2\}\)
+of \(\operatorname{for}_{12}\) fails. Moreover, \(w^a_{xy}\) is assigned to the part \(\varphi(x)\), while \(y\) is
+assigned to the part \(\varphi(y)\); hence \(y\) and \(w^a_{xy}\) are assigned to different parts, so the color
+condition \(C=\{2,3\}\) of \(\operatorname{for}_{23}\) fails.
+
+Thus the constructed solution avoids \(\mathcal F_{12\text{-}23}\).
+
+The converse follows from Lemma~\ref{lem:general-12-common-converse} with \(D=\{12,23\}\).
+\end{proof}
+
+
+
+
+
+
+
+\begin{theorem}\label{thm:F12-23-13-general-np-complete}
+For every fixed \(k\ge 3\), the \(\mathcal F_{12\text{-}23\text{-}13}\)-Avoidance problem is NP-complete.
+\end{theorem}
+
+\begin{proof}
+The problem is in NP. For NP-hardness, use the common construction above.
+
+Suppose that \(X\) has a proper \(k\)-coloring \(\varphi\). We choose the forward order described above. We assign
+each original vertex \(x\in V(X)\) to the part \(\varphi(x)\). For each edge \(xy\in E(X)\), with \(x\prec y\), choose
+a part different from both
+\[
+\varphi(x)
+\qquad\text{and}\qquad
+\varphi(y),
+\]
+and assign every witness \(w^a_{xy}\in W_{xy}\) to that part. This is possible because \(k\ge 3\) and
+\(\varphi(x)\neq\varphi(y)\).
+
+We claim that the resulting solution avoids
+\[
+\mathcal F_{12\text{-}23\text{-}13}.
+\]
+Let
+\[
+u\prec v\prec z
+\]
+be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\). If \(u\) and \(v\) are not both adjacent to \(z\). By Observation~\ref{obs:common-12-general-forward-triples}, there exist \(xy\in E(X)\), with \(x\prec y\),
+and \(a\in\{1,\dots,k+1\}\), such that
+\[
+(u,v,z)=(x,y,w^a_{xy}).
+\]
+By construction, the vertices \(x\), \(y\), and \(w^a_{xy}\) are assigned to pairwise different parts. Therefore the
+color conditions \(C=\{1,2\}\), \(C=\{1,3\}\), and \(C=\{2,3\}\) all fail. Hence the triple avoids
+\(\operatorname{for}_{12}\), \(\operatorname{for}_{13}\), and \(\operatorname{for}_{23}\).
+
+Thus the constructed solution avoids \(\mathcal F_{12\text{-}23\text{-}13}\).
+
+The converse follows from Lemma~\ref{lem:general-12-common-converse} with \(D=\{12,23,13\}\).
+\end{proof}
+
+
+
+
+
 
 
 
@@ -4377,160 +5311,6 @@ edges.
 Hence we obtain a proper \(k\)-coloring of \(X\). Therefore \(X\) is \(k\)-colorable if and only if \(G\) admits a
 solution with at most \(k\) parts avoiding \(\mathcal F_{rt\text{-}st}\). The construction is polynomial, and the
 problem is in NP, so it is NP-complete.
-\end{proof}
-
-
-
-
-
-
-
-% In the preamble, if not already included:
-% \usepackage{algorithm}
-% \usepackage{algpseudocode}
-
-\begin{definition}[Removable vertex for \(\mathcal F_{rt\text{-}st}\)]
-Let \(G=(V,E)\) be a graph and let
-\[
-\mathcal Q=\{V_1,\dots,V_k\}
-\]
-be a fixed partition of \(V(G)\). For a vertex \(v\in V(G)\), we denote by
-\(\mathcal Q(v)\) the unique part of \(\mathcal Q\) that contains \(v\).
-
-Let \(H\) be an induced subgraph of \(G\). A vertex \(v\in V(H)\) is called
-\emph{removable} in \(H\) with respect to \(\mathcal Q\) if at least one of the following holds:
-\[
-\deg_H(v)\le 1,
-\]
-or
-\[
-N_H(v)\cap \mathcal Q(v)=\varnothing.
-\]
-In other words, \(v\) is removable if, in the current induced subgraph, either it has at most one neighbor,
-or none of its current neighbors belongs to its own part of the partition.
-\end{definition}
-
-\begin{theorem}\label{thm:forrt-st-given-partition-poly}
-The \(\mathcal F_{rt\text{-}st}\)-Avoidance problem with a given partition can be solved in polynomial time.
-\end{theorem}
-
-\begin{proof}
-Let \(G=(V,E)\) be a graph and let
-\[
-\mathcal Q=\{V_1,\dots,V_k\}
-\]
-be the given partition of \(V(G)\). We use the following greedy algorithm.
-
-\begin{algorithm}[ht]
-\caption{\textsc{Given-Partition-\(\mathcal F_{rt\text{-}st}\)}}
-\label{alg:forrt-st-given-partition}
-\begin{algorithmic}[1]
-\Require A graph \(G=(V,E)\) and a partition \(\mathcal Q=\{V_1,\dots,V_k\}\) of \(V(G)\).
-\Ensure \textbf{YES} and an order \(\prec\) if such an order exists; otherwise \textbf{NO}.
-
-\State \(A \gets V(G)\)
-\State \(L \gets [\,]\) \Comment{\(L\) stores the vertices in deletion order}
-
-\While{\(A\neq\varnothing\)}
-    \If{there exists a removable vertex \(v\in A\) in \(G[A]\) with respect to \(\mathcal Q\)}
-        \State append \(v\) to \(L\)
-        \State \(A\gets A\setminus\{v\}\)
-    \Else
-        \State \Return \textbf{NO}
-    \EndIf
-\EndWhile
-
-\State Let \(\prec\) be the order obtained by reading \(L\) from right to left
-\State \Return \((\textbf{YES},\prec)\)
-\end{algorithmic}
-\end{algorithm}
-
-We prove correctness.
-
-\medskip
-\noindent\textbf{Key observation.}
-Suppose that \(H\) is an induced subgraph of \(G\), and that there exists an order \(\prec\) of \(V(H)\)
-such that \((\prec,\mathcal Q)\) avoids both \(\forrt\) and \(\forst\) in \(H\).
-Then the last vertex of this order is removable in \(H\).
-
-Indeed, let \(v\) be the last vertex of the order. All neighbors of \(v\) in \(H\) lie to the left of \(v\).
-If \(\deg_H(v)\le 1\), then \(v\) is removable. Assume then that \(\deg_H(v)\ge 2\).
-We claim that \(v\) has no neighbor in its own part.
-
-Suppose, towards a contradiction, that there exists
-\[
-x\in N_H(v)\cap \mathcal Q(v).
-\]
-Since \(\deg_H(v)\ge 2\), there is another neighbor \(y\in N_H(v)\), with \(y\neq x\).
-Both \(x\) and \(y\) appear before \(v\).
-
-If
-\[
-x\prec y\prec v,
-\]
-then the triple \((x,y,v)\) realizes \(\forrt\), because \(x\sim v\), \(y\sim v\), and \(x\) and \(v\)
-lie in the same part.
-
-If instead
-\[
-y\prec x\prec v,
-\]
-then the triple \((y,x,v)\) realizes \(\forst\), because \(y\sim v\), \(x\sim v\), and \(x\) and \(v\)
-lie in the same part.
-
-Both cases contradict the assumption that the order avoids \(\forrt\) and \(\forst\). Therefore
-\[
-N_H(v)\cap \mathcal Q(v)=\varnothing,
-\]
-and \(v\) is removable.
-
-\medskip
-\noindent\textbf{If the algorithm returns \textbf{YES}.}
-Let \(\prec\) be the order returned by the algorithm; that is, the reverse of the deletion order.
-We show that
-\[
-S=(\prec,\mathcal Q)
-\]
-avoids both \(\forrt\) and \(\forst\).
-
-Consider an ordered triple
-\[
-r\prec s\prec t.
-\]
-When \(t\) was deleted by the algorithm, the vertices \(r\) and \(s\) were still active, because they appear before
-\(t\) in the final order. Thus, \(r\) and \(s\) belonged to the current induced subgraph at the moment \(t\) was deleted.
-
-Since \(t\) was removable at that moment, one of the following occurred:
-
-\begin{itemize}
-\item \(t\) had at most one neighbor among the active vertices. Then \(t\) cannot be adjacent to both \(r\) and \(s\), so
-the triple cannot realize either \(\forrt\) or \(\forst\).
-
-\item \(t\) had no active neighbor in its own part \(\mathcal Q(t)\). Then neither \(r\) nor \(s\), if adjacent to \(t\),
-lies in the same part as \(t\). Hence the color condition of both \(\forrt\) and \(\forst\) fails.
-\end{itemize}
-
-Therefore no ordered triple realizes \(\forrt\) or \(\forst\), and \(S\) avoids
-\(\mathcal F_{rt\text{-}st}\).
-
-\medskip
-\noindent\textbf{If there exists a valid order.}
-Assume that there exists an order \(\prec\) such that
-\[
-(\prec,\mathcal Q)
-\]
-avoids both \(\forrt\) and \(\forst\). We show that the algorithm cannot get stuck.
-
-At any step, let \(H=G[A]\) be the current induced subgraph. The restriction of a valid order to \(A\) still avoids
-\(\forrt\) and \(\forst\) in \(H\), since deleting vertices cannot create a forbidden ordered triple.
-By the key observation, the last vertex of this restricted order is removable in \(H\). Hence, whenever a valid order
-exists for the current subgraph, at least one removable vertex exists.
-
-Thus the algorithm returns \textbf{NO} only if no valid order exists. Therefore, the algorithm returns \textbf{YES}
-if and only if there exists an order \(\prec\) such that \((\prec,\mathcal Q)\) avoids both \(\forrt\) and \(\forst\).
-
-Finally, the algorithm runs in polynomial time: at each step we can test removability of all remaining vertices in
-polynomial time, and there are at most \(|V(G)|\) deletion steps.
 \end{proof}
 
 
