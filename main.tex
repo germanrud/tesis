@@ -21,7 +21,7 @@
 \usepackage{subcaption} % para subfiguras lado a lado
 \usetikzlibrary{calc}
 \usepackage{subcaption}
-
+\usepackage{xspace}
 % ---------- Entornos de teoremas ----------
 \theoremstyle{plain} % estilo "teorema" (itálica)
 \newtheorem{theorem}{Teorema}[section]
@@ -62,6 +62,9 @@
 
 
 % ---------- Notación útil de grafos ----------
+\newcommand{\edgecondition}{\emph{\hyperref[def:avoid:cond:edge]{edge condition}}\xspace}
+\newcommand{\nonedgecondition}{\emph{\hyperref[def:avoid:cond:nonedge]{non-edge condition}}\xspace}
+\newcommand{\colorcondition}{\emph{\hyperref[def:avoid:cond:color]{color condition}}\xspace}
 \newcommand{\adj}{\sim}
 \newcommand{\V}{V}
 \newcommand{\E}{E}
@@ -137,22 +140,32 @@
 
 
 
+\german{reduccion de star12 con intuicion}
+\german{unificacion induced parameters}
+\german{escribi q no lo tenia star 12 23 13}
+\german{reduccion bip 12 23 13 con intuicion}
+\german{caso k=2 para dado orden}
 
 \begin{definition}[Pattern on three vertices]
-A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a pair
+A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a triple
 \[
-P=(A,N),
+P=(A,N,C),
 \]
 where
 \[
-A,N\subseteq \binom{\{r,s,t\}}{2}
-\qquad\text{and}\qquad
-A\cap N=\varnothing.
+A,N\subseteq \binom{\{r,s,t\}}{2},
+\qquad
+A\cap N=\varnothing,
+\qquad 
+C=\varnothing.
 \]
-The set \(A\) indicates the pairs of vertices that are required to be edges, while \(N\) indicates the pairs of vertices that are required to be non-edges.
-Pairs that do not belong to \(A\cup N\) are left unrestricted.
+The set \(A\) indicates the pairs of vertices that are required to be edges, while \(N\) indicates the pairs of
+vertices that are required to be non-edges. The condition \(C=\varnothing\) means that the pattern imposes no
+condition on the parts of a partition. Pairs that do not belong to \(A\cup N\) are left unrestricted.
 \end{definition}
 
+
+\german{falta definir familia de patrones}
 
 \begin{figure}[h] 
 \centering
@@ -169,7 +182,7 @@ Pairs that do not belong to \(A\cup N\) are left unrestricted.
 \draw[densely dashed, line width=0.6pt] (p2)--(p3);
 
 \end{tikzpicture}
-\caption{The pattern \(P=(A,N)\), where \(A=\{\{1,2\}\}\) and \(N=\{\{2,3\}\}\). Solid lines represent required edges, and dashed lines represent required non-edges.}
+\caption{The pattern \(P=(A,N, C)\), where \(A=\{\{1,2\}\}\) and \(N=\{\{2,3\}\}\). Solid lines represent required edges, and dashed lines represent required non-edges.}
 \label{fig:tiny-pattern-uncolored}
 \end{figure}
 \medskip
@@ -218,37 +231,199 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 
 
 \eric{Definir avoid a pattern, y definir avoid colored pattern en base a eso.}
+\german{done}
+\begin{definition}[Avoiding a pattern]\label{def:avoiding-pattern}
+Fix a graph \(G\), a total order \(\prec\) of \(V(G)\), and a pattern
+\[
+P=(A,N,\varnothing).
+\]
 
-\begin{definition}[Avoiding a pattern]
-Fix a graph \(G\) and a solution \(S=(\prec,\mathcal Q)\) for \(G\).
-Let \(P=(A,N,C)\) be a colored pattern.
+An \emph{ordered triple} of \(G\) is a triple
+\[
+(v_1,v_2,v_3)
+\]
+of distinct vertices of \(G\) such that
+\[
+v_1\prec v_2\prec v_3.
+\]
 
-An \emph{ordered triple} of the three vertices in \(G\) is a triple of vertices \(v_1 \prec v_2 \prec v_3\) in \(V(G)\).
+We say that the ordered triple \((v_1,v_2,v_3)\) \emph{avoids} \(P\) in \(G\) if at least one of the following
+conditions holds:
 
-We say that the ordered triple \((v_1, v_2, v_3)\) \emph{avoids} \(P\) in \(G\) \german{esta bien in G?, mas q nada por removable vertex} if at least one of the following conditions holds:
-\begin{enumerate}
-\item There exists \(\{a,b\}\in A\) such that \(\{v_a, v_b\}\notin E(G)\).
-\item There exists \(\{a,b\}\in N\) such that \(\{v_a, v_b\}\in E(G)\).
-\item[(color)]\label{def:avoid:cond:color} If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
-\end{enumerate}
+\begin{description}
+\item[\textup{(edge)}]\phantomsection\label{def:avoid:cond:edge}
+There exists \(\{a,b\}\in A\) such that
+\[
+\{v_a,v_b\}\notin E(G).
+\]
+
+\item[\textup{(non-edge)}]\phantomsection\label{def:avoid:cond:nonedge}
+There exists \(\{a,b\}\in N\) such that
+\[
+\{v_a,v_b\}\in E(G).
+\]
+\end{description}
+
+The order \(\prec\) \emph{avoids} \(P\) in \(G\) if every ordered triple of \(G\) avoids \(P\).
+
+For a family of patterns \(\mathcal P\), the order \(\prec\) avoids \(\mathcal P\) in \(G\) if it avoids every
+pattern \(P\in\mathcal P\).
 
 
-The solution \(S\) \emph{avoids} \(P\) in \(G\) if every ordered triple avoids \(P\) in \(G\) \german{in G (?}.
-For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) in \(G\) if it avoids every pattern
-\(P\in\mathcal P\).
+When the underlying graph is clear from the context, we omit the phrase ``in \(G\)'' and simply say that an ordered triple, an order, or a solution avoids \(P\) (or \(\mathcal P\)).
+
+
+\end{definition}
+\german{en algun lado escribir que los param aca estudiados la nonedge nunca se cumple, luego u
+una sol no avoidea el patron si no cumple ni edge ni color (lo uso mucho eso)}
+
+\begin{definition}[Avoiding a colored pattern]\label{def:avoiding-colored-pattern}
+Fix a graph \(G\), a solution
+\[
+S=(\prec,\mathcal Q)
+\]
+for \(G\), and a colored pattern
+\[
+P=(A,N,C).
+\]
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple of \(G\). We say that \((v_1,v_2,v_3)\) \emph{avoids} \(P\) with respect to \(S\) if it
+avoids the pattern
+\[
+(A,N,\varnothing)
+\]
+in \(G\), according to Definition~\ref{def:avoiding-pattern}, or if the following condition holds:
+
+\begin{description}
+\item[\textup{(color)}]\phantomsection\label{def:avoid:cond:color}
+If \(C=\{a,b\}\), then \(v_a\) and \(v_b\) lie in different parts of \(\mathcal Q\).
+\end{description}
+
+Equivalently, an ordered triple avoids \(P\) if at least one of
+\edgecondition, \nonedgecondition, or \colorcondition{} holds.
+
+The solution \(S\) \emph{avoids} \(P\) in \(G\) if every ordered triple of \(G\) avoids \(P\) with respect to \(S\).
+
+For a family of colored patterns \(\mathcal P\), the solution \(S\) avoids \(\mathcal P\) in \(G\) if it avoids every
+colored pattern \(P\in\mathcal P\).
 \end{definition}
 
+\german{mi duda aca es que aun no defini family of patterns}
 
-\eric{ojo de cambiar en todos lados para no usar un injective map.}
+
+\begin{definition}[\(P\)-partition number]
+Let \(P=(A,N,\varnothing)\) be a pattern on three vertices. We define
+\[
+\minClases_P(G)
+\]
+as the minimum \(k\) such that there exists a partition
+\[
+V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
+\]
+satisfying
+\[
+G[V_i]\in \mathcal C_P
+\qquad\text{for every } i=1,\dots,k.
+\]
+\end{definition}
+
+\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro. OK todavia no me meti en el lio de las citas}
+\german{puede ser que k<=2 sea poli para nuesteos parametros?}
+
+
+
+
 
 
 \begin{definition}[Parameter induced by forbidden patterns]
 For a finite family of colored patterns \(\mathcal P\), define \(\minClases_{\mathcal P}(G)\) as the minimum value
 of a solution for \(G\) that avoids \(\mathcal P\) in \(G\).
 \end{definition}
-\german{1.5 y 1.8 son parecidas peor una de color y otra de uncolored, esta bien?}
-\eric{O unirlas o poner la 1.8 antes de la 1.5}
+\german{1.5 y 1.6 son parecidas peor una de color y otra de uncolored, esta bien?}
+\eric{O unirlas o poner la 1.5 antes de la 1.6} \german{Done}
 
+
+
+
+\german{esto es un intento de unificar la notacion de los parametros inducidos por patrones coloreados y no coloreados, pero no se si es buena idea.}
+\begin{definition}[Notation for the induced parameters]
+For each \(ij\in\{12,13,23\}\), we define the singleton families
+\[
+\mathcal E_{ij}:=\{\operatorname{star}_{ij}\},
+\qquad
+\mathcal B_{ij}:=\{\operatorname{bip}_{ij}\},
+\qquad
+\mathcal F_{ij}:=\{\operatorname{for}_{ij}\}.
+\]
+
+For every index
+\[
+D\in
+\bigl\{
+12,13,23,
+12\text{-}13,
+12\text{-}23,
+13\text{-}23,
+12\text{-}13\text{-}23
+\bigr\},
+\]
+we denote the parameters induced by the corresponding families by
+\[
+\operatorname{star}_{D}(G)
+:=
+\minClases_{\mathcal E_D}(G),
+\]
+\[
+\operatorname{bip}_{D}(G)
+:=
+\minClases_{\mathcal B_D}(G),
+\]
+and
+\[
+\operatorname{for}_{D}(G)
+:=
+\minClases_{\mathcal F_D}(G).
+\]
+
+For the three uncolored patterns, we similarly write
+\[
+\operatorname{star}(G)
+:=
+\minClases_{\operatorname{star}}(G),
+\qquad
+\operatorname{bip}(G)
+:=
+\minClases_{\operatorname{bip}}(G),
+\qquad
+\operatorname{for}(G)
+:=
+\minClases_{\operatorname{for}}(G).
+\]
+\end{definition}
+
+\begin{remark}
+We use the same symbol \(\operatorname{star}_{ij}\), \(\operatorname{bip}_{ij}\), or
+\(\operatorname{for}_{ij}\) for a colored pattern, and add the argument \(G\) when referring to
+the corresponding graph parameter. Thus, for example,
+\[
+\operatorname{for}_{12}
+\]
+denotes a colored pattern, whereas
+\[
+\operatorname{for}_{12}(G)
+\]
+denotes the minimum number of parts in a solution for \(G\) that avoids that pattern.
+Similarly,
+\[
+\operatorname{for}_{12\text{-}23}(G)
+=
+\minClases_{\mathcal F_{12\text{-}23}}(G).
+\]
+\end{remark}
 
 
 
@@ -278,23 +453,6 @@ avoids the pattern \(P\).
 
 
 
-\begin{definition}[\(P\)-partition number]
-Let \(P=(A,N)\) be a pattern on three vertices. We define
-\[
-\minClases_P(G)
-\]
-as the minimum \(k\) such that there exists a partition
-\[
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\]
-satisfying
-\[
-G[V_i]\in \mathcal C_P
-\qquad\text{for every } i=1,\dots,k.
-\]
-\end{definition}
-
-\eric{Este problema ya existe en la literatura, así que vamos a tener que citar resultados. O mencionar que es NP-hard, por lo menos en la intro. OK todavia no me meti en el lio de las citas}
 
 
 
@@ -370,34 +528,56 @@ We first introduce the uncolored patterns associated with the graph classes that
 
 \begin{definition}[Basic uncolored patterns]
 We define the following uncolored patterns on the ordered vertices \(1\prec 2\prec 3\).
-\german{pongo A sub eso A sub bip aca?}\eric{Sip}
-\eric{Llamar directamente star, bip, for a los patrones}
 \begin{itemize}
     \item The \emph{star pattern} is
     \[
-    P_{\mathrm{star}}=(A,N),
-    \qquad
-    A=\bigl\{\{1,2\}\bigr\},
-    \qquad
-    N=\varnothing.
+    \operatorname{star}
+    :=
+    \bigl(A_{\operatorname{star}},N_{\operatorname{star}}\bigr),
     \]
-
-    \item The \emph{bipartite pattern} is
+    where
     \[
-    P_{\mathrm{bip}}=(A,N),
+    A_{\operatorname{star}}
+    =
+    \bigl\{\{1,2\}\bigr\},
     \qquad
-    A=\bigl\{\{1,2\},\{2,3\}\bigr\},
-    \qquad
-    N=\varnothing.
+    N_{\operatorname{star}}
+    =
+    \varnothing.
     \]
 
     \item The \emph{forest pattern} is
     \[
-    P_{\mathrm{for}}=(A,N),
+    \operatorname{for}
+    :=
+    \bigl(A_{\operatorname{for}},N_{\operatorname{for}}\bigr),
+    \]
+    where
+    \[
+    A_{\operatorname{for}}
+    =
+    \bigl\{\{1,3\},\{2,3\}\bigr\},
     \qquad
-    A=\bigl\{\{1,3\},\{2,3\}\bigr\},
+    N_{\operatorname{for}}
+    =
+    \varnothing.
+    \]
+
+    \item The \emph{bipartite pattern} is
+    \[
+    \operatorname{bip}
+    :=
+    \bigl(A_{\operatorname{bip}},N_{\operatorname{bip}}\bigr),
+    \]
+    where
+    \[
+    A_{\operatorname{bip}}
+    =
+    \bigl\{\{1,2\},\{2,3\}\bigr\},
     \qquad
-    N=\varnothing.
+    N_{\operatorname{bip}}
+    =
+    \varnothing.
     \]
 \end{itemize}
 
@@ -415,7 +595,8 @@ We define the following uncolored patterns on the ordered vertices \(1\prec 2\pr
 \node (c) at (3,0) {$3$};
 \draw (a)--(b);
 \end{tikzpicture}
-\caption{The pattern \(P_{\mathrm{star}}\).}
+
+\caption{\(\operatorname{star}\) pattern.}
 \label{fig:star-uncolored}
 \end{subfigure}
 \hfill
@@ -431,7 +612,7 @@ We define the following uncolored patterns on the ordered vertices \(1\prec 2\pr
 \draw (a)--(b);
 \draw (b)--(c);
 \end{tikzpicture}
-\caption{The pattern \(P_{\mathrm{bip}}\).}
+\caption{\(\operatorname{bip}\) pattern.}
 \label{fig:bip-uncolored}
 \end{subfigure}
 \hfill
@@ -447,7 +628,7 @@ We define the following uncolored patterns on the ordered vertices \(1\prec 2\pr
 \draw[bend left=35] (a) to (c);
 \draw (b)--(c);
 \end{tikzpicture}
-\caption{The pattern \(P_{\mathrm{for}}\).}
+\caption{\(\operatorname{for}\) pattern.}
 \label{fig:forest-uncolored}
 \end{subfigure}
 
@@ -461,19 +642,25 @@ We define the following uncolored patterns on the ordered vertices \(1\prec 2\pr
 
 
 \begin{remark}
-The associated classes \(\mathcal C_{P_{\mathrm{est}}}\), \(\mathcal C_{P_{\mathrm{bip}}}\), and
-\(\mathcal C_{P_{\mathrm{for}}}\) are, respectively, stars possibly with isolated vertices, bipartite graphs, and forests.
-Thus, the uncolored parameters
+The associated classes
 \[
-\minClases_{P_{\mathrm{est}}},
+\mathcal C_{\operatorname{star}},
 \qquad
-\minClases_{P_{\mathrm{bip}}},
+\mathcal C_{\operatorname{bip}},
 \qquad
-\minClases_{P_{\mathrm{for}}}
+\mathcal C_{\operatorname{for}}
+\]
+are, respectively, stars possibly with isolated vertices, bipartite graphs, and forests.
+Thus, the parameters
+\[
+\minClases_{\operatorname{star}},
+\qquad
+\minClases_{\operatorname{bip}},
+\qquad
+\minClases_{\operatorname{for}}
 \]
 are the corresponding partition parameters into these graph classes.
 \end{remark}
-
 
 
 
@@ -783,7 +970,7 @@ A solution avoids one of these families if it avoids every colored pattern in th
 
 
 \begin{lemma}\label{thm:minclases-one-class}
-Let \(P = (A,N)\) be a pattern. Then, for every graph \(G\),
+Let \(P\) be a pattern. Then, for every graph \(G\),
 \[
 \minClases_P(G)=1
 \quad\Longleftrightarrow\quad
@@ -882,7 +1069,7 @@ Dado un grafo \(G\), se define
 es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) de \(G\) que evita el patrón \(P_1\).
 \end{definition}
 
-\eric{Acá poner todos los patrones de bip, y decir que vamos a estar analizando los parámetros resultantes de las combinaciones entre ellos. Después la observación de que cada clase en una solución que evita los patrones induce un bipartito. Decir después que esto implica que $bip1(G) = 1 \iff \chi(G) = 2$, y decir que generalizamos esto con el teorema que viene despues, que dice $bip1(G) = \chi(G) - 1$.}
+
 
 
 \eric{Este es un resultado ya conocido en el paper de patrones. Si querés lo podemos dejar en la tesis, por ejemplo en un apéndice, para decir que lo probaste de nuevo. En el paper definitivamente no iría.}
@@ -1678,6 +1865,287 @@ los patrones \(P_1\), \(P_2\) y \(P_3\).
 \end{definition}
 
 
+
+
+
+
+\german{teo que dice que las versiones completas son "lo mismo" que las uncolored}
+\german{ahora me parece super obvio, cuando lo vi por primera vez con seg me re sorprendio q no exista el k=2 en 12 23 13}
+\begin{theorem}\label{thm:all-colored-two-iff-base-class}
+Let
+\[
+P=(A,N,\varnothing)
+\]
+be a pattern, and let
+\[
+P_{12}:=(A,N,\{1,2\}),\qquad
+P_{23}:=(A,N,\{2,3\}),\qquad
+P_{13}:=(A,N,\{1,3\})
+\]
+be its three colored versions. We write
+\[
+P_{12\text{-}23\text{-}13}(G)
+\]
+for the parameter induced by the family
+\[
+\{P_{12},P_{23},P_{13}\}.
+\]
+
+Then, for every graph \(G\),
+\[
+P_{12\text{-}23\text{-}13}(G)\le 2
+\quad\Longleftrightarrow\quad
+G\in\mathcal C_P.
+\]
+\end{theorem}
+
+\begin{proof}
+Suppose first that
+\[
+P_{12\text{-}23\text{-}13}(G)\le 2.
+\]
+Then there exists a solution
+\[
+S=(\prec,\mathcal Q),
+\qquad
+|\mathcal Q|\le 2,
+\]
+that avoids \(P_{12}\), \(P_{23}\), and \(P_{13}\).
+
+We claim that the order \(\prec\) avoids the pattern \(P\). Suppose otherwise that some ordered triple
+\[
+v_1\prec v_2\prec v_3
+\]
+realizes \(P\). Since the triple realizes the underlying pattern, neither \edgecondition{} nor
+\nonedgecondition{} holds for any of its three colored versions.
+
+Therefore, avoiding \(P_{12}\) forces \(v_1\) and \(v_2\) to lie in different parts of \(\mathcal Q\).
+Similarly, avoiding \(P_{23}\) forces \(v_2\) and \(v_3\) to lie in different parts, and avoiding \(P_{13}\)
+forces \(v_1\) and \(v_3\) to lie in different parts.
+
+Thus, \(v_1,v_2,v_3\) must lie in three pairwise distinct parts, contradicting
+\[
+|\mathcal Q|\le 2.
+\]
+Hence every ordered triple avoids \(P\), and therefore
+\[
+G\in\mathcal C_P.
+\]
+
+Conversely, suppose that
+\[
+G\in\mathcal C_P.
+\]
+Then there exists a total order \(\prec\) of \(V(G)\) that avoids \(P\).
+Consider the one-part partition
+\[
+\mathcal Q=\{V(G)\}.
+\]
+Every ordered triple avoids \(P\) by \edgecondition{} or \nonedgecondition{}, and therefore also avoids each of
+\(P_{12}\), \(P_{23}\), and \(P_{13}\).
+
+Thus,
+\[
+P_{12\text{-}23\text{-}13}(G)=1,
+\]
+and in particular,
+\[
+P_{12\text{-}23\text{-}13}(G)\le 2.
+\]
+\end{proof}
+
+
+
+\[
+P_{12\text{-}23\text{-}13}(G)\le 2
+\quad\Longleftrightarrow\quad
+P_{12\text{-}23\text{-}13}(G)=1
+\quad\Longleftrightarrow\quad
+G\in\mathcal C_P.
+\]
+
+
+
+
+
+
+
+\german{amo los parrafos de intuicion}
+\paragraph{Intuition.}
+The following reduction is designed by first considering the reverse implication.
+For each edge \(xy\in E(X)\) as always, we ask: "How can we force the endpoints of every edge of a graph \(X\) to lie in different parts", we add a vertex \(w_{xy}\) so that \(x,y,w_{xy}\) form a triangle.
+Since the solution must avoid the three patterns
+\(\operatorname{bip}_{12}\), \(\operatorname{bip}_{23}\), and \(\operatorname{bip}_{13}\),
+the three vertices of this triangle must lie in pairwise different parts, regardless of their relative order.
+In particular, \(x\) and \(y\) are forced to lie in different parts.
+
+
+
+
+
+\begin{theorem}\label{thm:bip12-23-13-np-complete}
+For every fixed integer \(k\ge 3\), deciding whether
+\[
+\operatorname{bip}_{12\text{-}23\text{-}13}(G)\le k
+\]
+is NP-complete.
+\end{theorem}
+\german{de nuevo lo de avoidance}
+\begin{proof}
+The problem belongs to NP: a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition
+\[
+\mathcal Q=\{V_1,\dots,V_q\},
+\qquad q\le k,
+\]
+and one can verify in polynomial time whether the corresponding solution avoids
+\[
+\mathcal B_{12\text{-}23\text{-}13}
+=
+\{\operatorname{bip}_{12},
+  \operatorname{bip}_{23},
+  \operatorname{bip}_{13}\}.
+\]
+
+We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}. Let
+\[
+X=(V(X),E(X))
+\]
+be an instance of \(k\)-\textsc{Coloring}. For every edge \(xy\in E(X)\), we add a new vertex \(w_{xy}\) and make
+\(x,y,w_{xy}\) induce a triangle. Thus,
+\[
+V(G)
+=
+V(X)\cup\{w_{xy}:xy\in E(X)\},
+\]
+and
+\[
+E(G)
+=
+E(X)\cup
+\{xw_{xy},yw_{xy}:xy\in E(X)\}.
+\]
+
+We claim that
+\[
+X\text{ is \(k\)-colorable}
+\quad\Longleftrightarrow\quad
+\operatorname{bip}_{12\text{-}23\text{-}13}(G)\le k.
+\]
+
+\medskip
+\noindent\textbf{(\(\Rightarrow\))}
+Suppose that \(X\) admits a proper \(k\)-coloring
+\[
+\varphi:V(X)\to\{1,\dots,k\}.
+\]
+For every edge \(xy\in E(X)\), choose a color
+\[
+\varphi(w_{xy})
+\notin
+\{\varphi(x),\varphi(y)\}.
+\]
+Such a color exists because \(k\ge 3\) and
+\(\varphi(x)\neq\varphi(y)\). This extends \(\varphi\) to a proper \(k\)-coloring of \(G\).
+
+Let
+\[
+\mathcal Q=\{V_1,\dots,V_k\}
+\]
+be the corresponding partition into color classes. We define an order \(\prec\) by blocks:
+\[
+V_1\prec V_2\prec\cdots\prec V_k,
+\]
+taking an arbitrary order inside each block.
+
+We show that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids the three colored patterns. Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple. If either \(v_1v_2\notin E(G)\) or \(v_2v_3\notin E(G)\), then the triple avoids every
+bipartite colored pattern by \edgecondition.
+
+Suppose instead that
+\[
+v_1v_2\in E(G)
+\qquad\text{and}\qquad
+v_2v_3\in E(G).
+\]
+Since the coloring of \(G\) is proper,
+\[
+\varphi(v_1)\neq\varphi(v_2)
+\qquad\text{and}\qquad
+\varphi(v_2)\neq\varphi(v_3).
+\]
+Moreover, \(\varphi(v_1)\neq\varphi(v_3)\). Indeed, if
+\(\varphi(v_1)=\varphi(v_3)\), then \(v_1\) and \(v_3\) would lie in the same color block. Since
+\[
+v_1\prec v_2\prec v_3,
+\]
+the vertex \(v_2\) would lie in that same block, contradicting
+\(\varphi(v_1)\neq\varphi(v_2)\).
+
+Thus \(v_1,v_2,v_3\) lie in pairwise distinct parts of \(\mathcal Q\). Therefore the triple satisfies
+\colorcondition{} for each of the colored pairs
+\[
+\{1,2\},\qquad
+\{2,3\},\qquad
+\{1,3\}.
+\]
+Hence \(S\) avoids \(\mathcal B_{12\text{-}23\text{-}13}\), and consequently
+\[
+\operatorname{bip}_{12\text{-}23\text{-}13}(G)\le k.
+\]
+
+\medskip
+\noindent\textbf{(\(\Leftarrow\))}
+Suppose that \(G\) admits a solution
+\[
+S=(\prec,\mathcal Q),
+\qquad
+|\mathcal Q|\le k,
+\]
+that avoids
+\(\mathcal B_{12\text{-}23\text{-}13}\).
+
+We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let
+\[
+xy\in E(X).
+\]
+By construction, the vertices
+\[
+x,\quad y,\quad w_{xy}
+\]
+induce a triangle in \(G\). Write them in their relative order as
+\[
+v_1\prec v_2\prec v_3.
+\]
+Since they induce a triangle,
+\[
+v_1v_2\in E(G)
+\qquad\text{and}\qquad
+v_2v_3\in E(G).
+\]
+Therefore \edgecondition{} does not hold for any of the three bipartite colored patterns.
+
+Because the solution avoids \(\operatorname{bip}_{12}\), the vertices \(v_1\) and \(v_2\) must lie in different
+parts. Similarly, avoiding \(\operatorname{bip}_{23}\) and \(\operatorname{bip}_{13}\) implies that
+\(v_2,v_3\) and \(v_1,v_3\), respectively, lie in different parts.
+
+Thus \(x,y,w_{xy}\) lie in pairwise distinct parts of \(\mathcal Q\). In particular, \(x\) and \(y\) lie in
+different parts. Since this holds for every edge \(xy\in E(X)\), the restriction of \(\mathcal Q\) to \(V(X)\)
+is a proper coloring of \(X\) with at most \(k\) colors. Hence \(X\) is \(k\)-colorable.
+
+The construction is polynomial, so the problem is NP-hard. Since it also belongs to NP, it is NP-complete.
+\end{proof}
+
+
+
+
+
 \begin{Claim}\label{cl:seg123-le-chi}
 Para todo grafo \(G\), se cumple
 \[
@@ -2246,7 +2714,7 @@ Como siempre vale \(\estone(G)=k\le \chi(G)\) por el Lema~\ref{lem:est1-le-chi},
 % ------------------------------------------------------------
 \begin{corollary}\label{cor:est1-chi-1-simple}
 Sea \(G\) un grafo, si en toda solución óptima \(S=(\prec,\mathcal S)\) (para \(\{E_1\}\)),
-si llamamos \(v_n\) al último vértice del orden \(\prec\) y \(v_n\in C\in\mathcal S\), (PREGUNTAR BIEN ESTO) se cumple
+si llamamos \(v_n\) al último vértice del orden \(\prec\) y \(v_n\in C\in\mathcal S\), se cumple
 \[
 N(v_n)\cap C\neq\varnothing,
 \]
@@ -2266,7 +2734,126 @@ Como siempre se tiene \(\chi(G)-1\le \estone(G)\le \chi(G)\), se concluye necesa
 
 
 
-EST2
+
+
+\paragraph{Intuition.}
+In a solution avoiding \(\operatorname{star}_{12}\), an edge whose endpoints lie in the same part can only have its
+right endpoint as the last vertex of the order. Indeed, if
+\[
+x\prec y,\qquad xy\in E(G),
+\]
+and \(x\) and \(y\) lie in the same part, then any vertex \(z\) with \(y\prec z\) would produce an ordered triple
+\[
+x\prec y\prec z
+\]
+that satisfies neither \edgecondition{} nor \colorcondition{} for \(\operatorname{star}_{12}\).
+\german{por ej aca! lo de nonedge}
+Therefore, to force the endpoints of every edge of a graph \(X\) to lie in different parts, it is enough to force
+the last vertex of the order to lie outside \(V(X)\). We achieve this by taking the disjoint union of \(X\) with
+a clique \(K_{k+1}\). \german{pense q seria copado poner estos textos de intuicion que son 
+la forma en que pense la vuelta del sii, que opinas sensei??, podria ponerlos en todas las reducciones me parece super interesante
+no tanto para los erics, pero si para los germancitos}
+
+\begin{theorem}\label{thm:star12-np-complete}
+For every fixed integer \(k\ge 3\), deciding whether
+\[
+\operatorname{star}_{12}(G)\le k
+\]
+is NP-complete.
+\end{theorem}
+\german{si las cajitas de los problemas van arriba de todo aca podria decir avoidance problem}
+\begin{proof}
+The problem belongs to NP: a certificate consists of an order \(\prec\) of \(V(G)\) and a partition of \(V(G)\)
+into at most \(k\) parts, and one can verify in polynomial time that every ordered triple avoids
+\(\operatorname{star}_{12}\).
+
+We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}. Let \(X\) be an instance of
+\(k\)-\textsc{Coloring}, and construct
+\[
+G:=X\,\dot\cup\,K_{k+1}.
+\]
+Thus \(G\) is the disjoint union of \(X\) and a clique \(K_{k+1}\), there are no edges between
+\(V(X)\) and \(V(K_{k+1})\).
+
+We claim that
+\[
+X\text{ is \(k\)-colorable}
+\quad\Longleftrightarrow\quad
+\minClases_{\operatorname{star}_{12}}(G)\le k.
+\]
+
+\medskip
+\noindent\textbf{(\(\Rightarrow\))}
+Suppose that \(X\) has a proper \(k\)-coloring. Let
+\[
+V(K_{k+1})=\{z_1,\dots,z_{k+1}\}.
+\]
+We keep the given coloring on \(V(X)\), assign \(z_i\) to part \(i\) for \(i=1,\dots,k\), and assign
+\(z_{k+1}\) to the same part as \(z_1\) (the important thing is to assign a different part for the first k+1 vertices, and the only 
+one that can repeat part is the last one). Hence \(z_1z_{k+1}\) is the only edge of \(K_{k+1}\) whose endpoints
+lie in the same part.
+
+Choose any order of \(V(G)\setminus\{z_{k+1}\}\), and place \(z_{k+1}\) last. We show that the resulting solution
+avoids \(\operatorname{star}_{12}\).
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple. If \(v_1v_2\notin E(G)\), then the triple avoids the pattern by \edgecondition.
+\german{esta duda la tengo siemrpe, si es mejor empezar asi las demos de que se avoidea
+o directamente tomar una terna tal que esten presentes las aristas del patron??}
+Suppose that \(v_1v_2\in E(G)\). Since \(G\) is a disjoint union, the vertices \(v_1,v_2\) are either both in
+\(V(X)\) or both in \(V(K_{k+1})\).
+
+If \(v_1,v_2\in V(X)\), they lie in different parts because the coloring of \(X\) is proper. If
+\(v_1,v_2\in V(K_{k+1})\), they also lie in different parts: the only monochromatic edge of the clique is
+\(z_1z_{k+1}\), but \(z_{k+1}\) is the last vertex of the whole order and therefore cannot occupy the second
+position of an ordered triple. Thus, in both cases, the triple avoids the pattern by \colorcondition.
+
+Therefore,
+\[
+\minClases_{\operatorname{star}_{12}}(G)\le k.
+\]
+
+\medskip
+\noindent\textbf{(\(\Leftarrow\))}
+Suppose that \(G\) admits a solution
+\[
+S=(\prec,\mathcal Q)
+\]
+with at most \(k\) parts that avoids \(\operatorname{star}_{12}\).
+
+Since \(K_{k+1}\) has \(k+1\) vertices and \(\mathcal Q\) has at most \(k\) parts, two vertices of the clique,
+say \(a\prec b\), lie in the same part \german{podria dibujar un zapdos aca (?}. As \(K_{k+1}\) is a clique, \(ab\in E(G)\). We claim that \(b\) is the
+last vertex of the order. Otherwise, there would exist a vertex \(c\) such that
+\[
+a\prec b\prec c.
+\]
+The triple \((a,b,c)\) would satisfy neither \edgecondition, because \(ab\in E(G)\), nor \colorcondition, because
+\(a\) and \(b\) lie in the same part. This would contradict that \(S\) avoids
+\(\operatorname{star}_{12}\).
+
+Hence the last vertex of the order belongs to \(K_{k+1}\). Let \(z\in V(K_{k+1})\) denote this last vertex.
+
+We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let \(xy\in E(X)\), and
+assume without loss of generality that \(x\prec y\). Since \(z\notin V(X)\) and \(z\) is the last vertex,
+\[
+x\prec y\prec z.
+\]
+If \(x\) and \(y\) were assigned to the same part, then the ordered triple \((x,y,z)\) would satisfy neither
+\edgecondition{} nor \colorcondition{} for \(\operatorname{star}_{12}\), a contradiction.
+
+Therefore, the endpoints of every edge of \(X\) lie in different parts of \(\mathcal Q\). The restriction of
+\(\mathcal Q\) to \(V(X)\) is consequently a proper coloring of \(X\) with at most \(k\) colors. Thus \(X\) is
+\(k\)-colorable.
+
+The construction is polynomial, so the problem is NP-hard. Since it also belongs to NP, it is NP-complete.
+\end{proof}
+
+
+
+
 
 
 % --- Patrón prohibido para est2 ---
@@ -2458,7 +3045,7 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 \end{definition}
 
 
-
+\german{este paraemtro ya lo definimos en otro lado}
 \begin{definition}[Parámetro \(\sigma\)]
 Sea \(G=(V,E)\) un grafo. Se define
 \[
@@ -2490,7 +3077,7 @@ Para todo grafo \(G\), se cumple
 \estthree(G)=\sigma(G).
 \]
 \end{theorem}
-
+\german{esto se borra no? esta cubierto por 13 o rt o esta buena la demo?}
 
 \begin{proof}
 Se prueban ambas desigualdades.
@@ -2709,7 +3296,7 @@ En conclusión, para todo \(k\ge 3\), decidir si \(\sigma(G)\le k\) es NP-comple
 
 
 
-
+\german{creo q en algun lugar dijimos o tenemos q decir que para todos estos parametros decidir si su P-parametro <=2 es  poli}
 \begin{theorem}\label{thm:sigma-dos-poly}
 El problema de decidir si \(\sigma(G)\le 2\) se puede resolver en tiempo polinomial.
 \end{theorem}
@@ -3217,7 +3804,192 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 \(\mathcal{E}_1\), \(\mathcal{E}_2\) y \(\mathcal{E}_3\).
 \end{definition}
 
+\bigskip
 
+\begin{theorem}\label{thm:star-all-vertex-cover}
+For every graph \(G\),
+\[
+\operatorname{star}_{12\text{-}23\text{-}13}(G)
+=
+\begin{cases}
+1, & \text{if } \tau(G)\le 1,\\[1mm]
+\tau(G)+1, & \text{if } \tau(G)\ge 2,
+\end{cases}
+\]
+where \(\tau(G)\) denotes the minimum size of a vertex cover of \(G\).
+\end{theorem}
+
+\begin{proof}
+We distinguish two cases.
+
+\medskip
+\noindent\textbf{Case 1: \(\tau(G)\le 1\).}
+
+If \(G\) has no edges, then any order together with the one-part partition
+\[
+\mathcal Q=\{V(G)\}
+\]
+avoids all three colored patterns, since every ordered triple satisfies the
+\edgecondition.
+
+Suppose now that \(\tau(G)=1\), and let \(z\in V(G)\) cover every edge of \(G\).
+Choose an order in which \(z\) is the last vertex, and again take the one-part partition
+\[
+\mathcal Q=\{V(G)\}.
+\]
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple. Since every edge of \(G\) is incident with \(z\), and \(z\) is the last vertex of the whole
+order, the pair \(\{v_1,v_2\}\) is not an edge. Hence the triple satisfies the \edgecondition  for each of
+the three star colored patterns.
+\german{esto vale para todos los star}
+Therefore,
+\[
+\operatorname{star}_{12\text{-}23\text{-}13}(G)\le 1.
+\]
+Since every solution has at least one part,
+\[
+\operatorname{star}_{12\text{-}23\text{-}13}(G)=1.
+\]
+
+\medskip
+\noindent\textbf{Case 2: \(\tau(G)\ge 2\).}
+
+We first prove the upper bound. Let \(L\) be a minimum vertex cover of \(G\), and let
+\[
+I:=V(G)\setminus L.
+\]
+Since \(L\) is a vertex cover, \(I\) is independent. Write
+\[
+L=\{z_1,\dots,z_{\tau(G)}\}.
+\]
+Consider the partition
+\[
+\mathcal Q
+=
+\bigl\{I,\{z_1\},\dots,\{z_{\tau(G)}\}\bigr\},
+\]
+which has \(\tau(G)+1\) parts. Define an order by placing first all vertices of \(I\), in arbitrary order, and then
+all vertices of \(L\), also in arbitrary order.
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple. If \(v_1v_2\notin E(G)\), then the triple avoids all three patterns by the
+\edgecondition.
+
+Suppose that \(v_1v_2\in E(G)\). Since \(I\) is independent and all its vertices precede the vertices of \(L\),
+the vertices \(v_1,v_2,v_3\) lie in pairwise distinct parts of \(\mathcal Q\). Indeed, either \(v_1\in I\) and
+\(v_2,v_3\in L\), or all three vertices belong to \(L\).
+Thus the \colorcondition holds for each of the colored pairs
+\[
+\{1,2\},\qquad \{1,3\},\qquad \{2,3\}.
+\]
+Hence the solution avoids all three patterns, and therefore
+\[
+\operatorname{star}_{12\text{-}23\text{-}13}(G)
+\le \tau(G)+1.
+\]
+
+We now prove the lower bound. Let
+\[
+k:=\operatorname{star}_{12\text{-}23\text{-}13}(G),
+\]
+and let
+\[
+S=(\prec,\mathcal Q),
+\qquad
+\mathcal Q=\{V_1,\dots,V_k\},
+\]
+be a solution of value \(k\) that avoids the three star colored patterns.
+
+For every \(i\in\{1,\dots,k\}\), let \(c_i\) be the last vertex of \(V_i\) in the order \(\prec\), and define
+\[
+L:=\{c_1,\dots,c_k\}.
+\]
+
+We first claim that \(L\) is a vertex cover of \(G\). Suppose otherwise that there are adjacent vertices
+\[
+x,y\in V(G)\setminus L,
+\qquad
+x\prec y.
+\]
+Since \(y\notin L\), it is not the last vertex of its part. Hence there exists a vertex \(z\) in the same part as
+\(y\) such that
+\[
+x\prec y\prec z.
+\]
+The required edge \(xy\) is present, also \(y\) and \(z\) lie in the same part, so  neither the \colorcondition nor the \edgecondition
+holds. Thus the triple does not avoid \(\operatorname{star}_{23}\), a contradiction.
+
+Therefore \(L\) is a vertex cover, and
+\[
+\tau(G)\le k.
+\]
+Since \(\tau(G)\ge 2\), we have \(k\ge 2\).
+
+Let \(c_h\) be the first vertex of \(L\) in the order \(\prec\). The idea of this demostration is
+to show that we can remove \(c_h\) from \(L\) and still have a vertex cover. We claim that
+\[
+N_G(c_h)\cap \bigl(V(G)\setminus L\bigr)=\varnothing.
+\]
+Suppose, towards a contradiction, that there exists
+\[
+x\in V(G)\setminus L
+\]
+such that \(x\sim c_h\). Let \(V_i\) be the part containing \(x\), and let \(c_i\) be its last vertex.
+
+If \(i=h\), then \(x\prec c_h\). Since \(k\ge 2\), there is another vertex \(c_j\in L\), and the choice of \(c_h\)
+gives
+\[
+x\prec c_h\prec c_j.
+\]
+The edge \(xc_h\) is present and \(x,c_h\) lie in the same part. Hence neither the \textup{(edge)} condition nor
+the \textup{(color)} condition holds for \(\operatorname{star}_{12}\), a contradiction.
+
+Assume now that \(i\neq h\). Since \(c_h\) is the first vertex of \(L\),
+\[
+c_h\prec c_i.
+\]
+Also, \(x\prec c_i\), because \(c_i\) is the last vertex of \(V_i\).
+
+If \(x\prec c_h\), then
+\[
+x\prec c_h\prec c_i.
+\]
+The edge \(xc_h\) is present and \(x,c_i\) lie in the same part, so the triple does not avoid
+\(\operatorname{star}_{13}\).
+
+If \(c_h\prec x\), then
+\[
+c_h\prec x\prec c_i.
+\]
+The edge \(c_hx\) is present and \(x,c_i\) lie in the same part, so the triple does not avoid
+\(\operatorname{star}_{23}\).
+
+Both alternatives give a contradiction. Therefore \(c_h\) has no neighbor outside \(L\).
+
+Since \(L\) is a vertex cover and \(c_h\) has no neighbor in \(V(G)\setminus L\), the set
+\[
+L\setminus\{c_h\}
+\]
+is also a vertex cover of \(G\). Consequently,
+\[
+\tau(G)\le k-1,
+\]
+and hence
+\[
+k\ge \tau(G)+1.
+\]
+
+Combining both inequalities gives
+\[
+\operatorname{star}_{12\text{-}23\text{-}13}(G)=\tau(G)+1.
+\]
+\end{proof}
 
 
 
@@ -3245,7 +4017,7 @@ for \(G\) such that \(S\) avoids every colored pattern in \(\mathcal P\)?
 \eric{Si las partes de la partición pueden ser vacías, podemos poner $\{V_1,\dots,V_k\}$ en cambio. OK}
 
 \begin{problem}[\(\mathcal P\)-Avoidance with a given order]
-\textbf{Input:} A graph \(G\) \eric{Usemos siempre o $V(G)$ o $V$ oK}, a total order \(\prec\) of \(V(G)\), and an integer \(k\).
+\textbf{Input:} A graph \(G\), a total order \(\prec\) of \(V(G)\), and an integer \(k\).
 
 \textbf{Question:} Does there exist a partition
 \[
@@ -3294,6 +4066,239 @@ and for the pattern families
 
 
 
+\german{puse las dos formas con el algoritmo y sin, eligamos cual tmb podria poner el algoritmo dentro de la segunda demo}
+\german{por alguna extrana razon los algoritmos q escribi estan ambos al final}
+
+
+\begin{algorithm}[h]
+\caption{\textsc{Two-Parts-Given-Order}}
+\label{alg:two-parts-given-order}
+\begin{algorithmic}[1]
+\Require A graph \(G\), a total order \(\prec\) of \(V(G)\), a pattern
+\(P=(A,N,\varnothing)\), and a set \(D\subseteq\{12,13,23\}\).
+\Ensure \textbf{YES} if \((G,\prec)\) admits a valid solution with at most two parts; otherwise \textbf{NO}.
+
+\State Construct a graph \(R\) with
+\[
+V(R)\gets V(G),
+\qquad
+E(R)\gets\varnothing.
+\]
+
+\ForAll{ordered triples \(v_1\prec v_2\prec v_3\) of \(G\)}
+    \If{\((v_1,v_2,v_3)\) realizes \(P\)}
+        \If{\(12\in D\)}
+            \State \(E(R)\gets E(R)\cup\{\{v_1,v_2\}\}\)
+        \EndIf
+        \If{\(13\in D\)}
+            \State \(E(R)\gets E(R)\cup\{\{v_1,v_3\}\}\)
+        \EndIf
+        \If{\(23\in D\)}
+            \State \(E(R)\gets E(R)\cup\{\{v_2,v_3\}\}\)
+        \EndIf
+    \EndIf
+\EndFor
+
+\If{\(R\) is bipartite}
+    \State \Return \textbf{YES}
+\Else
+    \State \Return \textbf{NO}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+The graph \(R\) is called the \emph{constraint graph}. Each edge \(v_iv_j\in E(R)\) records a constraint requiring
+\(v_i\) and \(v_j\) to lie in different parts of the solution.
+
+
+
+
+
+
+\begin{proof}
+Let
+\[
+R=R_{P,D}(G,\prec)
+\]
+be the constraint graph constructed by Algorithm~\ref{alg:two-parts-given-order}.
+
+Suppose first that \(R\) is bipartite, and let
+\[
+\mathcal Q=\{V_1,V_2\}
+\]
+be the partition induced by a proper \(2\)-coloring of \(R\). We claim that
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids every colored pattern in \(\mathcal P_D\).
+
+Let \(v_1\prec v_2\prec v_3\) be an ordered triple. If the triple avoids the base pattern \(P\), then it also
+avoids every colored version of \(P\) by \edgecondition{} or \nonedgecondition.
+
+Suppose instead that the triple realizes \(P\). For every \(ij\in D\), the algorithm adds the edge
+\[
+v_iv_j
+\]
+to \(R\). Since the coloring of \(R\) is proper, \(v_i\) and \(v_j\) lie in different parts of \(\mathcal Q\).
+Hence the triple avoids \(P_{ij}\) by \colorcondition. Therefore \(S\) avoids \(\mathcal P_D\).
+
+Conversely, suppose that there exists a partition
+\[
+\mathcal Q=\{V_1,V_2\}
+\]
+such that \(S=(\prec,\mathcal Q)\) avoids \(\mathcal P_D\). We show that \(\mathcal Q\) defines a proper
+\(2\)-coloring of \(R\).
+
+Let \(v_iv_j\in E(R)\). By construction, there exists an ordered triple
+\[
+v_1\prec v_2\prec v_3
+\]
+that realizes \(P\), with \(ij\in D\). Since the triple realizes the base pattern, neither
+\edgecondition{} nor \nonedgecondition{} holds. Therefore, in order to avoid \(P_{ij}\), the triple must satisfy
+\colorcondition. Hence \(v_i\) and \(v_j\) lie in different parts of \(\mathcal Q\).
+
+Thus every edge of \(R\) has endpoints in different parts, so \(R\) is bipartite.
+
+Finally, the algorithm examines \(O(|V(G)|^3)\) ordered triples, adds at most three constraints per triple, and checks
+bipartiteness in linear time in the size of \(R\). Therefore its total running time is
+\[
+O(|V(G)|^3).
+\]
+\end{proof}
+
+
+
+\paragraph{Intuition.}
+When \(k=2\), every constraint requiring two vertices to lie in different parts has the form
+\[
+c(v_i)\neq c(v_j),
+\qquad
+c:V(G)\to\{1,2\}.
+\]
+Such a constraint can be represented by an edge \(v_iv_j\) in an auxiliary graph. Therefore, all the color
+constraints imposed by the ordered triples that realize \(P\) can be collected in a single constraint graph
+\(R_{P,D}(G,\prec)\). A valid partition into at most two parts then exists exactly when this constraint graph is
+bipartite.
+
+\begin{theorem}\label{thm:given-order-two-parts}
+Let
+\[
+P=(A,N,\varnothing)
+\]
+be a pattern on three vertices, and let
+\[
+D\subseteq\{12,13,23\}.
+\]
+For every \(ij\in D\), define the colored pattern
+\[
+P_{ij}:=(A,N,\{i,j\}),
+\]
+and let
+\[
+\mathcal P_D:=\{P_{ij}:ij\in D\}.
+\]
+Thus, \(\mathcal P_D\) is the family of colored patterns obtained from \(P\) by using the pairs indexed by \(D\)
+as color constraints.
+
+The \(\mathcal P_D\)-Avoidance problem with a given order, restricted to instances with
+\[
+k=2,
+\]
+can be solved in polynomial time. More precisely, given a graph \(G\) and a total order \(\prec\) of \(V(G)\),
+one can construct a graph
+\[
+R_{P,D}(G,\prec)
+\]
+such that
+\[
+(G,\prec)\text{ admits a valid solution with at most two parts}
+\quad\Longleftrightarrow\quad
+R_{P,D}(G,\prec)\text{ is bipartite}.
+\]
+\end{theorem}
+
+\begin{proof}
+The constraint graph
+\[
+R=R_{P,D}(G,\prec)
+\]
+is defined by
+\[
+V(R):=V(G),
+\]
+and
+\[
+E(R):=
+\bigcup_{\substack{v_1\prec v_2\prec v_3\\
+(v_1,v_2,v_3)\text{ realizes P in \(G\)}}} 
+\bigl\{
+\{v_i,v_j\}:ij\in D
+\bigr\}.
+\]
+
+We prove the equivalence.
+
+Suppose first that there exists a partition
+\[
+\mathcal Q=\{V_1,V_2\}
+\]
+such that the solution
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids every colored pattern in \(\mathcal P_D\) in \(G\).
+Color each vertex of \(R\) according to its part in \(\mathcal Q\).
+
+Let \(v_iv_j\in E(R)\). By the definition of \(R\), there exists an ordered triple
+\[
+v_1\prec v_2\prec v_3
+\]
+that realizes \(P\) in \(G\), with \(ij\in D\). Since \(P\) is not avoided, but \(\mathcal P_D\) is,
+the triple avoid \(P_{ij}\) only by \colorcondition. Therefore \(v_i\) and \(v_j\) lie in different parts of
+\(\mathcal Q\). Hence the induced coloring of \(R\) is proper, and \(R\) is bipartite.
+
+
+Conversely, suppose that \(R\) is bipartite, and let
+\[
+c:V(R)\to\{1,2\}
+\]
+be a proper \(2\)-coloring of \(R\). Since \(V(R)=V(G)\), we take the color classes of \(c\) as a partition
+\(\mathcal Q\) of \(V(G)\) into at most two parts.
+
+We claim that the solution
+\[
+S=(\prec,\mathcal Q)
+\]
+avoids every colored pattern in \(\mathcal P_D\) in \(G\).
+Consider an ordered triple
+\[
+v_1\prec v_2\prec v_3.
+\]
+If the triple avoids the base pattern \(P\), then it also avoids every colored pattern \(P_{ij}\) by
+\edgecondition{} or \nonedgecondition.
+
+Suppose instead that the triple realizes \(P\). For every \(ij\in D\), the edge \(v_iv_j\) belongs to \(E(R)\).
+Since \(c\) is a proper coloring of \(R\),
+\[
+c(v_i)\neq c(v_j).
+\]
+Thus \(v_i\) and \(v_j\) lie in different parts of \(\mathcal Q\), and the triple avoids \(P_{ij}\) by
+\colorcondition. Therefore \(S\) avoids every pattern in \(\mathcal P_D\).
+
+To construct \(R\), we enumerate the \(O(|V(G)|^3)\) ordered triples of \(G\), test whether each triple realizes
+\(P\), and add at most \(|D|\le 3\) edges. We then test whether \(R\) is bipartite using BFS or DFS.
+Using an adjacency matrix for \(G\), the total running time is
+\[
+O(|V(G)|^3).
+\]
+\end{proof}
+
+
+
+
+
+
+
 
 
 \begin{theorem}\label{thm:forrs-given-order-np-complete}
@@ -3302,118 +4307,6 @@ More precisely, for every fixed \(k\ge 3\), deciding whether there exists a part
 that avoids \(\forrs\) with respect to a given order is NP-complete.
 \end{theorem}
 
-
-% esta es ka demo posta pero dejo el skecth primero
-%\begin{proof}
-%The problem belongs to NP, since a certificate is a partition of \(V(G)\) into at most \(k\) parts, and one can
-%check in polynomial time whether every ordered triple avoids \(\forrs\).
-
-%We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}, which is NP-complete for every fixed \(k\ge 3\).
-
-%Let \(X\) be an instance of \(k\)-\textsc{Coloring}, with
-%\[
-%V(X)=\{x_1,\dots,x_n\}.
-%\]
-%We construct a graph \(G\) as follows. For every edge \(x_i x_j\in E(X)\), with \(i<j\), we add a new vertex
-%\(w_{ij}\). The vertex \(w_{ij}\) is adjacent only to \(x_i\) and \(x_j\). We do not keep the original edge
-%\(x_i x_j\).
-
-%Thus,
-%\[
-%V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
-%\]
-%and
-%\[
-%E(G)=\bigl\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\bigr\}.
-%\]
-
-%We fix the order \(\prec\) by placing first all original vertices and then all witness vertices:
-%\[
-%x_1\prec x_2\prec \cdots \prec x_n \prec \text{all vertices } w_{ij},
-%\]
-%where the order among the vertices \(w_{ij}\) is arbitrary.
-
-%In particular, for every edge \(x_i x_j\in E(X)\), with \(i<j\), we have
-%\[
-%x_i\prec x_j\prec w_{ij}.
-%\]
-
-%We claim that
-%\[
-%X \text{ is \(k\)-colorable}
-%\quad\Longleftrightarrow\quad
-%(G,\prec) \text{ admits a partition into at most \(k\) parts avoiding } \forrs.
-%\]
-
-%\medskip
-%\noindent\textbf{(\(\Rightarrow\))} Suppose that \(X\) admits a proper \(k\)-coloring. We keep the same colors on the
-%original vertices \(x_1,\dots,x_n\), and we assign each witness vertex \(w_{ij}\) arbitrarily to one of the \(k\)
-%parts.
-
-%Let
-%\[
-%S=(\prec,\mathcal Q)
-%\]
-%be the resulting solution. We show that \(S\) avoids \(\forrs\).
-
-%Suppose, towards a contradiction, that there is an ordered triple
-%\[
-%r\prec s\prec t
-%\]
-%that realizes \(\forrs\). Then
-%\[
-%r\sim t,
-%\qquad
-%s\sim t,
-%\]
-%and \(r\) and \(s\) lie in the same part of \(\mathcal Q\).
-
-%Since the original vertices have no neighbors preceding them in the order, the vertex \(t\) cannot be an original
-%vertex. Hence \(t=w_{ij}\) for some edge \(x_i x_j\in E(X)\), with \(i<j\). The only neighbors of \(w_{ij}\) are
-%\(x_i\) and \(x_j\), and both of them precede \(w_{ij}\). Therefore,
-%\[
-%\{r,s\}=\{x_i,x_j\}.
-%\]
-%But \(x_i x_j\in E(X)\), and the coloring of \(X\) is proper, so \(x_i\) and \(x_j\) lie in different parts of
-%\(\mathcal Q\). This contradicts the assumption that \(r\) and \(s\) lie in the same part.
-
-%Thus \(S\) avoids \(\forrs\), and therefore \((G,\prec)\) admits a solution with at most \(k\) parts.
-
-%\medskip
-%\noindent\textbf{(\(\Leftarrow\))} Suppose that \((G,\prec)\) admits a solution
-%\[
-%S=(\prec,\mathcal Q),
-%\qquad
-%\mathcal Q=\{V_1,\dots,V_q\},
-%\qquad
-%q\le k,
-%\]
-%that avoids \(\forrs\).
-
-%We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let \(x_i x_j\in E(X)\),
-%with \(i<j\). By construction, the vertex \(w_{ij}\) satisfies
-%\[
-%x_i\prec x_j\prec w_{ij},
-%\]
-%and
-%\[
-%x_i\sim w_{ij},
-%\qquad
-%x_j\sim w_{ij}.
-%\]
-%If \(x_i\) and \(x_j\) belonged to the same part of \(\mathcal Q\), then the ordered triple
-%\[
-%x_i\prec x_j\prec w_{ij}
-%\]
-%would realize the forbidden pattern \(\forrs\), contradicting that \(S\) avoids \(\forrs\).
-
-%Therefore, for every edge \(x_i x_j\in E(X)\), the vertices \(x_i\) and \(x_j\) lie in different parts of
-%\(\mathcal Q\). Hence the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\) using at most
-%\(q\le k\) colors. In particular, \(X\) is \(k\)-colorable.
-
-%This proves the equivalence, and therefore the \(\forrs\)-Avoidance problem with a given order is NP-hard.
-%Since the problem is in NP, it is NP-complete.
-%\end{proof}
 
 
 
@@ -3504,13 +4397,11 @@ A vertex \(v\in V(H)\) is called \emph{\(\mathcal P\)-removable} in \(H\) with r
 in \(\mathcal P\) can be realized with \(v\) playing the role of the last vertex of the ordered triple.
 
 More explicitly, \(v\) is \(\mathcal P\)-removable if, for every pattern \(P\in\mathcal P\), and for every two distinct
-vertices \(x,y\in V(H)\setminus\{v\}\), both ordered triples
+vertices \(x,y\in V(H)\setminus\{v\}\), the ordered triple
 \[
 (x,y,v)
-\qquad\text{and}\qquad
-(y,x,v)
 \]
-avoid \(P\) in \(H\). \german{importante agregar in H no? tmb lo cambie en la def de arriba de todo}\eric{Sip}.
+avoids \(P\) in \(H\). \german{importante agregar in H no? tmb lo cambie en la def de arriba de todo}\eric{Sip}.
 \german{hace falta poner las dos triplas? con poner (x,y,z) alcanza no? pq intercambian el papel}\eric{No hace falta, tenes razon}
 \end{definition}
 
@@ -3746,7 +4637,7 @@ avoids every pattern in \(\mathcal P\) in \(G\).
 
 \begin{proof}
 First suppose that the algorithm returns \textbf{YES}. Let \(\prec\) be the order obtained by reading the deletion
-list \(L\) from right to left. We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) \german{seguro agregar que si es obvio en que grafo, se omite el in G no?}\eric{Me parece bien ponerlo en la def de avoids}.
+list \(L\) from right to left. We show that \((\prec,\mathcal Q)\) avoids \(\mathcal P\) in \(G\).
 
 Consider any ordered triple
 \[
@@ -4542,7 +5433,7 @@ be checked in polynomial time. Hence the problem is NP-complete.
 
 
 
-\german{aca hay un errpr en amarillo de latex, no quiero gastar tokens en esto, eric }
+
 \subsubsection{Families containing \(\operatorname{for}_{12}\): given order}
 
 For \(D\subseteq\{12,13,23\}\), we write
@@ -4555,7 +5446,6 @@ Fix \(k\ge 3\), and let \(X\) be an instance of \(k\)-\textsc{Coloring}, with
 \[
 V(X)=\{x_1,\dots,x_n\}.
 \]
-\german{queda claro que estan ordenados?}\eric{Sip}
 For every edge \(x_i x_j\in E(X)\), with \(i<j\), we add one witness vertex \(w_{ij}\), adjacent exactly to
 \(x_i\) and \(x_j\). We do not keep the original edge \(x_i x_j\). Thus,
 \[
@@ -4610,7 +5500,7 @@ for some edge \(x_i x_j\in E(X)\), with \(i<j\).
 
 
 \eric{Te permito que sea un lema}
-\begin{remark}\label{obs:common-12-given-order-triples} \german{puede q esto se use en mas lados}
+\begin{lemma}\label{obs:common-12-given-order-triples} \german{puede q esto se use en mas lados}
 In the common construction above, let
 \[
 u\prec v\prec z
@@ -4627,7 +5517,7 @@ Then there exists an edge \(x_i x_j\in E(X)\), with \(i<j\), and a witness \(w_{
 \]
 
 
-\end{remark}
+\end{lemma}
 
 \begin{proof}
 There are no edges among vertices of \(V(X)\), and there are no edges among witnesses. Moreover, every witness
@@ -4697,8 +5587,8 @@ be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Ob
 (u,v,z)=(x_i,x_j,w_{ij}).
 \]
 Since \(\varphi\) is a proper coloring of \(X\), the vertices \(x_i\) and \(x_j\) are assigned to different parts.
-Therefore by the color condition \(C=\{1,2\}\) of \(\operatorname{for}_{12}\), the triple avoids
-\(\operatorname{for}_{12}\). \german{te parece bien decirlo asi? lo de C}
+Therefore by the \colorcondition, the triple avoids
+\(\operatorname{for}_{12}\). 
 
 Thus the constructed solution avoids \(\mathcal F_{12}\).
 
@@ -4731,14 +5621,14 @@ be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Ob
 \[
 (u,v,z)=(x_i,x_j,w_{ij}).
 \]
-Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts. Hence the color condition
-\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) fails.
+Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts. Hence the \colorcondition
+\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) activates.
 
 Moreover, \(w_{ij}\) is assigned to the part \(\varphi(x_j)\), while \(x_i\) is assigned to the part
 \(\varphi(x_i)\). Since \(\varphi(x_i)\neq\varphi(x_j)\), the vertices \(x_i\) and \(w_{ij}\) are assigned to
-different parts. Hence the color condition \(C=\{1,3\}\) of \(\operatorname{for}_{13}\) fails. \german{o prferis asi lo del C}\eric{Lo que podes hacer es 1. ponerle un nombre a la condicion. Tipo }
+different parts. Hence by the \colorcondition  condition the solution avoids \(\operatorname{for}_{13}\).
 
-Thus the solution avoids \(\mathcal F_{12\text{-}13}\).
+Thus the solution avoids \(\mathcal F_{12\text{-}13}\). \german{asi? }
 
 The converse follows from Lemma~\ref{lem:given-order-12-common-converse} with \(D=\{12,13\}\).
 \end{proof}
@@ -4772,7 +5662,7 @@ be an ordered triple such that \(u\) and \(v\) are both adjacent to \(z\), by Ob
 (u,v,z)=(x_i,x_j,w_{ij}).
 \]
 Since \(\varphi\) is proper, \(x_i\) and \(x_j\) are assigned to different parts. Hence the color condition
-\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) activates. \german{o asi??}
+\(C=\{1,2\}\) of \(\operatorname{for}_{12}\) activates.
 
 Moreover, \(w_{ij}\) is assigned to the part \(\varphi(x_i)\), while \(x_j\) is assigned to the part
 \(\varphi(x_j)\). Since \(\varphi(x_i)\neq\varphi(x_j)\), the vertices \(x_j\) and \(w_{ij}\) are assigned to
