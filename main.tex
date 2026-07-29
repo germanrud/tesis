@@ -332,6 +332,7 @@ colored pattern \(P\in\mathcal P\).
 \end{definition}
 
 \german{mi duda aca es que aun no defini family of patterns}
+\eric{Usar solo la def de abajo, y decir que partition number es cuando el C está vacío}
 
 
 \begin{definition}[\(P\)-partition number]
@@ -369,6 +370,7 @@ of a solution for \(G\) that avoids \(\mathcal P\).
 
 
 \german{esto es un intento de unificar la notacion de los parametros inducidos por patrones coloreados y no coloreados, pero no se si es buena idea.}
+\eric{Eliminar los E y B y F y hacer en todos lados lo que te gusto a vos que me parece lo mejor.}
 \begin{definition}[Notation for the induced parameters]
 For each \(ij\in\{12,13,23\}\), we define the singleton families
 \[
@@ -2031,7 +2033,7 @@ The following reduction is designed by first considering the reverse implication
 For each edge \(xy\in E(X)\) as always, we ask: "How can we force the endpoints of every edge of a graph \(X\) to lie in different parts", we add a vertex \(w_{xy}\) so that \(x,y,w_{xy}\) form a triangle.
 Since the solution must avoid the three patterns
 \(\operatorname{bip}_{12}\), \(\operatorname{bip}_{23}\), and \(\operatorname{bip}_{13}\),
-the three vertices of this triangle must lie in pairwise different parts, regardless of their relative order.
+the three vertices of this triangle must lie in pairwise different parts, regardless of their relative order.\eric{Considerar poner estas cosas de intuitions en un lemma u observation.}
 In particular, \(x\) and \(y\) are forced to lie in different parts.
 
 
@@ -2047,7 +2049,8 @@ is NP-complete.
 \end{theorem}
 \german{de nuevo lo de avoidance}
 \begin{proof}
-The problem belongs to NP: a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition
+  % Si no está inmedietamente abajo: [Proof of \cref{thm:bip12-23-13-np-complete}]
+The problem belongs to NP:\eric{Poner esto al principio de todo, que vale para todos los problemas.} a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition
 \[
 \mathcal Q=\{V_1,\dots,V_q\},
 \qquad q\le k,
@@ -2099,8 +2102,7 @@ For every edge \(xy\in E(X)\), choose a color
 \notin
 \{\varphi(x),\varphi(y)\}.
 \]
-Such a color exists because \(k\ge 3\) and
-\(\varphi(x)\neq\varphi(y)\). This extends \(\varphi\) to a proper \(k\)-coloring of \(G\).
+Such a color exists because \(k\ge 3\). This extends \(\varphi\) to a proper \(k\)-coloring of \(G\).
 
 Let
 \[
@@ -2136,7 +2138,7 @@ Since the coloring of \(G\) is proper,
 \varphi(v_2)\neq\varphi(v_3).
 \]
 Moreover, \(\varphi(v_1)\neq\varphi(v_3)\). Indeed, if
-\(\varphi(v_1)=\varphi(v_3)\), then \(v_1\) and \(v_3\) would lie in the same color block. Since
+\(\varphi(v_1)=\varphi(v_3)\), then \(v_1\) and \(v_3\) would lie in the same color block\eric{que es un color block? ahh es un block?}. Since
 \[
 v_1\prec v_2\prec v_3,
 \]
@@ -2184,7 +2186,7 @@ v_1v_2\in E(G)
 \qquad\text{and}\qquad
 v_2v_3\in E(G).
 \]
-Therefore \edgecondition{} does not hold for any of the three bipartite colored patterns.
+Therefore \edgecondition{} does not hold for any of the three bipartite colored patterns.\eric{reescribir esto de alguna forma.}
 
 Because the solution avoids \(\operatorname{bip}_{12}\), the vertices \(v_1\) and \(v_2\) must lie in different
 parts. Similarly, avoiding \(\operatorname{bip}_{23}\) and \(\operatorname{bip}_{13}\) implies that
@@ -2827,7 +2829,7 @@ We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}. Let \(X\) be an i
 \[
 G:=X\,\dot\cup\,K_{k+1}.
 \]
-Thus \(G\) is the disjoint union of \(X\) and a clique \(K_{k+1}\), there are no edges between
+Thus \(G\) is the disjoint union of \(X\) and a clique \(K_{k+1}\),\eric{"and" o ;} there are no edges between
 \(V(X)\) and \(V(K_{k+1})\).
 
 We claim that
@@ -2843,8 +2845,8 @@ Suppose that \(X\) has a proper \(k\)-coloring. Let
 \[
 V(K_{k+1})=\{z_1,\dots,z_{k+1}\}.
 \]
-We keep the given coloring on \(V(X)\), assign \(z_i\) to part \(i\) for \(i=1,\dots,k\), and assign
-\(z_{k+1}\) to the same part as \(z_1\) (the important thing is to assign a different part for the first k+1 vertices, and the only 
+We keep the given coloring on \(V(X)\)\eric{keep está raro, sería un poco más claro quizá hablando de partition}, assign \(z_i\) to part \(i\) for \(i=1,\dots,k\), and assign
+\(z_{k+1}\) to the same part as \(z_1\) (the important thing is to assign a different part for the first \(k+1\) vertices, and the only 
 one that can repeat part is the last one). Hence \(z_1z_{k+1}\) is the only edge of \(K_{k+1}\) whose endpoints
 lie in the same part.
 
@@ -4945,6 +4947,7 @@ Thus, for every edge \(xy\in E(X)\), the vertices \(x\) and \(y\) receive differ
 
 
 \paragraph{Intuition.}
+\eric{Decir de donde reducis}
 As in the previous reductions, in this next reduction we begin by considering the reverse implication: how can we force every valid solution
 of the constructed graph to encode a consistent NAE assignment? For each clause
 \[
@@ -4965,7 +4968,7 @@ so \(v_2\) and \(v_3\) cannot lie in the same part. Hence every clause triangle 
 required by the NAE condition.
 
 It remains to ensure that all occurrences of the same variable receive the same truth value. Equality gadgets are
-commonly used in reductions in which several copies of the same variable are created and must be kept consistent.
+commonly used in reductions in which several copies of the same variable are created and must be kept consistent.\eric{Borrar esta ultima frase}
 Here, however, the gadget \(EQ(a,b)\) is specifically designed for \(\operatorname{for}_{23}\). We add four internal
 vertices \(p,q,r,s\), make each of them adjacent to both terminals \(a\) and \(b\), and add the edges
 \[
@@ -4982,7 +4985,7 @@ with that terminal, would form a monochromatic triangle, contradicting the avoid
 c(a)=c(b).
 \]
 Conversely, when the terminals have the same color, their coloring can be extended to the internal vertices of the
-gadget. Therefore \(EQ(a,b)\) translates the ordering restrictions imposed by \(\operatorname{for}_{23}\) into an
+gadget.\eric{Poner "we show that" o "as we will see in the proof".} Therefore \(EQ(a,b)\) translates the ordering restrictions imposed by \(\operatorname{for}_{23}\) into an
 equality constraint between its terminals.
 
 
@@ -4994,6 +4997,7 @@ The problem of deciding whether
 is NP-complete.
 \end{theorem}
 \german{no se si quiero decir el for23 avoidance problem with k=2 is np complete}
+\eric{Definir el problema k-avoidance y usarlo aca como 2-avoidance}
 
 \begin{proof}
 The problem belongs to NP: a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition of
@@ -5004,15 +5008,15 @@ We prove NP-hardness by reducing from \textsc{Monotone NAE-3SAT}. Let
 \[
 \Phi=C_1\land\cdots\land C_m
 \]
-be an instance in which each clause contains exactly three distinct positive variables.
+be an instance in which each clause contains exactly three distinct positive variables.\eric{Usar literal u ocurrence}
 
-We first record a local property of \(\operatorname{for}_{23}\).
+We first record\eric{remark? recall?} a local property of \(\operatorname{for}_{23}\).
 
 \medskip
 \noindent\textbf{Local rule.}
 Let
 \[
-u_1\prec u_2\prec\cdots\prec u_\ell\prec t
+u_1\prec u_2\prec\cdots\prec u_\ell
 \]
 be the neighbors of a vertex \(t\) that appear before \(t\) in the order.
 Then
@@ -5020,6 +5024,8 @@ Then
 c(u_i)\neq c(t)
 \qquad\text{for every }i\ge 2.
 \]
+
+\eric{c no está definido}
 
 Indeed, if \(c(u_i)=c(t)\) for some \(i\ge2\), then
 \[
@@ -5036,31 +5042,31 @@ Equivalently, a vertex may share its part with at most its first earlier neighbo
 
 \medskip
 \noindent\textbf{Equality gadget.}
-Given two existing vertices \(a\) and \(b\), we construct a gadget \(EQ(a,b)\) by adding four private vertices
+Given two existing vertices \(a\) and \(b\), we construct a gadget \(EQ(a,b)\) by adding four private\eric{exclusive quiza, o nada} vertices
 \[
 p,q,r,s.
 \]
-Each of \(a\) and \(b\) is adjacent to all four internal vertices, and we also add the edges
+Each of \(a\) and \(b\) is adjacent to all four internal\eric{exclusive o nada} vertices, and we also add the edges
 \[
 ps
 \qquad\text{and}\qquad
 qr.
 \]
-No other edges are added inside the gadget; in particular, \(a\) and \(b\) are not adjacent.
+No other edges are added inside the gadget; in particular, \(a\) and \(b\) are not adjacent.\eric{No edge is added between \(a\) and \(b\).}
 
-We claim that every solution with two parts that avoids \(\operatorname{for}_{23}\) satisfies
-\[
+We claim\eric{usar environment claim asi lo podes referenciar} that every solution with two parts that avoids \(\operatorname{for}_{23}\) satisfies
+\(
 c(a)=c(b).
-\]
+\)
 
 Suppose, towards a contradiction, that
-\[
+\(
 c(a)\neq c(b).
-\]
+\)
 Without loss of generality, assume
-\[
+\(
 a\prec b.
-\]
+\)
 
 Every internal vertex \(u\in\{p,q,r,s\}\) appearing after \(b\) must have the same color as \(a\). Indeed,
 \[
@@ -5110,14 +5116,14 @@ avoids \(\operatorname{for}_{23}\) inside the gadget.
 \noindent\textbf{Construction of \(G_\Phi\).}
 
 For every variable \(x\) of \(\Phi\), we create one vertex
-\[
+\(
 v_x.
-\]
+\)
 
 For every occurrence of \(x\) in a clause \(C_j\), we create a distinct occurrence vertex
-\[
+\(
 o_{j,x}.
-\]
+\)
 We then add a private copy of the equality gadget
 \[
 EQ(v_x,o_{j,x}).
@@ -5156,7 +5162,7 @@ with at most two parts that avoids \(\operatorname{for}_{23}\). We identify the 
 values and define
 \[
 \tau(x):=c(v_x).
-\]
+\]\eric{definir c}\eric{Decir que a la variable x le asignamos el valor de verdad correspondiente al color de su vertice $v_x$. Decir que vamos a ver que esta asignacion es valida.}
 
 By the equality-gadget property, for every occurrence of \(x\) in \(C_j\),
 \[
@@ -5224,21 +5230,21 @@ color and the third has the opposite color. Denote the two occurrence vertices w
 B_{o_1}\prec B_{o_2}\prec B_{o_3}.
 \]
 
-We order the clauses arbitrarily. After all occurrence blocks, we place all variable vertices \(v_x\), also in
+We order the clauses arbitrarily \eric{Se pueden mezclar los vertices entre clauses?}. After all occurrence blocks, we place all variable vertices \(v_x\), also in
 arbitrary order.
 
-We verify the local rule for every vertex.
+We verify the local rule\eric{Decir que la local rule es equivalente. Ademas, poner la local rule como lemma u observation} for every vertex.
 
 \begin{itemize}
-\item The vertices \(p_o\) and \(q_o\) have no earlier neighbors.
+\item The vertices \(p_o\) and \(q_o\) have no earlier neighbors.\eric{For any o ocurrence vertex?}
 
-\item The first majority occurrence \(o_1\) has as earlier neighbors only \(p_{o_1}\) and \(q_{o_1}\), both of
+\item The first majority\eric{que quiere decir majority?} occurrence \(o_1\)\eric{in a clause} has as earlier neighbors only \(p_{o_1}\) and \(q_{o_1}\), both of
 the color opposite to \(o_1\).
 
 \item The second majority occurrence \(o_2\) has \(o_1\) as its first earlier neighbor. This vertex has the same
 color as \(o_2\). Its remaining earlier neighbors \(p_{o_2}\) and \(q_{o_2}\) have the opposite color.
 
-\item The minority occurrence \(o_3\) has as earlier neighbors the two majority occurrence vertices and
+\item The minority occurrence \(o_3\) has as earlier neighbors the two majority occurrence vertices\eric{o1 y o2} and
 \(p_{o_3},q_{o_3}\). All of them have the color opposite to \(o_3\).
 
 \item The earlier neighbors of \(r_o\) are \(q_o\) and \(o\), in this order. The vertex \(q_o\) has the same
