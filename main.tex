@@ -81,6 +81,24 @@
 \newcommand{\minClases}{\operatorname{minClases}}
 \newcommand{\chisemi}{\chi_{\mathrm{semi}}}
 
+
+
+
+
+
+
+% Names of the parameters
+\DeclareMathOperator{\starname}{star}
+\DeclareMathOperator{\bipname}{bip}
+\DeclareMathOperator{\forname}{for}
+
+% Parameters indexed by a family of colored pairs
+\newcommand{\starparam}[1]{\starname_{#1}}
+\newcommand{\bipparam}[1]{\bipname_{#1}}
+\newcommand{\forparam}[1]{\forname_{#1}}
+
+
+
 \newcommand{\segone}{\operatorname{bip}_{1}}
 \newcommand{\Pone}{\mathcal{P}_{1}}
 
@@ -145,6 +163,7 @@
 \german{escribi q no lo tenia star 12 23 13}
 \german{reduccion bip 12 23 13 con intuicion}
 \german{caso k=2 para dado orden}
+\german{caso k=2 for23}
 
 \begin{definition}[Pattern on three vertices]
 A \emph{pattern} on three ordered vertices \(r\prec s\prec t\) is a triple
@@ -409,6 +428,9 @@ For the three uncolored patterns, we similarly write
 We use the same symbol \(\operatorname{star}_{ij}\), \(\operatorname{bip}_{ij}\), or
 \(\operatorname{for}_{ij}\) for a colored pattern, and add the argument \(G\) when referring to
 the corresponding graph parameter. Thus, for example,
+\german{aca intente resolver el abuso de notacion}
+\german{una idea que tengo es una vez q definimos bip12 el patron, definir el paraemtro bip12(G) como el minimo 
+numero de clases... sin definir nunca el molesto minclases}
 \[
 \operatorname{for}_{12}
 \]
@@ -661,7 +683,7 @@ Thus, the parameters
 \]
 are the corresponding partition parameters into these graph classes.
 \end{remark}
-
+\german{cuales son las clases asociadas, eso hay q probarlo o se ve de algun paper?}
 
 
 \subsection{Colored versions}
@@ -1026,7 +1048,7 @@ G\in \mathcal C_P.
 \end{proof}
 
 
-In words, when \(C=\varnothing\), the parameter \(\minClases_P\) is the partition version of the original
+In other words, when \(C=\varnothing\), the parameter \(\minClases_P\) is the partition version of the original
 class \(\mathcal C_P\). Having value \(1\) means exactly that no partition is needed: the whole graph already
 belongs to the class characterized by \(P\).
 \medskip
@@ -1036,40 +1058,6 @@ belongs to the class characterized by \(P\).
 
 
 
-\german{fijate si borras esto}
-\begin{definition}[Patrón prohibido para \(\segone\)]
-Se fija el patrón coloreado
-\[
-P_1=(A,N,C),
-\]
-donde
-\[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad
-N=\varnothing,\qquad
-C=\bigl\{\{1,2\}\bigr\}.
-\]
-\end{definition}
-
-\begin{figure}[ht]
-\centering
-\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
-\node[fill=gray!20] (a) at (0,0) {1};
-\node[fill=gray!20] (b) at (1.2,0) {2};
-\node             (c) at (2.4,0) {3};
-\draw (a)--(b);
-\draw (b)--(c);
-\end{tikzpicture}
-\end{figure}
-
-\begin{definition}[\(\segone\)]
-Dado un grafo \(G\), se define
-\[
-\segone(G)\;:=\;\minClases_{\{P_1\}}(G),
-\]
-es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) de \(G\) que evita el patrón \(P_1\).
-\end{definition}
-
-
 
 
 \eric{Este es un resultado ya conocido en el paper de patrones. Si querés lo podemos dejar en la tesis, por ejemplo en un apéndice, para decir que lo probaste de nuevo. En el paper definitivamente no iría.}
@@ -1077,8 +1065,7 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) 
 Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si \(\segone(G)=1\).
 \end{theorem}
 
-DEMO NUEVA
-cambiar los nombres de la variables por la A
+
 \begin{proof}
 \noindent(\(\Rightarrow\)) Supongamos que \(G\) es bipartito. Entonces existe una partición
 \(V=V_1\,\dot\cup\,V_2\) tal que \(V_1\) y \(V_2\) son independientes.
@@ -1149,7 +1136,7 @@ V \;=\; V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k.
 \]
 En cada paso se elige un vértice no ubicado, se lo agrega al final del orden parcial y se le asigna
 una de las \(k\) clases.
-
+\german{esto podria ser en general un algoritmo de bt para cualquier parametro}
 Tras cada asignación se verifica la condición correspondiente a \(\segone\) en lo ya construido:
 si el nuevo vértice queda en la posición \(t\), se chequea que no existan \(r<s<t\) tales que
 \(v_r\) y \(v_s\) estén en la misma clase, \(v_r\sim v_s\) y \(v_s\sim v_t\).
@@ -1158,187 +1145,230 @@ Si se detecta una violación, se descarta la rama y se retrocede; si no, se cont
 
 El procedimiento utilizado fue probar grafos conocidos y asi poder conjeturar y demostrar lo siguiente:
 
-\begin{theorem}\label{thm:segone-chi}
 
+
+
+\begin{theorem}\label{thm:bip12-chi}
+Let \(G\) be a graph with \(\chi(G)\ge 2\). Then
 \[
-\segone(G)=\chi(G)-1.
+\bipparam{12}(G)=\chi(G)-1.
 \]
 \end{theorem}
 
-DEMO NUEVA
-
-
-
-
-\begin{Claim}\label{lem:seg1-le}
-\(\segone(G)\le \chi(G)-1\).
-\end{Claim}
-
 \begin{proof}
-Sea \(m=\chi(G)\) y sea \(c:V\to\{1,\dots,m\}\) un \(m\)-coloreo propio de \(G\).
-Para cada \(i\in\{1,\dots,m\}\) se define la \emph{clase de color}
+We prove both inequalities.
+
+\medskip
+\noindent\textbf{First, \(\chi(G)-1\le \bipparam{12}(G)\).}
+
+Let
 \[
-C_i:=\{\,v\in V:\ c(v)=i\,\}.
+k:=\bipparam{12}(G),
 \]
-A partir de estas clases se construye una partición \(\mathcal{Q}\) de \(V\) en \(m-1\) clases dada por
+and let
 \[
-V_1:=C_1\cup C_m,
+S=(\prec,\mathcal Q),
 \qquad
-V_i:=C_i \ \ \text{para todo } i=2,\dots,m-1,
+\mathcal Q=\{V_1,\dots,V_k\},
 \]
-y se escribe \(\mathcal{Q}:=\{V_1,\dots,V_{m-1}\}\). Como \(C_1,\dots,C_m\) forman una partición de \(V\),
-también lo hacen \(V_1,\dots,V_{m-1}\).
-
-Además, se fija un orden total \(\prec\) \emph{por bloques} imponiendo que
+be a solution of value \(k\) that avoids \(\operatorname{bip}_{12}\).
+\german{tmb esta el tema que bip12(G) o bip12 ahi hay un abuso de notacion no?}
+We construct a proper coloring of \(G\) with at most \(k+1\) colors. For each vertex \(v\in V_i\), define
 \[
-C_1 \prec C_2 \prec \cdots \prec C_{m-1} \prec C_m,
-\]
-esto es, para todo \(i<j\), para todo \(u\in C_i\) y todo \(v\in C_j\), se cumple \(u\prec v\),
-y dentro de cada bloque \(C_i\) se toma un orden arbitrario.
-
-Probemos que \((\prec,\mathcal{Q})\) evita el patrón \(P_1=(A,N,C)\) que define \(\segone\),
-donde
-\[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad N=\varnothing,\qquad C=\bigl\{\{1,2\}\bigr\}.
-\]
-Sea \(r\prec s\prec t\) una terna de vértices.
-Si \(r\not\sim s\), entonces falla la arista \(\{1,2\}\in A\) y si \(r\) y \(s\) pertenecen a clases distintas de \(\mathcal{Q}\), entonces falla la condición de color
-asociada a \(\{1,2\}\in C\) supongamos entonces que \(r\sim s\) y que \(r\) y \(s\) pertenecen a una misma clase de \(\mathcal{Q}\).
-
-
-Como todas las clases \(V_i\) para \(i=2,\dots,m-1\) son independientes, necesariamente
-\(r,s\in V_1\) y por construcción,
-\[
-V_1=C_1\,\dot\cup\, C_m,
-\]
-y el orden dentro de \(V_1\) ubica a todos los vértices de \(C_1\) antes que todos los de \(C_m\)
-por lo tanto, de \(r\prec s\) y \(r,s\in V_1\) se deduce
-\[
-r\in C_1
-\quad\text{y}\quad
-s\in C_m.
-\]
-
-Pero \(C_m\) es independiente (por ser clase de un coloreo propio), lo cual contradice
-\(s\sim t\), por lo tanto, \(s\not\sim t\), es decir, falla la arista \(\{2,3\}\in A\), y la terna
-\(r\prec s\prec t\) evita \(P_1\).
-
-Como la terna fue arbitraria, \((\prec,\mathcal{Q})\) evita \(P_1\) y tiene \(|\mathcal{Q}|=m-1\).
-En consecuencia,
-\[
-\segone(G)\le m-1=\chi(G)-1,
-\]
-como se quería demostrar.
-\end{proof}
-
-
-
-\begin{Claim}\label{lem:le-seg1}
-Se cumple \(\chi(G)-1 \le \segone(G)\).
-\end{Claim}
-
-\begin{proof}
-Sea \(G\) tal que admite un orden \(v_1 \prec \cdots \prec v_n\) y una partición
-\[
-V \;=\; V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_k,
-\qquad\text{con } k=\segone(G),
-\]
-de modo que la solución \(S=(\prec,\{V_1,\dots,V_k\})\) evita el patrón \(P_1=(A,N,C)\) (patrón \emph{bip1}),
-donde
-\[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad N=\varnothing,\qquad C=\{1,2\}.
-\]
-
-Se define un coloreo \(c:V\to\{0,1,\dots,k\}\) del siguiente modo. Para cada \(s\in\{1,\dots,n\}\),
-se fija
-\[
-c(v_s)=
+c(v)=
 \begin{cases}
-0, & \text{si existe } r<s \text{ tal que } v_r \in V_i,\ v_s\in V_i
-      \text{ y } v_r \sim v_s,\\[2mm]
-i, & \text{en caso contrario, donde \(i\in\{1,\dots,k\}\) es tal que } v_s\in V_i.
+0,
+& \text{if \(v\) has an earlier neighbor in \(V_i\)},\\[1mm]
+i,
+& \text{otherwise}.
 \end{cases}
 \]
 
-Se afirma que si \(c(v_s)=0\), entonces \(v_s\) no tiene vecinos a la derecha en el orden.
-En efecto, por definición de \(c\) existe \(r<s\) tal que \(v_r\) y \(v_s\) pertenecen a una misma clase \(V_i\)
-y además \(v_r\sim v_s\).
-Si existiera \(t>s\) con \(v_s\sim v_t\), entonces la terna ordenada \((v_r,v_s,v_t)\) realizaría el patrón \(P_1\):
-las posiciones \(1\) y \(2\) estarían en la misma clase (porque \(v_r,v_s\in V_i\)), y se tendrían las aristas
-correspondientes a \(\{1,2\}\) y \(\{2,3\}\). Esto contradice que \(S\) evita \(P_1\).
-Por lo tanto, para todo \(t>s\) se cumple \(v_s\not\sim v_t\).
-
-Se verifica ahora que \(c\) es un coloreo propio.
-
-\smallskip
-\noindent\textbf{(a) Dos vértices de color \(0\) no pueden ser adyacentes.}
-Si \(v_i\sim v_j\) con \(i<j\) y \(c(v_i)=c(v_j)=0\), entonces \(v_i\) tendría un vecino
-a la derecha (a saber, \(v_j\)), contradicción.
-
-\smallskip
-\noindent\textbf{(b) Dos vértices con el mismo color \(i\in\{1,\dots,k\}\) no pueden ser adyacentes.}
-Si \(c(v_a)=c(v_b)=i\) con \(a<b\), entonces \(v_a,v_b\in V_i\). Si además ocurriera \(v_a\sim v_b\),
-por la definición de \(c\) el vértice \(v_b\) debería satisfacer \(c(v_b)=0\), contradicción.
-
-Por (a) y (b), no existe arista cuyos extremos tengan el mismo color; por lo tanto,
-\(c\) es un coloreo propio que utiliza a lo sumo \(k+1\) colores. En consecuencia,
+We first observe that if \(c(v)=0\), then \(v\) has no later neighbor. Indeed, there exists
+\(u\in V_i\) such that
 \[
-\chi(G)\le k+1=\segone(G)+1,
+u\prec v
+\qquad\text{and}\qquad
+u\sim v.
 \]
-como se quería demostrar.
-\end{proof}
-
-
-SEG2 
-
-
-\begin{definition}[Patrón prohibido para \(\segtwo\)]
-Se fija el patrón coloreado
+If \(v\) had a later neighbor \(w\), then
 \[
-P_2=(A,N,C),
+u\prec v\prec w,
+\qquad
+u\sim v,
+\qquad
+v\sim w.
 \]
-donde
-\[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad
-N=\varnothing,\qquad
-C=\{2,3\}.
-\]
-\end{definition}
+Moreover, \(u\) and \(v\) lie in the same part of \(\mathcal Q\). Therefore, the ordered triple
+\((u,v,w)\) satisfies neither \edgecondition{} nor \colorcondition{} for
+\(\operatorname{bip}_{12}\), contradicting that \(S\) avoids the pattern.
 
-\begin{figure}[ht]
+We now show that \(c\) is a proper coloring.
+
+Suppose first that
+\[
+x\prec y
+\qquad\text{and}\qquad
+c(x)=c(y)=0.
+\]
+If \(x\sim y\), then \(x\) would have a later neighbor, contradicting the previous observation. Hence
+\(x\not\sim y\).
+
+Now suppose that
+\[
+x\prec y
+\qquad\text{and}\qquad
+c(x)=c(y)=i
+\]
+for some \(i\in\{1,\dots,k\}\). Then \(x,y\in V_i\). If \(x\sim y\), the vertex \(y\) would have an earlier
+neighbor in \(V_i\), and therefore \(c(y)=0\), a contradiction.
+
+Thus every color class of \(c\) is independent. Hence
+\[
+\chi(G)\le k+1,
+\]
+and therefore
+\[
+\chi(G)-1\le k=\bipparam{12}(G).
+\]
+
+\medskip
+\noindent\textbf{Now, \(\bipparam{12}(G)\le \chi(G)-1\).}
+
+Let
+\[
+k:=\chi(G),
+\]
+and fix a proper \(k\)-coloring of \(G\), represented by a partition
+\[
+V(G)=C_1\,\dot\cup\,C_2\,\dot\cup\,\cdots\,\dot\cup\,C_k,
+\]
+where each \(C_i\) is independent.
+
+Define a partition
+\[
+\mathcal Q=\{V_1,\dots,V_{k-1}\}
+\]
+by
+\[
+V_1:=C_1\cup C_k,
+\qquad
+V_i:=C_i
+\quad\text{for }i=2,\dots,k-1.
+\]
+Define the order \(\prec\) by color blocks:
+\[
+C_1\prec C_2\prec\cdots\prec C_k,
+\]
+taking an arbitrary order inside each \(C_i\).
+
+\begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=1, every node/.style={circle, draw, inner sep=1.2pt, font=\small}]
-\node                    (a) at (0,0)   {1};
-\node[draw=red, very thick, fill=red!20] (b) at (1.2,0) {2};
-\node[draw=red, very thick, fill=red!20] (c) at (2.4,0) {3};
-\draw (a)--(b);
-\draw (b)--(c);
+\begin{tikzpicture}[
+  font=\small,
+  oval/.style={
+    draw,
+    rounded corners=12pt,
+    minimum width=16mm,
+    minimum height=7mm,
+    inner sep=1.5pt
+  },
+  rowlab/.style={anchor=east}
+]
+
+\def\dy{0.90cm}
+
+% Fixed column for the labels
+\node[rowlab] at (-0.35,0) {$V_1$};
+\node[rowlab] at (-0.35,-\dy) {$V_2$};
+\node[rowlab] at (-0.35,-3*\dy) {$V_{k-1}$};
+
+% Color blocks in their order
+\node[oval] (C1) at (1.0,0) {$C_1$};
+\node[oval] (C2) at (2.5,-\dy) {$C_2$};
+
+\node[draw=none] at (4.0,-2*\dy) {$\vdots$};
+
+\node[oval] (Ckm1) at (5.5,-3*\dy) {$C_{k-1}$};
+\node[oval] (Ck) at (7.4,0) {$C_k$};
+
+\node[draw=none] at (4.2,0) {$V_1=C_1\cup C_k$};
+
 \end{tikzpicture}
+\caption{The partition and block order used to prove
+\(\bipparam{12}(G)\le\chi(G)-1\).}
+\label{fig:bip12-upper-bound}
 \end{figure}
 
-\begin{definition}[\(\segtwo\)]
-Dado un grafo \(G\), se define
+We claim that
 \[
-\segtwo(G)\;:=\;\minClases_{\{P_2\}}(G),
+S=(\prec,\mathcal Q)
 \]
-es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) de \(G\) que evita el patrón \(P_2\).
-\end{definition}
+avoids \(\operatorname{bip}_{12}\).
 
-
-
-\begin{definition}[\(\segonetwo\)]
-Se fija la familia de patrones
+Let
 \[
-\Ponetwo := \{P_1,P_2\}.
+v_1\prec v_2\prec v_3
 \]
-Dado un grafo \(G\), se define
+be an ordered triple. If
 \[
-\segonetwo(G)\;:=\;\minClases_{\Ponetwo}(G),
+v_1\not\sim v_2
+\qquad\text{or}\qquad
+v_2\not\sim v_3,
 \]
-es decir, el mínimo número de clases de una solución \((\prec,\mathcal{Q})\) de \(G\) que evita simultáneamente
-los patrones \(P_1\) y \(P_2\).
-\end{definition}
+then the triple avoids \(\operatorname{bip}_{12}\) by \edgecondition.
 
+Suppose then that
+\[
+v_1\sim v_2
+\qquad\text{and}\qquad
+v_2\sim v_3.
+\]
+We show that \(v_1\) and \(v_2\) lie in different parts of \(\mathcal Q\).
+
+Suppose, towards a contradiction, that \(v_1\) and \(v_2\) lie in the same part. Since
+\[
+V_i=C_i
+\qquad\text{for }i=2,\dots,k-1,
+\]
+and every \(C_i\) is independent, necessarily
+\[
+v_1,v_2\in V_1=C_1\cup C_k.
+\]
+Because \(v_1\sim v_2\), they belong to different color classes. Since
+\[
+C_1\prec C_k
+\qquad\text{and}\qquad
+v_1\prec v_2,
+\]
+we obtain
+\[
+v_1\in C_1
+\qquad\text{and}\qquad
+v_2\in C_k.
+\]
+
+The class \(C_k\) is the last block of the order. Hence \(v_2\prec v_3\) implies
+\[
+v_3\in C_k.
+\]
+Since \(C_k\) is independent, this gives
+\[
+v_2\not\sim v_3,
+\]
+a contradiction.
+
+Therefore \(v_1\) and \(v_2\) lie in different parts of \(\mathcal Q\), and the triple avoids
+\(\operatorname{bip}_{12}\) by \colorcondition. Thus \(S\) avoids \(\operatorname{bip}_{12}\), and
+\[
+\bipparam{12}(G)\le k-1=\chi(G)-1.
+\]
+
+Combining both inequalities, we conclude that
+\[
+\bipparam{12}(G)=\chi(G)-1.
+\]
+\end{proof}
 
 
 
@@ -1348,7 +1378,7 @@ Sea \(G\) un grafo y sean \(\mathcal P,\mathcal P'\) dos familias de patrones co
 Si \(\mathcal P\subseteq \mathcal P'\), entonces
 \[
 \minClases_{\mathcal P}(G)\;\le\;\minClases_{\mathcal P'}(G).
-x\]
+\]
 \end{lemma}
 
 \begin{proof}
@@ -1361,108 +1391,6 @@ no puede disminuir al imponer más restricciones. En consecuencia,
 \end{proof}
 
 
-
-
-
-\begin{theorem}\label{thm:seg12-chi}
-Para todo grafo \(G\),
-\[
-\segg(G)=\chi(G)-1.
-\]
-\end{theorem}
-
-\begin{proof}
-La demostración se divide en dos desigualdades.
-
-\medskip
-\begin{lemma}\label{lem:seg12-ge}
-Para todo grafo \(G\), se cumple \(\segg(G)\ge \chi(G)-1\).
-\end{lemma}
-
-\begin{proof}
-Por definición, \(\segone(G)=\minClases_{\{P_1\}}(G)\) y \(\segg(G)=\minClases_{\{P_1,P_2\}}(G)\).
-Como \(\{P_1\}\subseteq \{P_1,P_2\}\), por el Lema \ref{lem:monotone-patterns} se obtiene
-\[
-\segone(G)\le \segg(G).
-\]
-Usando el Teorema \ref{thm:segone-chi} (i.e.\ \(\segone(G)=\chi(G)-1\)), se concluye que
-\[
-\chi(G)-1=\segone(G)\le \segg(G).
-\]
-\end{proof}
-
-
-
-
-
-\medskip
-\begin{lemma}\label{lem:seg12-le}
-Para todo grafo \(G\), se cumple \(\segg(G)\le \chi(G)-1\).
-\end{lemma}
-
-
-
-
-\begin{proof}
-Para probar \(\segg(G)\le \chi(G)-1\) se reutiliza la misma construcción del
-Lema \ref{lem:segto-le}. Sea \(m=\chi(G)\) y sea \(c:V\to\{1,\dots,m\}\) una \(m\)-coloración propia.
-Para cada \(i\in\{1,\dots,m\}\) se considera la clase de color
-\[
-C_i:=\{v\in V: c(v)=i\}.
-\]
-Se define la partición \(V=V_1 \,\dot\cup\, \cdots \,\dot\cup\, V_{m-1}\) por
-\[
-V_1:=C_1\cup C_m,
-\qquad
-V_i:=C_i \ \ \text{para } i=2,\dots,m-1,
-\]
-y se fija un orden \(\prec\) por bloques imponiendo
-\[
-C_1 \prec C_2 \prec \cdots \prec C_{m-1} \prec C_m,
-\]
-tomando además un orden arbitrario dentro de cada bloque \(C_i\).
-
-Por el Lema \ref{lem:segto-le}, esta partición y este orden satisfacen \textup{(Seg\(_{\to}\))}.
-Resta verificar que también satisfacen \textup{(Seg\(_{\leftarrow}\))}.
-
-Sea entonces \(r<s<t\) una terna de índices del orden fijado. Supóngase que \(v_s\) y \(v_t\)
-pertenecen a una misma clase \(V_i\) y que \(v_s\sim v_t\). Se probará que necesariamente
-\(v_r\not\sim v_s\).
-
-Primero se observa que no puede ocurrir \(i\in\{2,\dots,m-1\}\): en tal caso \(V_i=C_i\), y como
-\(C_i\) es una clase de una coloración propia, es un conjunto independiente. Esto contradice
-la hipótesis \(v_s\sim v_t\). Por lo tanto, se concluye que
-\[
-i=1 \quad\text{y en particular}\quad v_s,v_t\in V_1=C_1\cup C_m.
-\]
-
-Se determina ahora en qué subclase cae cada vértice. Dado que \(s<t\) y el orden por bloques ubica
-todos los vértices de \(C_1\) antes que todos los vértices de \(C_m\), el único modo de tener
-\(v_s\sim v_t\) con \(v_s,v_t\in C_1\cup C_m\) es que
-\[
-v_s\in C_1
-\quad\text{y}\quad
-v_t\in C_m,
-\]
-ya que \(C_1\) y \(C_m\) son independientes y por lo tanto no pueden contener una arista interna.
-
-Finalmente, como \(C_1\) es el primer bloque del orden, no existe ningún vértice estrictamente a la izquierda
-de un vértice de \(C_1\). En particular, si \(v_s\in C_1\) entonces no existe \(r<s\) tal que
-\(v_r\sim v_s\). Por consiguiente, para la terna considerada se cumple \(v_r\not\sim v_s\), y queda verificada
-\textup{(Seg\(_{\leftarrow}\))}.
-
-Como la partición y el orden satisfacen simultáneamente \textup{(Seg\(_{\to}\))} y \textup{(Seg\(_{\leftarrow}\))},
-se obtiene que \(\segg(G)\le m-1\). En conclusión,
-\[
-\segg(G)\le m-1=\chi(G)-1,
-\]
-como se quería demostrar.
-\end{proof}
-
-
-\medskip
-Combinando los Lemas \ref{lem:seg12-ge-segto} y \ref{lem:seg12-le} se obtiene la igualdad.
-\end{proof}
 
 
 SEG3
@@ -1658,190 +1586,317 @@ los patrones \(P_1\) y \(P_3\).
 
 
 
-\begin{theorem}\label{thm:seg13-eq}
-Para todo grafo \(G\),
+\begin{theorem}\label{thm:bip12-bip12-23-bip12-13}
+Let \(G\) be a graph with \(\chi(G)\ge 2\). Then
 \[
-\segthirteen(G)=\chi(G)-1.
+\bipparam{12}(G)
+=
+\bipparam{12\text{-}23}(G)
+=
+\bipparam{12\text{-}13}(G)
+=
+\chi(G)-1.
 \]
 \end{theorem}
 
 \begin{proof}
-La demostración se divide en dos desigualdades.
+By Theorem~\ref{thm:bip12-chi},
+\[
+\bipparam{12}(G)=\chi(G)-1.
+\]
+Moreover, since every solution avoiding
+\german{citar}
+\[
+\mathcal B_{12\text{-}23}
+\qquad\text{or}\qquad
+\mathcal B_{12\text{-}13}
+\]
+also avoids \(\bipparam{12}\), monotonicity under inclusion of pattern families gives
+\[
+\bipparam{12\text{-}23}(G)
+\ge
+\bipparam{12}(G)
+=
+\chi(G)-1
+\]
+and
+\[
+\bipparam{12\text{-}13}(G)
+\ge
+\bipparam{12}(G)
+=
+\chi(G)-1.
+\]
+
+It remains to prove the corresponding upper bounds.
 
 \medskip
-\begin{lemma}\label{lem:seg13-ge-chi-1}
-Para todo grafo \(G\),
-\[
-\segthirteen(G)\ge \chi(G)-1.
-\]
-\end{lemma}
+\noindent\textbf{The parameter \(\bipparam{12\text{-}23}\).}
 
-\begin{proof}
-Por definición, \(\segthirteen\) se obtiene imponiendo simultáneamente las restricciones que definen
-\(\segone\) y \(\segthree\). En particular, toda solución que evita los patrones prohibidos de
-\(\segthirteen\) evita también el patrón prohibido de \(\segone\).
-Luego, por el Lema \ref{lem:monotone-patterns} (monotonía al agregar patrones prohibidos),
+Let
 \[
-\segthirteen(G)\ge \segone(G).
+k:=\chi(G),
 \]
-Finalmente, por el Teorema \ref{thm:segone-chi} se tiene \(\segone(G)=\chi(G)-1\), y por lo tanto
+and fix a proper \(k\)-coloring of \(G\), represented by a partition
 \[
-\segthirteen(G)\ge \chi(G)-1.
+V(G)=C_1\,\dot\cup\,C_2\,\dot\cup\,\cdots\,\dot\cup\,C_k,
 \]
-\end{proof}
+where each \(C_i\) is an independent set.
 
+We use exactly the same construction as in the proof of
+Theorem~\ref{thm:bip12-chi}. Define
+\[
+\mathcal Q=\{V_1,\dots,V_{k-1}\}
+\]
+by
+\[
+V_1:=C_1\cup C_k,
+\qquad
+V_i:=C_i
+\quad\text{for }i=2,\dots,k-1,
+\]
+and define the order \(\prec\) by color blocks:
+\[
+C_1\prec C_2\prec\cdots\prec C_k,
+\]
+taking an arbitrary order inside each \(C_i\).
+
+Let
+\[
+S=(\prec,\mathcal Q).
+\]
+By the proof of Theorem~\ref{thm:bip12-chi}, the solution \(S\) avoids
+\(\bipparam{12}\). It remains to prove that \(S\) also avoids
+\(\bipparam{23}\).
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple.
+
+Suppose that
+\[
+v_1v_2\in E(G)
+\qquad\text{and}\qquad
+v_2v_3\in E(G).
+\]
+Otherwise the triple avoids \(\bipparam{23}\) by \edgecondition.
+We show that \(v_2\) and \(v_3\) lie in different parts of \(\mathcal Q\).
+
+Suppose, towards a contradiction, that \(v_2\) and \(v_3\) are assigned to the same part. Since
+\[
+V_i=C_i
+\qquad\text{for }i=2,\dots,k-1,
+\]
+and every \(C_i\) is independent, necessarily
+\[
+v_2,v_3\in V_1=C_1\cup C_k.
+\]
+Because \(v_2v_3\in E(G)\), the vertices \(v_2\) and \(v_3\) belong to different color classes. The block order and
+\(v_2\prec v_3\) therefore imply
+\[
+v_2\in C_1,
+\qquad
+v_3\in C_k.
+\]
+Since \(C_1\) is the first block and \(v_1\prec v_2\), we must also have
+\[
+v_1\in C_1.
+\]
+But \(C_1\) is independent, contradicting
+\[
+v_1v_2\in E(G).
+\]
+
+Therefore \(v_2\) and \(v_3\) lie in different parts of \(\mathcal Q\), so the triple avoids
+\(\bipparam{23}\) by \colorcondition. Hence \(S\) avoids
+\(\mathcal B_{12\text{-}23}\), and consequently
+\[
+\bipparam{12\text{-}23}(G)
+\le
+k-1
+=
+\chi(G)-1.
+\]
+
+Combining this inequality with the lower bound gives
+\[
+\bipparam{12\text{-}23}(G)=\chi(G)-1.
+\]
 
 \medskip
-\begin{lemma}\label{lem:seg13-le-chi-1}
-Para todo grafo \(G\),
-\[
-\segthirteen(G)\le \chi(G)-1.
-\]
-\end{lemma}
+\noindent\textbf{The parameter \(\bipparam{12\text{-}13}\).}
 
-\begin{proof}
-Sea \(k=\chi(G)\). Fijamos una partición basada en el k-coloreo propio
+We use the same block-order strategy as in Theorem~\ref{thm:bip12-chi}, but now merge the last two color classes.
+Define
 \[
-V \;=\; C_1 \,\dot\cup\, C_2 \,\dot\cup\, \cdots \,\dot\cup\, C_k,
+\mathcal Q'=\{V_1,\dots,V_{k-1}\}
 \]
-donde cada \(C_i\) es independiente.
-
-Se construye una partición de \(V\) en \(k-1\) clases definiendo
+by
 \[
-V_i := C_i \quad \text{para todo } i=1,\dots,k-2,
-\qquad\text{y}\qquad
-V_{k-1} := C_{k-1}\cup C_k.
+V_i:=C_i
+\quad\text{for }i=1,\dots,k-2,
+\qquad
+V_{k-1}:=C_{k-1}\cup C_k.
 \]
-El orden \(\prec\) se define por bloques imponiendo
+We use again the order
 \[
-V_1 \prec V_2 \prec \cdots \prec V_{k-2} \prec V_{k-1},
+C_1\prec C_2\prec\cdots\prec C_k,
 \]
-es decir, para todo \(i<j\), para todo \(u\in V_i\) y todo \(v\in V_j\), se cumple \(u\prec v\).
-Además, dentro del último bloque \(V_{k-1}=C_{k-1}\cup C_k\) se fija el orden
-\[
-C_{k-1} \prec C_k,
-\]
-esto es, primero se ubican todos los vértices de \(C_{k-1}\) y luego todos los de \(C_k\).
-Por último, dentro de cada \(C_i\) se toma un orden arbitrario.
+taking an arbitrary order inside each color class.
 
 
-\begin{figure}[t]
+
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[
   font=\small,
-  oval/.style={draw, rounded corners=12pt, minimum width=16mm, minimum height=7mm, inner sep=1.5pt},
+  oval/.style={
+    draw,
+    rounded corners=12pt,
+    minimum width=16mm,
+    minimum height=7mm,
+    inner sep=1.5pt
+  },
   rowlab/.style={anchor=east}
 ]
 
-\def\dy{0.90cm}   % separación vertical entre clases
-\def\hg{0.60cm}   % “gap” horizontal mínimo entre óvalos
+\def\dy{0.90cm}
+\def\hg{0.60cm}
 
-% Fila 1
+% Row 1
 \node[oval, anchor=west] (C1) at (0,0) {$C_1$};
 \node[rowlab] at ($(C1.west)+(-0.35cm,0)$) {$V_1$};
 
-% Fila 2: arranca después de que termina C1
+% Row 2
 \node[oval, anchor=west] (C2) at ($(C1.east)+(\hg,-\dy)$) {$C_2$};
 \node[rowlab] at ($(C2.west)+(-0.35cm,0)$) {$V_2$};
 
-% Puntos suspensivos
+% Dots
 \node at ($(C2.east)+(1.0cm,-\dy)$) {$\vdots$};
 
-% Fila k-2 (posición ilustrativa, también “arranca más a la derecha”)
+% Row k-2
 \node[oval, anchor=west] (Ck2) at ($(C2.east)+(2.0cm,-2*\dy)$) {$C_{k-2}$};
 \node[rowlab] at ($(Ck2.west)+(-0.35cm,0)$) {$V_{k-2}$};
 
-% Fila k-1: arranca después de que termina C_{k-2}
-\node[oval, anchor=west, minimum width=18mm] (Ckm1) at ($(Ck2.east)+(\hg,-\dy)$) {$C_{k-1}$};
+% Row k-1
+\node[oval, anchor=west, minimum width=18mm] (Ckm1)
+at ($(Ck2.east)+(\hg,-\dy)$) {$C_{k-1}$};
 \node[rowlab] at ($(Ckm1.west)+(-0.35cm,0)$) {$V_{k-1}$};
 
-% C_k: arranca después de que termina C_{k-1}
-\node[oval, anchor=west, minimum width=16mm] (Ck) at ($(Ckm1.east)+(0.80cm,0)$) {$C_k$};
+% Last color class, in the same part as C_{k-1}
+\node[oval, anchor=west, minimum width=16mm] (Ck)
+at ($(Ckm1.east)+(0.80cm,0)$) {$C_k$};
 
-\node[draw=none] at ($(Ckm1.west)+(1.9cm,-0.55cm)$) {$V_{k-1}=C_{k-1}\cup C_k$};
+\node[draw=none] at ($(Ckm1.west)+(1.9cm,-0.55cm)$)
+{$V_{k-1}=C_{k-1}\cup C_k$};
 
 \end{tikzpicture}
-\caption{Esquema diagonal del orden por bloques.}
-\label{fig:esquema-diagonal}
+\caption{Block order and partition used to prove
+\(\bipparam{12\text{-}13}(G)\le\chi(G)-1\).}
+\label{fig:bip12-13-diagonal}
 \end{figure}
 
-
-
-
-
-Comprobemos que la solución \((\prec,\{V_1,\dots,V_{k-1}\})\) evita simultáneamente los patrones
-\(P_1\) y \(P_3\).
-
-\medskip
-\noindent\textbf{Verifiquemos que toda terna evita \(P_1\),}
-sea \(r\prec s\prec t\). Por definición de “evitar”, alcanza con ver que se cumple al menos una
-de las condiciones (1)–(3) para el patrón \(P_1=(A,N,C)\), donde
-\(A=\{\{1,2\},\{2,3\}\}\), \(N=\varnothing\) y \(C=\{1,2\}\).
-Es decir, alcanza con que ocurra alguna de las siguientes:
+Let
 \[
-\text{(1) } r\not\sim s \text{ o } s\not\sim t,
+S'=(\prec,\mathcal Q').
+\]
+We show that \(S'\) avoids both \(\bipparam{12}\) and \(\bipparam{13}\).
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple.
+
+Suppose then that
+\[
+v_1v_2\in E(G)
+\qquad\text{and}\qquad
+v_2v_3\in E(G).
+\]
+Otherwise the triple avoids \(\bipparam{12}\) and \(\bipparam{13}\) by \edgecondition.
+
+\german{una observcion arriba de todo q me deje tomar directamente una tenra ordenada que no tenga edge condition asi
+no repito cada vez esta oracion del otherwise}
+
+We first verify that the triple avoids \(\bipparam{12}\). Suppose, towards a contradiction, that \(v_1\) and \(v_2\)
+are assigned to the same part of \(\mathcal Q'\). Since the parts
+\[
+V_i=C_i
+\qquad\text{for }i=1,\dots,k-2
+\]
+are independent, necessarily
+\[
+v_1,v_2\in V_{k-1}=C_{k-1}\cup C_k.
+\]
+Because \(v_1v_2\in E(G)\) and \(v_1\prec v_2\), the block order implies
+\[
+v_1\in C_{k-1},
 \qquad
-\text{(3) } r \text{ y } s \text{ quedan en clases distintas.}
+v_2\in C_k.
 \]
-(La condición (2) no aplica porque \(N=\varnothing\).)
-
-\smallskip
-Si \(r\) y \(s\) están en clases distintas, entonces vale (3) y la terna evita \(P_1\),
-
-supongamos ahora que \(r\) y \(s\) están en una misma
-clase \(V_i\), si fuera que \(i\in\{1,\dots,k-2\}\), entonces \(V_i=C_i\) es independiente, luego \(r\not\sim s\) y vale (1).
-
-Resta el caso \(i=k-1\), o sea \(r,s\in V_{k-1}=C_{k-1}\cup C_k\).
-Si \(r\) y \(s\) pertenecen al mismo color, nuevamente \(r\not\sim s\) por independencia y vale (1).
-Si pertenecen a colores distintos, como dentro de \(V_{k-1}\) se fijó \(C_{k-1}\prec C_k\) y \(r\prec s\),
-se tiene \(r\in C_{k-1}\) y \(s\in C_k\). En ese caso, todo vértice \(t\) con \(s\prec t\) pertenece a \(C_k\),
-y como \(C_k\) es independiente, se cumple \(s\not\sim t\), es decir, vale (1).
-
-En todos los casos la terna \((r,s,t)\) evita \(P_1\).
-
-
-\medskip
-\noindent\textbf{Verifiquemos que toda terna evita \(P_3\)},
-sea \(r\prec s\prec t\), recordemos que \(P_3=(A,N,C)\) está dado por
+Since \(C_k\) is the last block and \(v_2\prec v_3\), we obtain
 \[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad N=\varnothing,\qquad C=\{1,3\}.
+v_3\in C_k,
 \]
-Como \(N=\varnothing\), la condición (2) nunca aplica. Por lo tanto, para que \((r,s,t)\) \emph{no} evitara \(P_3\)
-tendría que fallar (1) y fallar (3) simultáneamente, es decir:
+contradicting \(v_2v_3\in E(G)\). Therefore \(v_1\) and \(v_2\) lie in different parts, and the triple avoids
+\(\bipparam{12}\) by \colorcondition.
+
+We now verify that the triple avoids \(\bipparam{13}\). Suppose, towards a contradiction, that \(v_1\) and \(v_3\)
+are assigned to the same part of \(\mathcal Q'\).
+
+If they lie in some part \(V_i=C_i\), with \(i\le k-2\), then the block order and
 \[
-r\sim s,\ \ s\sim t
-\qquad\text{y}\qquad
-r \text{ y } t \text{ pertenecen a una misma clase } V_i.
+v_1\prec v_2\prec v_3
 \]
-Entonces, para probar que \((r,s,t)\) evita \(P_3\), alcanza con ver que si \(r\) y \(t\) están en una misma clase,
-no pueden ocurrir a la vez \(r\sim s\) y \(s\sim t\).
+imply that \(v_2\in C_i\). This contradicts the presence of the required edges.
 
-Supongamos \(r,t\in V_i\), como el orden \(\prec\) es por bloques, necesariamente \(s\in V_i\).
+Thus,
+\[
+v_1,v_3\in V_{k-1}=C_{k-1}\cup C_k.
+\]
+Since the two color classes \(C_{k-1}\) and \(C_k\) are consecutive blocks, the intermediate vertex \(v_2\) also
+belongs to \(C_{k-1}\cup C_k\).
 
-\smallskip
-\emph{Caso 1: \(i\in\{1,\dots,k-2\}\).}
-Aquí \(V_i=C_i\) y \(C_i\) es independiente. Luego \(r\not\sim s\) y \(s\not\sim t\), en particular no pueden darse ambas aristas.
+If \(v_2\in C_{k-1}\), then the block order implies \(v_1\in C_{k-1}\), contradicting
+\[
+v_1v_2\in E(G).
+\]
+If \(v_2\in C_k\), then the block order implies \(v_3\in C_k\), contradicting
+\[
+v_2v_3\in E(G).
+\]
 
-\smallskip
-\emph{Caso 2: \(i=k-1\).}
-Entonces \(r,s,t\in V_{k-1}=C_{k-1}\cup C_k\).
-\begin{itemize}
-  \item Si \(r\) y \(t\) caen en el mismo color (ambos en \(C_{k-1}\) o ambos en \(C_k\)), entonces por el orden interno
-  \(C_{k-1}\prec C_k\) también \(s\) cae en ese mismo color, y como dicho color es independiente se tiene
-  \(r\not\sim s\) y \(s\not\sim t\).
-  \item Si \(r\) y \(t\) caen en colores distintos, necesariamente \(r\in C_{k-1}\) y \(t\in C_k\).
-  Si \(s\in C_{k-1}\), entonces \(r\not\sim s\); si \(s\in C_k\), entonces \(s\not\sim t\).
-  En ambos subcasos es imposible que ocurran simultáneamente \(r\sim s\) y \(s\sim t\).
-\end{itemize}
+Therefore \(v_1\) and \(v_3\) lie in different parts of \(\mathcal Q'\), and the triple avoids
+\(\bipparam{13}\) by \colorcondition.
 
-En todos los casos, cuando \(r\) y \(t\) están en la misma clase, al menos una de las aristas \(rs\) o \(st\) falta.
+Hence \(S'\) avoids \(\mathcal B_{12\text{-}13}\), and consequently
+\[
+\bipparam{12\text{-}13}(G)
+\le
+k-1
+=
+\chi(G)-1.
+\]
+Together with the lower bound, this gives
+\[
+\bipparam{12\text{-}13}(G)=\chi(G)-1.
+\]
 
-
+Combining all the equalities, we conclude that
+\[
+\bipparam{12}(G)
+=
+\bipparam{12\text{-}23}(G)
+=
+\bipparam{12\text{-}13}(G)
+=
+\chi(G)-1.
+\]
 \end{proof}
 
-\medskip
-Combinando los Lemas \ref{lem:seg13-ge-chi-1} y \ref{lem:seg13-le-chi-1} se obtiene la igualdad.
-\end{proof}
 
 
 
@@ -3045,7 +3100,7 @@ es decir, el mínimo número de clases de una solución \((\prec,\mathcal Q)\) d
 \end{definition}
 
 
-\german{este paraemtro ya lo definimos en otro lado}
+\german{este paraemtro ya lo definimos en otro lado, P=parametro}
 \begin{definition}[Parámetro \(\sigma\)]
 Sea \(G=(V,E)\) un grafo. Se define
 \[
@@ -4301,88 +4356,6 @@ O(|V(G)|^3).
 
 
 
-\begin{theorem}\label{thm:forrs-given-order-np-complete}
-The \(\forrs\)-Avoidance problem with a given order is NP-complete.
-More precisely, for every fixed \(k\ge 3\), deciding whether there exists a partition into at most \(k\) parts
-that avoids \(\forrs\) with respect to a given order is NP-complete.
-\end{theorem}
-
-
-
-
-\begin{proof}[Proof sketch]
-Reduce from \(k\)-\textsc{Coloring}. Let \(X\) be an instance with
-\(V(X)=\{x_1,\dots,x_n\}\). For each edge \(x_i x_j\in E(X)\), with \(i<j\),
-add a witness vertex \(w_{ij}\), adjacent only to \(x_i\) and \(x_j\), and do
-not keep the original edge \(x_i x_j\). Thus,
-\[
-V(G)=V(X)\cup \{w_{ij}: x_i x_j\in E(X),\ i<j\},
-\]
-\eric{También fijarse si usamos siempre : o mid para conjuntos por comprensión}
-and
-\[
-E(G)=\{x_iw_{ij},x_jw_{ij}: x_i x_j\in E(X),\ i<j\}.
-\]
-The given order is
-\[
-x_1\prec \cdots \prec x_n \prec \text{all vertices } w_{ij}.
-\]
-
-If \(X\) has a proper \(k\)-coloring, keep the colors on the original vertices
-and assign the witnesses arbitrarily. Then each witness \(w_{ij}\) has earlier
-neighbors \(x_i,x_j\), which have different colors.
-
-Conversely, if a \(\forrs\)-avoiding partition exists, then for every edge
-\(x_i x_j\in E(X)\), with \(i<j\), the triple
-\[
-x_i\prec x_j\prec w_{ij}
-\]
-forces \(x_i\) and \(x_j\) to lie in different parts. Hence the restriction to
-\(V(X)\) is a proper \(k\)-coloring of \(X\).
-\end{proof}
-
-
-
-
-
-
-\begin{theorem}\label{thm:forrs-general-np-complete}
-The \(\forrs\)-Avoidance problem is NP-complete.
-More precisely, for every fixed \(k\ge 3\), deciding whether a graph admits a
-\(\forrs\)-avoiding solution with at most \(k\) parts is NP-complete.
-\end{theorem}
-
-
-
-
-
-\begin{proof}[Proof sketch]
-Reduce from \(k\)-\textsc{Coloring}. Given an instance \(X\), for each edge
-\(xy\in E(X)\), add \(k+1\) common witnesses
-\[
-W_{xy}:=\{w^1_{xy},\dots,w^{k+1}_{xy}\},
-\]
-each adjacent only to \(x\) and \(y\), and do not keep the original edge \(xy\).
-Thus,
-\[
-V(G)=V(X)\cup \bigcup_{xy\in E(X)} W_{xy},
-\]
-and
-\[
-E(G)=\{xw^i_{xy},yw^i_{xy}: xy\in E(X),\ 1\le i\le k+1\}.
-\]
-
-If \(X\) has a proper \(k\)-coloring, color the original vertices accordingly,
-assign the witnesses arbitrarily, and order first the original vertices and then
-the witnesses.
-
-Conversely, suppose that a \(\forrs\)-avoiding solution with at most \(k\) parts
-exists. If two adjacent original vertices \(x,y\) were in the same part, say
-\(x\prec y\), then all \(k+1\) witnesses for \(xy\) must appear before \(y\).
-Two of them lie in the same part, and together with \(y\) they form an occurrence
-of \(\forrs\), a contradiction. Hence the restriction to \(V(X)\) is a proper
-\(k\)-coloring of \(X\).
-\end{proof}
 
 
 
@@ -4967,6 +4940,332 @@ realizes the forbidden pattern \(\forst\), contradicting that \(S\) avoids \(\fo
 Thus, for every edge \(xy\in E(X)\), the vertices \(x\) and \(y\) receive different colors. Hence \(X\) is
 \(k\)-colorable.
 \end{proof}
+
+
+
+
+\paragraph{Intuition.}
+As in the previous reductions, in this next reduction we begin by considering the reverse implication: how can we force every valid solution
+of the constructed graph to encode a consistent NAE assignment? For each clause
+\[
+C_j=(x,y,z),
+\]
+we make the three corresponding occurrence vertices form a triangle. Such a triangle cannot be monochromatic in a
+solution avoiding \(\operatorname{for}_{23}\). Indeed, if its vertices are ordered as
+\[
+v_1\prec v_2\prec v_3,
+\]
+then
+\[
+v_1\sim v_3
+\qquad\text{and}\qquad
+v_2\sim v_3,
+\]
+so \(v_2\) and \(v_3\) cannot lie in the same part. Hence every clause triangle contains both colors, exactly as
+required by the NAE condition.
+
+It remains to ensure that all occurrences of the same variable receive the same truth value. Equality gadgets are
+commonly used in reductions in which several copies of the same variable are created and must be kept consistent.
+Here, however, the gadget \(EQ(a,b)\) is specifically designed for \(\operatorname{for}_{23}\). We add four internal
+vertices \(p,q,r,s\), make each of them adjacent to both terminals \(a\) and \(b\), and add the edges
+\[
+ps
+\qquad\text{and}\qquad
+qr.
+\]
+The construction exploits the fact that, in a valid solution, a vertex can share its part with at most its first
+earlier neighbor. If \(a\) and \(b\) had different colors, this local restriction would force at least three of
+\(p,q,r,s\) to have the same color as one of the terminals. Consequently, one of the edges \(ps\) or \(qr\), together
+with that terminal, would form a monochromatic triangle, contradicting the avoidance of
+\(\operatorname{for}_{23}\). Thus every valid solution satisfies
+\[
+c(a)=c(b).
+\]
+Conversely, when the terminals have the same color, their coloring can be extended to the internal vertices of the
+gadget. Therefore \(EQ(a,b)\) translates the ordering restrictions imposed by \(\operatorname{for}_{23}\) into an
+equality constraint between its terminals.
+
+
+\begin{theorem}\label{thm:for23-k2-np-complete}
+The problem of deciding whether
+\[
+\forparam{23}(G)\le 2
+\]
+is NP-complete.
+\end{theorem}
+\german{no se si quiero decir el for23 avoidance problem with k=2 is np complete}
+
+\begin{proof}
+The problem belongs to NP: a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition of
+\(V(G)\) into at most two parts. One can verify in polynomial time whether the resulting solution avoids
+\(\operatorname{for}_{23}\).
+
+We prove NP-hardness by reducing from \textsc{Monotone NAE-3SAT}. Let
+\[
+\Phi=C_1\land\cdots\land C_m
+\]
+be an instance in which each clause contains exactly three distinct positive variables.
+
+We first record a local property of \(\operatorname{for}_{23}\).
+
+\medskip
+\noindent\textbf{Local rule.}
+Let
+\[
+u_1\prec u_2\prec\cdots\prec u_\ell\prec t
+\]
+be the neighbors of a vertex \(t\) that appear before \(t\) in the order.
+Then
+\[
+c(u_i)\neq c(t)
+\qquad\text{for every }i\ge 2.
+\]
+
+Indeed, if \(c(u_i)=c(t)\) for some \(i\ge2\), then
+\[
+u_1\prec u_i\prec t,
+\qquad
+u_1\sim t,
+\qquad
+u_i\sim t.
+\]
+Thus the ordered triple \((u_1,u_i,t)\) satisfies neither \edgecondition{} nor \colorcondition{} for
+\(\operatorname{for}_{23}\), a contradiction.
+
+Equivalently, a vertex may share its part with at most its first earlier neighbor.
+
+\medskip
+\noindent\textbf{Equality gadget.}
+Given two existing vertices \(a\) and \(b\), we construct a gadget \(EQ(a,b)\) by adding four private vertices
+\[
+p,q,r,s.
+\]
+Each of \(a\) and \(b\) is adjacent to all four internal vertices, and we also add the edges
+\[
+ps
+\qquad\text{and}\qquad
+qr.
+\]
+No other edges are added inside the gadget; in particular, \(a\) and \(b\) are not adjacent.
+
+We claim that every solution with two parts that avoids \(\operatorname{for}_{23}\) satisfies
+\[
+c(a)=c(b).
+\]
+
+Suppose, towards a contradiction, that
+\[
+c(a)\neq c(b).
+\]
+Without loss of generality, assume
+\[
+a\prec b.
+\]
+
+Every internal vertex \(u\in\{p,q,r,s\}\) appearing after \(b\) must have the same color as \(a\). Indeed,
+\[
+a\prec b\prec u,
+\qquad
+a\sim u,
+\qquad
+b\sim u,
+\]
+and avoiding \(\operatorname{for}_{23}\) forces \(c(b)\neq c(u)\). Since only two colors are available and
+\(c(a)\neq c(b)\), it follows that \(c(u)=c(a)\).
+
+Moreover, at most one internal vertex appearing before \(b\) can have color \(c(b)\). Otherwise, two such vertices
+could be ordered as
+\[
+u\prec v\prec b.
+\]
+Both are adjacent to \(b\), and \(c(v)=c(b)\), so the triple \((u,v,b)\) would satisfy neither
+\edgecondition{} nor \colorcondition{}.
+
+Consequently, at least three of the four internal vertices have color \(c(a)\). Since the edges
+\[
+ps
+\qquad\text{and}\qquad
+qr
+\]
+partition the four internal vertices into two pairs, one of these edges has both endpoints colored \(c(a)\).
+Together with \(a\), its endpoints induce a monochromatic triangle. Regardless of the relative order of the three
+vertices, this triangle contains an occurrence of \(\operatorname{for}_{23}\), a contradiction.
+
+Therefore,
+\[
+c(a)=c(b).
+\]
+
+Notice also that the gadget is compatible with equal terminal colors. If
+\[
+c(a)=c(b)=\alpha,
+\]
+we may assign the opposite color \(\beta\) to \(p,q,r,s\), and the local order
+\[
+p\prec q\prec b\prec r\prec s\prec a
+\]
+avoids \(\operatorname{for}_{23}\) inside the gadget.
+
+\medskip
+\noindent\textbf{Construction of \(G_\Phi\).}
+
+For every variable \(x\) of \(\Phi\), we create one vertex
+\[
+v_x.
+\]
+
+For every occurrence of \(x\) in a clause \(C_j\), we create a distinct occurrence vertex
+\[
+o_{j,x}.
+\]
+We then add a private copy of the equality gadget
+\[
+EQ(v_x,o_{j,x}).
+\]
+For each occurrence vertex \(o=o_{j,x}\), we denote the four internal vertices of its equality gadget by
+\[
+p_o,q_o,r_o,s_o.
+\]
+
+Finally, for every clause
+\[
+C_j=(x,y,z),
+\]
+we make its three occurrence vertices
+\[
+o_{j,x},\qquad o_{j,y},\qquad o_{j,z}
+\]
+induce a triangle.
+
+No other vertices or edges are added.
+
+We claim that
+\[
+\Phi\text{ is NAE-satisfiable}
+\quad\Longleftrightarrow\quad
+\forparam{23}(G_\Phi)\le2.
+\]
+
+\medskip
+\noindent\textbf{(\(\Leftarrow\))}
+Suppose that \(G_\Phi\) admits a solution
+\[
+S=(\prec,\mathcal Q)
+\]
+with at most two parts that avoids \(\operatorname{for}_{23}\). We identify the two parts with the two Boolean
+values and define
+\[
+\tau(x):=c(v_x).
+\]
+
+By the equality-gadget property, for every occurrence of \(x\) in \(C_j\),
+\[
+c(o_{j,x})=c(v_x)=\tau(x).
+\]
+Thus all occurrences of the same variable receive a consistent value.
+
+Consider a clause
+\[
+C_j=(x,y,z).
+\]
+Its three occurrence vertices induce a triangle. Suppose that they all had the same color, and write them in their
+relative order as
+\[
+u\prec v\prec w.
+\]
+Since they form a triangle,
+\[
+u\sim w
+\qquad\text{and}\qquad
+v\sim w.
+\]
+Moreover, \(v\) and \(w\) have the same color. Hence the triple satisfies neither \edgecondition{} nor
+\colorcondition{} for \(\operatorname{for}_{23}\), a contradiction.
+
+Therefore the occurrence vertices of each clause are not all assigned the same color. Since these colors coincide
+with the values of the corresponding variables,
+\[
+\tau(x),\tau(y),\tau(z)
+\]
+are not all equal. Thus every clause is NAE-satisfied, and \(\Phi\) is NAE-satisfiable.
+
+\medskip
+\noindent\textbf{(\(\Rightarrow\))}
+Suppose now that \(\Phi\) admits a NAE-satisfying assignment
+\[
+\tau:V(\Phi)\to\{0,1\}.
+\]
+
+We define a coloring of \(G_\Phi\) by
+\[
+c(v_x):=\tau(x)
+\]
+and
+\[
+c(o_{j,x}):=\tau(x).
+\]
+For each occurrence vertex \(o=o_{j,x}\), we assign the opposite color to the internal vertices of its equality
+gadget:
+\[
+c(p_o)=c(q_o)=c(r_o)=c(s_o):=1-\tau(x).
+\]
+
+For each occurrence vertex \(o\), define the block
+\[
+B_o:
+\qquad
+p_o\prec q_o\prec o\prec r_o\prec s_o.
+\]
+
+Consider a clause \(C_j\). Since \(\tau\) NAE-satisfies \(C_j\), exactly two of its occurrence vertices have one
+color and the third has the opposite color. Denote the two occurrence vertices with the majority color by
+\(o_1,o_2\), and the remaining occurrence vertex by \(o_3\). We order the three blocks of the clause as
+\[
+B_{o_1}\prec B_{o_2}\prec B_{o_3}.
+\]
+
+We order the clauses arbitrarily. After all occurrence blocks, we place all variable vertices \(v_x\), also in
+arbitrary order.
+
+We verify the local rule for every vertex.
+
+\begin{itemize}
+\item The vertices \(p_o\) and \(q_o\) have no earlier neighbors.
+
+\item The first majority occurrence \(o_1\) has as earlier neighbors only \(p_{o_1}\) and \(q_{o_1}\), both of
+the color opposite to \(o_1\).
+
+\item The second majority occurrence \(o_2\) has \(o_1\) as its first earlier neighbor. This vertex has the same
+color as \(o_2\). Its remaining earlier neighbors \(p_{o_2}\) and \(q_{o_2}\) have the opposite color.
+
+\item The minority occurrence \(o_3\) has as earlier neighbors the two majority occurrence vertices and
+\(p_{o_3},q_{o_3}\). All of them have the color opposite to \(o_3\).
+
+\item The earlier neighbors of \(r_o\) are \(q_o\) and \(o\), in this order. The vertex \(q_o\) has the same
+color as \(r_o\), whereas \(o\) has the opposite color.
+
+\item The earlier neighbors of \(s_o\) are \(p_o\) and \(o\), in this order. The vertex \(p_o\) has the same
+color as \(s_o\), whereas \(o\) has the opposite color.
+
+\item Every variable vertex \(v_x\) appears after all occurrence blocks. Its earlier neighbors are precisely
+internal vertices belonging to equality gadgets associated with occurrences of \(x\), and all of them have the
+color opposite to \(v_x\).
+\end{itemize}
+
+Thus, for every vertex, only its first earlier neighbor may have the same color. By the local rule, the resulting
+order and coloring avoid \(\operatorname{for}_{23}\). Therefore,
+\[
+\forparam{23}(G_\Phi)\le2.
+\]
+
+The construction has polynomial size and can be performed in polynomial time. Hence the problem is NP-hard.
+Since it also belongs to NP, it is NP-complete.
+\german{le pase la idea al chat, no lei bien a fondo esta demo aun, queda por hacer}
+\end{proof}
+
+
+
+
 
 
 
