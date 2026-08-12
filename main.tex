@@ -109,7 +109,7 @@
 % ============================================================
 
 \newcommand{\edgecondition}{%
-  \emph{\hyperref[def:avoid:cond:edge]{edge condition}}\xspace
+  \hyperref[def:avoid:cond:edge]{(edge condition)}\xspace
 }
 
 \newcommand{\nonedgecondition}{%
@@ -547,15 +547,15 @@ G\in\mathcal C_P.
 
 \begin{proof}
 By definition, \(\chi_P(G)=1\) if and only if the one-part partition
-\[
+\(
 \{V(G)\}
-\]
+\)
 is a \(P\)-coloring of \(G\). This holds if and only if
-\[
+\(
 G\in\mathcal C_P.
-\]
+\)
 \end{proof}
-\german{hace falta la proof?}
+\german{hace falta la proof?}\eric{Nop}
 
 
 
@@ -641,7 +641,7 @@ denotes the family
 \[
 \{P_{12},P_{13},P_{23}\}.
 \]
-\end{remark}
+\end{remark}\eric{No hace falta}
 
 \begin{definition}[Notation for the induced parameters]
 \label{def:notation-induced-parameters}
@@ -779,7 +779,7 @@ a solution of value one is precisely a one-part solution. Hence
 \quad\Longleftrightarrow\quad
 G\in\mathcal C_P.
 \]
-\end{proof}
+\end{proof}\eric{Nah}
 
 \begin{lemma}[Monotonicity under inclusion of pattern families]
 \label{lem:monotone-patterns}
@@ -1114,6 +1114,7 @@ P_{12\text{-}23\text{-}13}(G)\le 2.
 \subsubsection{Special cases according to \texorpdfstring{\(|C|\)}{|C|}}
 \label{subsubsec:special-cases-C}
 
+\eric{Ponele lemiiita pobre}
 \begin{observation}[The case \texorpdfstring{\(|C|=1\)}{|C|=1}]
 \label{obs:color-set-size-one}
 Let
@@ -1742,8 +1743,72 @@ exists if and only if the constraint graph is \(2\)-colorable. A graph is
 \(2\)-colorable if and only if it is bipartite.
 \end{proof}
 
+\begin{theorem}[Polynomial-time algorithm for two parts]
+\label{thm:given-order-two-parts-polynomial}
+Let \(\mathcal P\) be a fixed finite family of patterns such that
+\[
+|C|=2
+\qquad
+\text{for every }(A,N,C)\in\mathcal P.
+\]
+Then the \(\mathcal P\)-Avoidance problem with a given order, restricted
+to instances with
+\(
+k=2,
+\)
+can be solved in time
+\(
+O\bigl(|V(G)|^3\bigr).
+\)
+\end{theorem}
+
+\begin{proof}
+Algorithm~\ref{alg:two-parts-given-order} constructs precisely the
+constraint graph
+\(
+R_{\mathcal P}(G,\prec)
+\)
+from Definition~\ref{def:constraint-graph}. By
+Corollary~\ref{cor:constraint-graph-two-parts}, the algorithm returns
+\textbf{YES} if and only if the given ordered graph admits a valid partition
+into at most two parts.
+
+It remains to analyze its running time. Let
+\(
+n:=|V(G)|.
+\)
+There are
+\(
+O(n^3)
+\)
+ordered triples
+\(
+v_1\prec v_2\prec v_3.
+\)
+For each triple and each pattern in \(\mathcal P\), testing the required
+edges and non-edges takes constant time when \(G\) is represented by an
+adjacency matrix. Since \(\mathcal P\) is fixed, the construction of \(R\)
+takes
+\(
+O(n^3)
+\)
+time.
+\german{tema complejidad podemos verlo mejor}
+The graph \(R\) has \(n\) vertices and at most \(O(n^2)\) edges.
+Bipartiteness can be tested by BFS or DFS in
+\[
+O\bigl(|V(R)|+|E(R)|\bigr)
+\subseteq
+O(n^2)
+\]
+time. Therefore, the total running time is
+\(
+O(n^3).
+\)
+\end{proof}
+
 \begin{algorithm}[ht]
-\caption{\textsc{Two-Parts-Given-Order}}
+\caption{\textsc{Two parts given order}}
 \label{alg:two-parts-given-order}
 \begin{algorithmic}[1]
 \Require A graph \(G\), a total order \(\prec\) of \(V(G)\), and a finite
@@ -1775,70 +1840,6 @@ E(R)\gets\varnothing.
 \EndIf
 \end{algorithmic}
 \end{algorithm}
-
-\begin{theorem}[Polynomial-time algorithm for two parts]
-\label{thm:given-order-two-parts-polynomial}
-Let \(\mathcal P\) be a fixed finite family of patterns such that
-\[
-|C|=2
-\qquad
-\text{for every }(A,N,C)\in\mathcal P.
-\]
-Then the \(\mathcal P\)-Avoidance problem with a given order, restricted
-to instances with
-\[
-k=2,
-\]
-can be solved in time
-\[
-O\bigl(|V(G)|^3\bigr).
-\]
-\end{theorem}
-
-\begin{proof}
-Algorithm~\ref{alg:two-parts-given-order} constructs precisely the
-constraint graph
-\[
-R_{\mathcal P}(G,\prec)
-\]
-from Definition~\ref{def:constraint-graph}. By
-Corollary~\ref{cor:constraint-graph-two-parts}, the algorithm returns
-\textbf{YES} if and only if the given ordered graph admits a valid partition
-into at most two parts.
-
-It remains to analyze its running time. Let
-\[
-n:=|V(G)|.
-\]
-There are
-\[
-O(n^3)
-\]
-ordered triples
-\[
-v_1\prec v_2\prec v_3.
-\]
-For each triple and each pattern in \(\mathcal P\), testing the required
-edges and non-edges takes constant time when \(G\) is represented by an
-adjacency matrix. Since \(\mathcal P\) is fixed, the construction of \(R\)
-takes
-\[
-O(n^3)
-\]
-time.
-\german{tema complejidad podemos verlo mejor}
-The graph \(R\) has \(n\) vertices and at most \(O(n^2)\) edges.
-Bipartiteness can be tested by BFS or DFS in
-\[
-O\bigl(|V(R)|+|E(R)|\bigr)
-=
-O(n^2)
-\]
-time. Therefore, the total running time is
-\[
-O(n^3).
-\]
-\end{proof}
 
 \eric{Hacer analogía con el $G_<$ de thinness y proper thinness.}
 \german{nani?}
@@ -1907,7 +1908,7 @@ N_{\biplabel}=\varnothing.
 \smallskip
 \(\bipparam{12}\)
 \end{center}
-
+\eric{Mencionar que estamos usando la notacion de la def XX}
 \begin{remark}
   This is equivalent to the \(\bipparam{23}\) parameter by symmetry.
 \end{remark}
@@ -2248,8 +2249,6 @@ Combining both inequalities, we conclude that
 \smallskip
 \(\bipparam{13}\)
 \end{center}
-
-
 
 
 
