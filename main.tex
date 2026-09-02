@@ -123,11 +123,11 @@
 }
 
 \newcommand{\nonedgecondition}{%
-  \emph{\hyperref[def:avoid:cond:nonedge]{non-edge condition}}\xspace
+  \hyperref[def:avoid:cond:nonedge]{(non-edge condition)}\xspace
 }
 
 \newcommand{\colorcondition}{%
-  \emph{\hyperref[def:avoid:cond:color]{color condition}}\xspace
+  \hyperref[def:avoid:cond:color]{(color condition)}\xspace
 }
 
 
@@ -487,6 +487,14 @@ corresponding colored patterns.
 
 \section{Preliminaries}\label{sec:preliminaries}
 
+This section introduces the general framework used throughout the paper.
+We first define colored forbidden patterns and the notion of avoidance.
+We then associate with each pattern a graph parameter and a
+corresponding graph class. Finally, we introduce the three decision problems
+studied in the paper and establish a collection of structural and algorithmic
+results that will be repeatedly used in the subsequent sections.
+
+
 \subsection{Patterns, colored patterns and solutions}
 \label{subsec:patterns}
 \begin{definition}[Colored pattern on three vertices]
@@ -601,53 +609,54 @@ The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
 \subsection{Associated graph classes and induced parameters}
 \label{subsec:induced-parameters}
 
-
-
-
+Having defined solutions and avoidance, we associate a graph parameter with
+each family of colored patterns by minimizing the number of parts in a valid
+solution.
 
 \begin{definition}[Parameter induced by a family of colored patterns]
-\label{def:parameter-induced-by-patterns}
-
+\label{def:avoidance-parameter}
 Let \(\mathcal P\) be a finite family of colored patterns such that the
 color set of every pattern in \(\mathcal P\) has size at least two.
 
 For a graph \(G\), we define
 \[
 \mathcal P(G)
-:=
-\min
-\left\{
-|\mathcal Q| :
-(\prec,\mathcal Q)
-\text{ is a solution for \(G\) that avoids }\mathcal P
-\right\}.
 \]
+as the minimum value of a solution
+\[
+S=(\prec,\mathcal Q)
+\]
+that avoids every pattern in \(\mathcal P\) in \(G\).
 
 When \(\mathcal P=\{P\}\) consists of a single pattern, we simply write
 \[
-P(G)
+P(G).
 \]
 
 \end{definition}
 
 The restriction on the size of the color sets guarantees that
-\(\mathcal P(G)\) is always well defined. Indeed, the partition of
-\(V(G)\) into singleton parts, together with any total order, avoids
-every pattern in \(\mathcal P\) by the \colorcondition{}.
+\(\mathcal P(G)\) is always well defined. Indeed, the partition of \(V(G)\)
+into singleton parts, together with any total order, avoids every pattern in
+\(\mathcal P\) by the \colorcondition{}.
 
+\medskip
 
-
-
+The value-one case provides a natural way to identify the graph class
+generalized by an avoidance parameter. For a single pattern \(P\), this is
+the class of graphs that admit an order avoiding \(P\) when all vertices are
+placed in one part. Although this interpretation is most natural for a single
+pattern, we define the associated class for an arbitrary family so that the
+framework extends uniformly to families of patterns.
 
 \begin{definition}[Graph class associated with a family of patterns]
 \label{def:associated-class}
-
 Let \(\mathcal P\) be a finite family of colored patterns. We denote by
 \[
 \mathcal C_{\mathcal P}
 \]
-the class of graphs \(H\) for which there exists a total order
-\(\prec\) of \(V(H)\) such that the one-part solution
+the class of graphs \(H\) for which there exists a total order \(\prec\) of
+\(V(H)\) such that the one-part solution
 \[
 \bigl(\prec,\{V(H)\}\bigr)
 \]
@@ -657,69 +666,20 @@ When \(\mathcal P=\{P\}\) consists of a single pattern, we simply write
 \[
 \mathcal C_P
 \]
-instead of \(\mathcal C_{\{P\}}\).
+
 \end{definition}
 
+\medskip
 
-\german{cambie algunas defs que estaban para un patron, a familia de patrones, entiendo que los resueltados que hablan de flias
-valen tmb para cuando son mixtas}
-\german{justo la ce Cp tiene poco sentido hacelro para flias, pero como defini P-coloring para flias, necesito deifnir Cp para flias}
-\german{normalmente importa el caso que es un singleton, pero no me aprece mal definirlo en generaly de ultima instnaciarlo cuando P es singleton}
-\begin{definition}[Class associated with a colored pattern]
-\label{def:associated-class}
-
-Let
-\[
-P=(A,N,C)
-\]
-be a colored pattern. We denote by \(\mathcal C_P\) the class of graphs
-\(H\) for which there exists a total order \(\prec\) of \(V(H)\) such that
-the one-part solution
-\[
-\bigl(\prec,\{V(H)\}\bigr)
-\]
-avoids \(P\) in \(H\).
-
-Equivalently, \(H\in\mathcal C_P\) if its vertices admit a total order
-\(\prec\) such that every ordered triple
-\[
-v_1\prec v_2\prec v_3
-\]
-avoids \(P\) by the \edgecondition{} or the \nonedgecondition{}.
-
-Indeed, since the partition consists of a single part, all three vertices
-of every ordered triple lie in the same part, and therefore the
-\colorcondition{} never holds.
-\end{definition}
-
-
-
-
-\begin{observation}
-\label{obs:associated-class-independent-of-color}
-Let
-\[
-P=(A,N,C)
-\]
-be a colored pattern, and let
-\[
-P^{\circ}:=(A,N,\varnothing)
-\]
-be its underlying uncolored pattern. Then
-\[
-\mathcal C_P=\mathcal C_{P^{\circ}}.
-\]
-In particular, the associated class depends only on the edge and
-non-edge requirements \(A\) and \(N\), and not on the color set \(C\).
-\end{observation}
-
-
-
-
+The associated class also gives rise to a natural partition parameter.
+Instead of requiring a single global order that works simultaneously for all
+parts, we may only require each part to induce a graph in
+\(\mathcal C_{\mathcal P}\). Equivalently, each part may use its own order
+to avoid \(\mathcal P\). This separates the partition requirement from the
+global ordering requirement present in \(\mathcal P(G)\).
 
 \begin{definition}[\(\mathcal P\)-coloring and \(\mathcal P\)-chromatic number]
-\label{def:P-family-coloring}
-
+\label{def:P-coloring}
 Let \(\mathcal P\) be a finite family of colored patterns.
 
 A \emph{\(\mathcal P\)-coloring} of a graph \(G\) is a partition
@@ -733,6 +693,8 @@ G[V_i]\in\mathcal C_{\mathcal P}
 \text{for every }i=1,\dots,k.
 \]
 
+No condition is imposed on the edges whose endpoints lie in different parts.
+
 The \emph{\(\mathcal P\)-chromatic number} of \(G\), denoted by
 \[
 \chi_{\mathcal P}(G),
@@ -741,140 +703,126 @@ is the minimum number of parts in a \(\mathcal P\)-coloring of \(G\).
 
 When \(\mathcal P=\{P\}\), we simply write \(P\)-coloring and
 \[
-\chi_P(G)
+\chi_P(G).
 \]
-instead of \(\chi_{\{P\}}(G)\).
+
 \end{definition}
-\german{aca tengo las dos}
 
+\begin{observation}[The value-one case]
+\label{obs:value-one}
 
-
-\begin{definition}[\(P\)-coloring and \(P\)-chromatic number]
-Let \(P=(A,N,C)\) be a colored pattern, and let \(\mathcal C_P\) be its associated graph class.
-
-A \emph{\(P\)-coloring} of a graph \(G\) is a partition
+Let \(\mathcal P\) be a finite family of colored patterns for which
+\(\mathcal P(G)\) is defined. Then, for every graph \(G\),
 \[
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\]
-such that
-\[
-G[V_i]\in\mathcal C_P
-\qquad
-\text{for every } i=1,\dots,k.
-\]
-No condition is imposed on the edges whose endpoints lie in different parts of the partition.
-
-The \emph{\(P\)-chromatic number} of \(G\), denoted by
-\[
-\chi_P(G),
-\]
-is the minimum number of parts in a \(P\)-coloring of \(G\). Equivalently,
-\[
-\chi_P(G)
-=
-\min\left\{
-k:
-V(G)=V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k
-\text{ and }
-G[V_i]\in\mathcal C_P
-\text{ for every } i=1,\dots,k
-\right\}.
-\]
-\end{definition}
-\eric{Podemos llamarla $\chi_P(G)$ para un patrón coloreado, y decir que es la partición de $G$ en clases en la que cada una evita $P$, sin importar las aristas entre clases.}
-
-
-\eric{Poner esto como remark u observacion despues de definir CP chromatic number.}
-
-\begin{observation}[Value one of the \(P\)-chromatic number]
-\label{obs:chiP-value-one}
-Let \(P=(A,N,C)\) be a pattern. Then, for every graph \(G\),
-\[
-\chi_P(G)=1
+\mathcal P(G)=1
 \quad\Longleftrightarrow\quad
-G\in\mathcal C_P.
+G\in\mathcal C_{\mathcal P}
+\quad\Longleftrightarrow\quad
+\chi_{\mathcal P}(G)=1.
 \]
 \end{observation}
 
 
 
 
+Before introducing the colored versions that will be studied throughout the
+paper, we dispose of the case in which the color set has size one.
 
 
 
-\subsection{Notation for colored versions and induced parameters}
+\begin{lemma}[The case \texorpdfstring{\(|C|=1\)}{|C|=1}]
+\label{lem:color-set-size-one}
+Let
+\[
+P=(A,N,C)
+\]
+be a pattern with
+\[
+|C|=1,
+\]
+and let
+\[
+P^{\circ}:=(A,N,\varnothing)
+\]
+be its underlying uncolored pattern.
+
+Then, for every graph \(G\), every total order \(\prec\) of \(V(G)\),
+and every partition \(\mathcal Q\) of \(V(G)\),
+\[
+(\prec,\mathcal Q)\text{ avoids }P\text{ in }G
+\quad\Longleftrightarrow\quad
+(\prec,\mathcal Q)\text{ avoids }P^{\circ}\text{ in }G.
+\]
+\end{lemma}
+
+\begin{proof}
+Since \(|C|=1\), there are no two distinct indices \(a,b\in C\).
+Therefore, the \colorcondition{} never holds.
+
+Hence an ordered triple avoids \(P\) if and only if it avoids \(P\)
+by the \edgecondition{} or the \nonedgecondition{}. Since \(P\) and
+\(P^{\circ}\) have the same sets \(A\) and \(N\), these are exactly
+the conditions for avoiding \(P^{\circ}\).
+\end{proof}
+
+
+Thus, when \(|C|=1\), the color set imposes no effective constraint, and the
+pattern behaves exactly as its uncolored version.
+
+
+\subsection{Notation for colored versions and families}
 \label{subsec:colored-notation}
 
-\begin{definition}[Colored versions and families associated with a pattern]
-\label{def:colored-versions-and-families}
 Let
 \[
 P=(A,N,\varnothing)
 \]
-be an uncolored pattern.
-
-For every set
+be an uncolored pattern. For \(I\subseteq\{1,2,3\}\), we write
 \[
-I\subseteq\{1,2,3\},
+P_I
 \]
-we define the colored version
+for the colored pattern obtained from \(P\) by using \(I\) as its color set;
+that is,
 \[
-P_I:=(A,N,I).
-\]
-
-In subscripts, we omit braces and commas. Thus, for example,
-\[
-P_{12}:=P_{\{1,2\}}=(A,N,\{1,2\}),
-\]
-\[
-P_{13}:=P_{\{1,3\}}=(A,N,\{1,3\}),
-\]
-and
-\[
-P_{123}:=P_{\{1,2,3\}}=(A,N,\{1,2,3\}).
+P_I=(A,N,I).
 \]
 
-Given distinct sets
+In subscripts, braces and commas are omitted. Thus, for example,
+\[
+P_{12}=(A,N,\{1,2\}),
+\qquad
+P_{13}=(A,N,\{1,3\}),
+\qquad
+P_{123}=(A,N,\{1,2,3\}).
+\]
+
+For distinct sets
 \[
 I_1,\dots,I_\ell\subseteq\{1,2,3\},
-\qquad \ell\ge 2,
+\qquad \ell\ge2,
 \]
 we use the hyphenated notation
 \[
 P_{I_1\text{-}\cdots\text{-}I_\ell}
 :=
-\{P_{I_1},\dots,P_{I_\ell}\}
+\{P_{I_1},\dots,P_{I_\ell}\}.
 \]
-for the family formed by the corresponding colored versions of \(P\).
-
 For example,
 \[
 P_{12\text{-}13}
 =
 \{P_{12},P_{13}\},
-\]
-\[
-P_{12\text{-}23}
-=
-\{P_{12},P_{23}\},
-\]
-and
-\[
+\qquad
 P_{12\text{-}13\text{-}23}
 =
 \{P_{12},P_{13},P_{23}\}.
 \]
 
+This notation is reserved for families whose members are colored versions
+of the same underlying uncolored pattern \(P\). A general family of colored
+patterns, denoted by \(\mathcal P\), may also contain patterns with different
+underlying uncolored patterns.
 
-A family of colored patterns may contain patterns with different underlying
-uncolored patterns. Families of the form
-\[
-P_{I_1\text{-}\cdots\text{-}I_\ell}
-\]
-are the particular case in which all patterns are colored versions of the
-same uncolored pattern \(P\).
-
-\end{definition}
 \german{tal vez  agregar a estas notaciones, el caso cuando cruzamos flias}
 
 
@@ -886,8 +834,30 @@ same uncolored pattern \(P\).
 \label{subsec:decision-problems}
 
 
-Let \(\mathcal P\) be a family of colored patterns. We consider the following three decision problems.
+We now turn to the computational problems associated with the avoidance
+framework. A solution has two components: a total order and a partition of
+the vertex set. Besides the general problem, in which both components must
+be found, we consider two restricted variants obtained by fixing one of
+them. This allows us to study separately the difficulty of finding a
+suitable partition for a prescribed order and that of finding a suitable
+order for a prescribed partition.
+
+Let \(\mathcal P\) be a fixed finite family of colored patterns. We consider
+the following three decision problems.
  
+
+
+\begin{problem}[\(\mathcal P\)-Avoidance]
+\textbf{Input:} A graph \(G\) and an integer \(k\).
+
+\textbf{Question:} Is
+\[
+\mathcal P(G)\le k?
+\]
+\end{problem}
+
+\german{creo que lo correcto es la de arriba, no se si son lo mismo o no, creeeeo que no son =}
+
 \begin{problem}[\(\mathcal P\)-Avoidance]
 \textbf{Input:} A graph \(G\) and an integer \(k\).
 
@@ -970,94 +940,117 @@ is NP-complete.
 
 
 
+The two restricted variants are introduced mainly as tools for understanding
+the forest-pattern problems studied later in the paper. Our initial motivation
+was to isolate the two components of a solution, the order and the partition,
+in the hope of gaining insight into the unrestricted problem.
+
+As we will see, fixing the order often serves this purpose: several reductions
+for the given-order problem extend naturally to the unrestricted setting once
+the construction is modified to account for the freedom in choosing the order.
+The given-partition problem behaves differently. Rather than consistently
+serving as an intermediate step toward the unrestricted problem, it reveals
+a separate algorithmic aspect of the framework, with a complexity that may
+differ substantially from that of the unrestricted problem.
+
+
+
 \subsection{General structural results}
 \label{subsec:general-structural-results}
 
 
 
+We now present some general properties of the parameters introduced above.
+These results will be used repeatedly in the study of the specific pattern
+families considered later.
 
-\begin{corollary}[Value one of the avoidance parameter]
-\label{cor:minClasses-value-one}
-Let \(P=(A,N,C)\) be a pattern with \(|C|\ge2\). Then, for every graph \(G\),
-\[
-\minClases_P(G)=1
-\quad\Longleftrightarrow\quad
-\chi_P(G)=1
-\quad\Longleftrightarrow\quad
-G\in\mathcal C_P.
-\]
-\end{corollary}
 
+
+\subsubsection{Monotonicity properties}
+\label{subsubsec:monotonicity}
+
+We first record two basic monotonicity properties that will be useful later.
+The first concerns families of forbidden patterns: adding more patterns can
+only make the avoidance condition more restrictive.
 
 
 \begin{lemma}[Monotonicity under inclusion of pattern families]
 \label{lem:monotone-patterns}
-Let \(\mathcal P\) and \(\mathcal P'\) be two finite families of patterns.
-If
+
+Let \(\mathcal P\) and \(\mathcal P'\) be finite families of colored patterns
+such that
 \[
-\mathcal P\subseteq\mathcal P',
+\mathcal P\subseteq\mathcal P'.
 \]
-then, for every graph \(G\),
+Then, for every graph \(G\),
 \[
-\mathcal P(G)
-\le
-\mathcal P'(G).
+\mathcal P(G)\le \mathcal P'(G).
 \]
 \end{lemma}
 
 \begin{proof}
-Every solution that avoids all the patterns in \(\mathcal P'\) also avoids all the patterns in
-\(\mathcal P\), since
+Every solution that avoids \(\mathcal P'\) also avoids \(\mathcal P\).
+Hence every feasible solution for \(\mathcal P'(G)\) is also feasible for
+\(\mathcal P(G)\), and therefore
 \[
-\mathcal P\subseteq\mathcal P'.
+\mathcal P(G)\le \mathcal P'(G).
 \]
-Therefore, the set of feasible solutions for
-\(\mathcal P(G)\) is contained in the set of feasible solutions for
-\(\mathcal P'(G)\).
 \end{proof}
 
 
 
+We can also compare individual patterns. In this case, enlarging the sets of
+required edges, forbidden edges, or colored positions makes the pattern
+easier to avoid. The following order captures this relation.
+
+
 \begin{definition}[Order on patterns]
 \label{def:pat-order}
+
 Let
 \[
 P=(A,N,C)
 \qquad\text{and}\qquad
 P'=(A',N',C')
 \]
-be two patterns. We write
+be two colored patterns. We write
 \[
 P\preceq P'
 \]
 if
-\[
+\(
 A\subseteq A',
 \qquad
 N\subseteq N',
 \qquad
 C\subseteq C'.
-\]
+\)
 \end{definition}
 
 
 \begin{lemma}[Monotonicity with respect to \(\preceq\)]
 \label{lem:pat-monotone}
-Let
+
+Let \(P\) and \(P'\) be colored patterns such that
 \[
-P=(A,N,C)
-\qquad\text{and}\qquad
-P'=(A',N',C')
+P\preceq P'.
 \]
-be two patterns such that
-\[
-P\preceq P'
-\]
-and \(|C|\ge2\). Then, for every graph \(G\),
+Whenever \(P(G)\) is defined, for every graph \(G\),
 \[
 P'(G)\le P(G).
 \]
 \end{lemma}
+
+\begin{proof}
+If \(P\preceq P'\), every ordered triple that avoids \(P\) also avoids
+\(P'\). Hence every solution avoiding \(P\) also avoids \(P'\), and therefore
+\[
+P'(G)\le P(G).
+\]
+\end{proof}
+
+
+
 
 \begin{proof}
 Since \(P\preceq P'\), every ordered triple that avoids \(P\) also
@@ -1072,6 +1065,10 @@ P'(G)\le P(G).
 \end{proof}
 
 
+
+We next relate the avoidance parameter to the
+\(\mathcal P\)-chromatic number. Any solution avoiding \(\mathcal P\)
+already gives a \(\mathcal P\)-coloring by considering its partition.
 
 
 \begin{lemma}[Valid solutions induce \(\mathcal P\)-colorings]
@@ -1151,127 +1148,16 @@ Let \(\mathcal P\) be a finite family of colored patterns for which
 
 
 
-
-\begin{theorem}\label{thm:all-colored-two-iff-base-class}
-Let
-\[
-P=(A,N,\varnothing)
-\]
-be a  uncolored pattern, and let
-\[
-P_{12}:=(A,N,\{1,2\}),\qquad
-P_{23}:=(A,N,\{2,3\}),\qquad
-P_{13}:=(A,N,\{1,3\})
-\]
-be its three colored versions.
-
-Then, for every graph \(G\),
-\[
-P_{12\text{-}23\text{-}13}(G)\le 2
-\quad\Longleftrightarrow\quad
-P_{12\text{-}23\text{-}13}(G)=1
-\quad\Longleftrightarrow\quad
-G\in\mathcal C_P.
-\]
-\end{theorem}
-
-\begin{proof}
-Suppose first that
-\[
-P_{12\text{-}23\text{-}13}(G)\le 2.
-\]
-Then there exists a solution
-\[
-S=(\prec,\mathcal Q),
-\qquad
-|\mathcal Q|\le 2,
-\]
-that avoids \(P_{12}\), \(P_{23}\), and \(P_{13}\).
-
-We claim that the order \(\prec\) avoids the pattern \(P\). Suppose otherwise that some ordered triple
-\[
-v_1\prec v_2\prec v_3
-\]
-realizes \(P\). Since the triple realizes the underlying pattern, neither \edgecondition{} nor
-\nonedgecondition{} holds for any of its three colored versions.
-
-Therefore, avoiding \(P_{12}\) forces \(v_1\) and \(v_2\) to lie in different parts of \(\mathcal Q\).
-Similarly, avoiding \(P_{23}\) forces \(v_2\) and \(v_3\) to lie in different parts, and avoiding \(P_{13}\)
-forces \(v_1\) and \(v_3\) to lie in different parts.
-
-Thus, \(v_1,v_2,v_3\) must lie in three pairwise distinct parts, contradicting
-\[
-|\mathcal Q|\le 2.
-\]
-Hence every ordered triple avoids \(P\), and therefore
-\[
-G\in\mathcal C_P.
-\]
-
-Conversely, suppose that
-\[
-G\in\mathcal C_P.
-\]
-Then there exists a total order \(\prec\) of \(V(G)\) that avoids \(P\).
-Consider the one-part partition
-\[
-\mathcal Q=\{V(G)\}.
-\]
-Every ordered triple avoids \(P\) by \edgecondition{} or \nonedgecondition{}, and therefore also avoids each of
-\(P_{12}\), \(P_{23}\), and \(P_{13}\).
-
-Thus,
-\[
-P_{12\text{-}23\text{-}13}(G)=1,
-\]
-and in particular,
-\[
-P_{12\text{-}23\text{-}13}(G)\le 2.
-\]
-\end{proof}
+The inequality may be strict because a \(\mathcal P\)-coloring allows each
+part to use its own order, while \(\mathcal P(G)\) requires a single order
+for the whole graph. We next identify cases in which this additional
+requirement does not increase the number of parts.
 
 
 
-\subsubsection{Special cases according to \texorpdfstring{\(|C|\)}{|C|}}
-\label{subsubsec:special-cases-C}
 
-\begin{lemma}[The case \texorpdfstring{\(|C|=1\)}{|C|=1}]
-\label{lem:color-set-size-one}
-Let
-\[
-P=(A,N,C)
-\]
-be a pattern with
-\[
-|C|=1,
-\]
-and let
-\[
-P^{\circ}:=(A,N,\varnothing)
-\]
-be its underlying uncolored pattern.
-
-Then, for every graph \(G\), every total order \(\prec\) of \(V(G)\),
-and every partition \(\mathcal Q\) of \(V(G)\),
-\[
-(\prec,\mathcal Q)\text{ avoids }P\text{ in }G
-\quad\Longleftrightarrow\quad
-(\prec,\mathcal Q)\text{ avoids }P^{\circ}\text{ in }G.
-\]
-\end{lemma}
-
-\begin{proof}
-Since \(|C|=1\), there are no two distinct indices \(a,b\in C\).
-Therefore, the \colorcondition{} never holds.
-
-Hence an ordered triple avoids \(P\) if and only if it avoids \(P\)
-by the \edgecondition{} or the \nonedgecondition{}. Since \(P\) and
-\(P^{\circ}\) have the same sets \(A\) and \(N\), these are exactly
-the conditions for avoiding \(P^{\circ}\).
-\end{proof}
-Thus, when \(|C|=1\), the color set imposes no effective constraint, and the pattern behaves exactly as it does when \(C=\varnothing\).
-\medskip
-
+\subsubsection{The full color set}
+\label{subsubsec:full-color-set}
 
 
 
@@ -1350,8 +1236,16 @@ Thus, when \(C=\{1,2,3\}\), the global ordering requirement does not make the pa
 
 
 
-\subsection{The color pair \texorpdfstring{\(\{1,3\}\)}{{1,3}}}
-\label{subsec:color-pair-13}
+
+
+\subsubsection{The color pair \texorpdfstring{\(\{1,3\}\)}{{1,3}}}
+\label{subsubsec:color-pair-13}
+
+The full color set gives a first case in which the avoidance parameter
+coincides with the corresponding \(P\)-chromatic number. We now show that
+the same phenomenon occurs when only positions \(1\) and \(3\) belong to
+the color set. The key point is a characterization of avoidance for a fixed
+partition, which we establish first.
 
 \begin{theorem}[Characterization of fixed partitions for \(P_{13}\)]
 \label{thm:13-fixed-partition-characterization}
@@ -1442,6 +1336,13 @@ avoids \(P_{13}\) in \(G\).
 
 
 
+The previous characterization shows that, for the color pair
+\(\{1,3\}\), the global ordering requirement does not impose any additional
+restriction once the partition is fixed. This immediately gives the following
+equality.
+
+
+
 \begin{corollary}[Equality for the color pair \(\{1,3\}\)]
 \label{cor:13-colored-partition-equality}
 Let
@@ -1500,6 +1401,13 @@ P_{13}(G)
 
 
 
+The fixed-partition characterization also has a direct algorithmic
+consequence: deciding whether a given partition can be extended to a valid
+order reduces to testing membership in the associated class on each part.
+
+
+
+
 \begin{theorem}\label{thm:13-given-partition-polynomial}
 Let
 \[
@@ -1546,6 +1454,90 @@ Theorem~\ref{thm:13-given-partition-polynomial} applies to every such pattern.
 
 
 
+\subsubsection{Combining the three color pairs}
+
+We finally consider the family obtained by combining all three pair-colored
+versions of the same uncolored pattern. In this case, allowing two parts
+does not give any advantage over using a single part.
+
+
+
+\begin{theorem}
+\label{thm:all-colored-two-iff-base-class}
+Let
+\[
+P=(A,N,\varnothing)
+\]
+be an uncolored pattern. Then, for every graph \(G\),
+\[
+P_{12\text{-}13\text{-}23}(G)\le 2
+\quad\Longleftrightarrow\quad
+P_{12\text{-}13\text{-}23}(G)=1
+\quad\Longleftrightarrow\quad
+G\in\mathcal C_P.
+\]
+\end{theorem}
+
+\begin{proof}
+Suppose first that
+\[
+P_{12\text{-}13\text{-}23}(G)\le 2.
+\]
+Then there exists a solution
+\[
+S=(\prec,\mathcal Q),
+\qquad
+|\mathcal Q|\le 2,
+\]
+that avoids \(P_{12}\), \(P_{13}\), and \(P_{23}\).
+
+We show that the order \(\prec\) avoids \(P\). Suppose otherwise that some
+ordered triple
+\[
+v_1\prec v_2\prec v_3
+\]
+realizes \(P\). Then neither the \edgecondition{} nor the
+\nonedgecondition{} holds for any of its three colored versions.
+
+Since the solution avoids \(P_{12}\), the vertices \(v_1\) and \(v_2\)
+must lie in different parts of \(\mathcal Q\). Similarly, avoiding
+\(P_{13}\) forces \(v_1\) and \(v_3\) to lie in different parts, while
+avoiding \(P_{23}\) forces \(v_2\) and \(v_3\) to lie in different parts.
+
+Thus \(v_1,v_2,v_3\) lie in three pairwise distinct parts, contradicting
+\[
+|\mathcal Q|\le 2.
+\]
+Hence \(\prec\) avoids \(P\), and therefore
+\[
+G\in\mathcal C_P.
+\]
+
+Now suppose that
+\[
+G\in\mathcal C_P.
+\]
+Then there exists a total order \(\prec\) of \(V(G)\) such that the
+one-part solution
+\[
+(\prec,\{V(G)\})
+\]
+avoids \(P\). Since \(P_{12}\), \(P_{13}\), and \(P_{23}\) have the same
+edge and non-edge requirements as \(P\), the same solution avoids all three
+colored versions. Therefore,
+\[
+P_{12\text{-}13\text{-}23}(G)=1.
+\]
+
+Finally,
+\[
+P_{12\text{-}13\text{-}23}(G)=1
+\]
+clearly implies
+\[
+P_{12\text{-}13\text{-}23}(G)\le2.
+\]
+\end{proof}
 
 
 
@@ -1553,6 +1545,7 @@ Theorem~\ref{thm:13-given-partition-polynomial} applies to every such pattern.
 \subsection{The given-order problem and constraint graphs}
 \label{subsec:constraint-graphs}
 
+\german{voy por aca en cuanto a comentarios}
 \paragraph{Intuition.}
 Once the order \(\prec\) is fixed, every occurrence of a pattern
 \[
