@@ -465,6 +465,8 @@ pattern, several of the resulting parameters admit direct expressions in
 terms of the chromatic number. Similarly, many of the parameters arising
 from the star pattern can be characterized using classical invariants such
 as the chromatic number and the vertex cover number.
+\german{estos params no dan mas poder que cn o vc que ya son conocidos}
+\german{en cambio forest tiene mas potencial (?}
 
 The forest pattern appears to lead to a richer situation. At the
 computational level, we establish NP-completeness for the unrestricted
@@ -726,7 +728,7 @@ G\in\mathcal C_{\mathcal P}
 
 
 Before introducing the colored versions that will be studied throughout the
-paper, we dispose of the case in which the color set has size one.
+paper, we address the case in which the color set has size one.
 
 
 
@@ -823,8 +825,6 @@ of the same underlying uncolored pattern \(P\). A general family of colored
 patterns, denoted by \(\mathcal P\), may also contain patterns with different
 underlying uncolored patterns.
 
-\german{tal vez  agregar a estas notaciones, el caso cuando cruzamos flias}
-
 
 
 
@@ -904,6 +904,12 @@ for \(G\) avoids every colored pattern in \(\mathcal P\)?
 When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write \textsc{\(P\)-Avoidance} instead of
 \textsc{\(\{P\}\)-Avoidance}.
 
+\german{que opinas de esta? hace un poco mas cortos los enunciados de los lemas}
+For a fixed integer \(k\ge1\), we use the prefix \(k\)- to denote the
+restriction of an avoidance problem to solutions with at most \(k\) parts.
+For example, \(k\)-\(\mathcal P\)-Avoidance with a given order asks whether,
+for a given graph \(G\) and order \(\prec\), there exists a partition into at
+most \(k\) parts such that the resulting solution avoids \(\mathcal P\).
 
 \begin{observation}[Membership in NP]
 \label{obs:avoidance-in-NP}
@@ -1102,37 +1108,6 @@ G[V_i]\in\mathcal C_{\mathcal P}
 \]
 and thus \(\mathcal Q\) is a \(\mathcal P\)-coloring of \(G\).
 \end{proof}
-
-\german{aca por ej puse ambas}
-
-\begin{lemma}[Valid solutions induce \(P\)-colorings]
-\label{lem:solution-induces-P-coloring}
-Let \(P\) be a pattern, let \(G\) be a graph, and let
-\[
-S=(\prec,\mathcal Q)
-\]
-be a solution that avoids \(P\). Then \(\mathcal Q\) is a
-\(P\)-coloring of \(G\).
-\end{lemma}
-
-\begin{proof}
-Let
-\[
-\mathcal Q=\{V_1,\dots,V_k\}.
-\]
-For each \(i\), restrict \(\prec\) to \(V_i\). Since all vertices of any
-ordered triple contained in \(V_i\) lie in the same part of \(\mathcal Q\),
-the \colorcondition{} does not hold. Hence, because \(S\) avoids \(P\),
-every such triple must avoid \(P\) by the \edgecondition{} or the
-\nonedgecondition{}.
-
-Therefore the one-part solution on \(G[V_i]\) avoids \(P\), and thus
-\[
-G[V_i]\in\mathcal C_P.
-\]
-Hence \(\mathcal Q\) is a \(P\)-coloring of \(G\).
-\end{proof}
-
 
 
 
@@ -1545,35 +1520,34 @@ P_{12\text{-}13\text{-}23}(G)\le2.
 \subsection{The given-order problem and constraint graphs}
 \label{subsec:constraint-graphs}
 
-\german{voy por aca en cuanto a comentarios}
-\paragraph{Intuition.}
-Once the order \(\prec\) is fixed, every occurrence of a pattern
-\[
-P=(A,N,\{a,b\})
-\]
-imposes a single constraint: the vertices occupying positions \(a\) and \(b\)
-must lie in different parts. We represent this constraint by adding an edge
-between those two vertices in an auxiliary graph. Hence, finding a valid
-partition of \(G\) is equivalent to properly coloring this auxiliary graph.
+When the order is fixed, the only remaining choice is the partition.
+For patterns whose color set has size two, every ordered triple for which
+neither the \edgecondition{} nor the \nonedgecondition{} holds forces the two
+vertices indicated by the color set to lie in different parts.
+
+This suggests representing all these constraints in an auxiliary graph.
+With this representation, finding a valid partition of \(G\) is equivalent
+to properly coloring the auxiliary graph.
+
+
+
+
 
 \begin{definition}[Constraint graph]
 \label{def:constraint-graph}
-Let \(\mathcal P\) be a finite family of patterns such that
-\[
-|C|=2
-\qquad
-\text{for every }(A,N,C)\in\mathcal P.
-\]
-Let \(G\) be a graph, and let \(\prec\) be a total order of \(V(G)\).
+
+Let \(\mathcal P\) be a finite family of colored patterns, each with a color
+set of size two. Let \(G\) be a graph and let \(\prec\) be a total order of
+\(V(G)\).
 
 The \emph{constraint graph} associated with \(G\), \(\prec\), and
 \(\mathcal P\), denoted by
 \[
 R_{\mathcal P}(G,\prec),
 \]
-is defined as follows. Its vertex set is
+has vertex set
 \[
-V\bigl(R_{\mathcal P}(G,\prec)\bigr):=V(G).
+V\bigl(R_{\mathcal P}(G,\prec)\bigr)=V(G).
 \]
 
 For every ordered triple
@@ -1582,52 +1556,47 @@ v_1\prec v_2\prec v_3
 \]
 and every pattern
 \[
-P'=(A',N',\{a,b\})\in\mathcal P,
+P=(A,N,\{a,b\})\in\mathcal P,
 \]
-if neither the \edgecondition{} nor the \nonedgecondition{} holds for \(P'\),
-we add the edge
+if neither the \edgecondition{} nor the \nonedgecondition{} holds for
+\(P\), we add the edge
 \[
-\{v_a,v_b\}
+v_av_b
 \]
-
 to \(R_{\mathcal P}(G,\prec)\).
-In other words, whenever an ordered triple satisfies all the edge and
-non-edge requirements of a pattern \(P'\), the constraint graph records that
-the two vertices indicated by the color set of \(P'\) must lie in different
-parts.
 \end{definition}
+
+
+
+The next result shows that the constraint graph captures exactly the
+partition requirements imposed by the fixed order.
+
+
+
 \begin{lemma}[Constraint graph characterization]
 \label{lem:constraint-graph-characterization}
-Let \(\mathcal P\) be a finite family of patterns such that
-\[
-|C|=2
-\qquad
-\text{for every }(A,N,C)\in\mathcal P.
-\]
-Let \(G\) be a graph, let \(\prec\) be a total order of \(V(G)\), and let
-\[
-R:=R_{\mathcal P}(G,\prec)
-\]
-be the corresponding constraint graph.
 
-Then, for every integer \(k\ge 1\), the following statements are equivalent:
+Let \(\mathcal P\) be a finite family of colored patterns, each with a color
+set of size two. Let \(G\) be a graph, let \(\prec\) be a total order of
+\(V(G)\), and let
+\[
+R=R_{\mathcal P}(G,\prec).
+\]
 
+Then, for every integer \(k\ge1\), the following are equivalent:
 \begin{enumerate}
-\item There exists a partition \(\mathcal Q\) of \(V(G)\) into at most
-\(k\) parts such that
-\[
-(\prec,\mathcal Q)
-\]
-avoids every pattern in \(\mathcal P\) in \(G\).
+    \item there exists a partition \(\mathcal Q\) of \(V(G)\) into at most
+    \(k\) parts such that \((\prec,\mathcal Q)\) avoids \(\mathcal P\);
 
-\item
-\[
-\chi(R)\le k.
-\]
+    \item
+    \[
+    \chi(R)\le k.
+    \]
 \end{enumerate}
-
-
 \end{lemma}
+
+
+
 
 \begin{proof}
 Suppose first that there exists a partition
@@ -1654,7 +1623,7 @@ v_1\prec v_2\prec v_3
 \]
 and a pattern
 \[
-P'=(A',N',\{a,b\})\in\mathcal P
+P=(A,N,\{a,b\})\in\mathcal P
 \]
 such that
 \[
@@ -1665,7 +1634,7 @@ y=v_b,
 and neither the \edgecondition{} nor the \nonedgecondition{} holds for
 \(P'\).
 
-Since the solution \((\prec,\mathcal Q)\) avoids \(P'\), the
+Since the solution \((\prec,\mathcal Q)\) avoids \(P\), the
 \colorcondition{} must hold. Therefore, \(v_a\) and \(v_b\) lie in
 different parts of \(\mathcal Q\). Hence \(x\) and \(y\) receive different
 colors.
@@ -1700,11 +1669,11 @@ v_1\prec v_2\prec v_3
 \]
 be an ordered triple, and let
 \[
-P'=(A',N',\{a,b\})\in\mathcal P.
+P=(A,N,\{a,b\})\in\mathcal P.
 \]
 
-If the \edgecondition{} or the \nonedgecondition{} holds for \(P'\), then
-the triple avoids \(P'\).
+If the \edgecondition{} or the \nonedgecondition{} holds for \(P\), then
+the triple avoids \(P\).
 
 Suppose instead that neither the \edgecondition{} nor the
 \nonedgecondition{} holds. By the definition of the constraint graph,
@@ -1714,7 +1683,7 @@ Suppose instead that neither the \edgecondition{} nor the
 Since \(c\) is a proper coloring of \(R\), the vertices \(v_a\) and \(v_b\)
 receive different colors, and therefore lie in different parts of
 \(\mathcal Q\). Hence the \colorcondition{} holds, so the triple avoids
-\(P'\).
+\(P\).
 
 Therefore every ordered triple avoids every pattern in \(\mathcal P\), and
 thus
@@ -1727,17 +1696,22 @@ avoids \(\mathcal P\) in \(G\).
 
 
 
+A particularly useful case is \(k=2\). Since a graph is \(2\)-colorable
+if and only if it is bipartite, the previous characterization gives the
+following immediate consequence.
+
 
 
 \begin{corollary}[Constraint graph characterization for two parts]
 \label{cor:constraint-graph-two-parts}
+
 Under the assumptions of
 Lemma~\ref{lem:constraint-graph-characterization}, there exists a partition
 \(\mathcal Q\) of \(V(G)\) into at most two parts such that
 \[
 (\prec,\mathcal Q)
 \]
-avoids \(\mathcal P\) in \(G\) if and only if
+avoids \(\mathcal P\) if and only if
 \[
 R_{\mathcal P}(G,\prec)
 \]
@@ -1746,67 +1720,105 @@ is bipartite.
 
 
 
-\begin{theorem}[Polynomial-time algorithm for two parts]
-\label{thm:given-order-two-parts-polynomial}
-Let \(\mathcal P\) be a fixed finite family of patterns such that
+
+
+
+
+
+\begin{algorithm}[ht]
+\caption{\textsc{Two-Parts-Given-Order}}
+\label{alg:two-parts-given-order}
+
+\begin{algorithmic}[1]
+
+\Require A graph \(G\), a total order \(\prec\) of \(V(G)\), and a finite
+family \(\mathcal P\) of colored patterns, each with a color set of size two.
+
+\Ensure \textbf{YES} if there exists a partition of \(V(G)\) into at most
+two parts such that the resulting solution avoids \(\mathcal P\);
+otherwise \textbf{NO}.
+
+\State Initialize \(R\) with
 \[
-|C|=2
+V(R)\gets V(G),
 \qquad
-\text{for every }(A,N,C)\in\mathcal P.
+E(R)\gets\varnothing.
 \]
-Then the \(\mathcal P\)-Avoidance problem with a given order, restricted
-to instances with
-\(
-k=2,
-\)
-can be solved in time
-\(
-O\bigl(|V(G)|^3\bigr).
-\)
+
+\ForAll{ordered triples \(v_1\prec v_2\prec v_3\)}
+    \ForAll{\(P=(A,N,\{a,b\})\in\mathcal P\)}
+        \If{neither the \edgecondition{} nor the \nonedgecondition{}
+        holds for \(P\) on \((v_1,v_2,v_3)\)}
+            \State \(E(R)\gets E(R)\cup\{\{v_a,v_b\}\}\)
+        \EndIf
+    \EndFor
+\EndFor
+
+\If{\(R\) is bipartite}
+    \State \Return \textbf{YES}
+\Else
+    \State \Return \textbf{NO}
+\EndIf
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+The previous characterization and algorithm immediately give a polynomial-time
+solution for the case of two parts.
+
+
+\german{ACA tengo duda de si tengo que definir un problema nuevo tipo k-avoidance}
+
+\begin{theorem}[Polynomial-time solvability for two parts]
+The \(2\)-\(\mathcal P\)-Avoidance problem with a given order can be solved
+in time
+\[
+O(|V(G)|^3).
+\]
 \end{theorem}
 
-\begin{proof}
-Algorithm~\ref{alg:two-parts-given-order} constructs precisely the
-constraint graph
-\(
-R_{\mathcal P}(G,\prec)
-\)
-from Definition~\ref{def:constraint-graph}. By
-Corollary~\ref{cor:constraint-graph-two-parts}, the algorithm returns
-\textbf{YES} if and only if the given ordered graph admits a valid partition
-into at most two parts.
+\german{la de arriba un ejemplo de lo de los problemas, si agrego o no el k-P-avoidance}
 
-It remains to analyze its running time. Let
-\(
-n:=|V(G)|.
-\)
-There are
-\(
-O(n^3)
-\)
-ordered triples
-\(
-v_1\prec v_2\prec v_3.
-\)
-For each triple and each pattern in \(\mathcal P\), testing the required
-edges and non-edges takes constant time when \(G\) is represented by an
-adjacency matrix. Since \(\mathcal P\) is fixed, the construction of \(R\)
-takes
-\(
-O(n^3)
-\)
-time.
-The graph \(R\) has \(n\) vertices and at most \(O(n^2)\) edges.
-Bipartiteness can be tested by BFS or DFS in
+\begin{theorem}[Polynomial-time solvability for two parts]
+\label{thm:given-order-two-parts-polynomial}
+
+Let \(\mathcal P\) be a fixed finite family of colored patterns, each with a
+color set of size two. Then the \(\mathcal P\)-Avoidance problem with a given
+order and \(k=2\) can be solved in time
 \[
-O\bigl(|V(R)|+|E(R)|\bigr)
-\subseteq
-O(n^2)
+O\bigl(|V(G)|^3\bigr).
 \]
-time. Therefore, the total running time is
-\(
+\end{theorem}
+
+
+
+\begin{proof}
+By Corollary~\ref{cor:constraint-graph-two-parts},
+Algorithm~\ref{alg:two-parts-given-order} returns \textbf{YES} if and only if
+the constraint graph
+\[
+R_{\mathcal P}(G,\prec)
+\]
+is bipartite.
+
+Let \(n=|V(G)|\). There are \(O(n^3)\) ordered triples
+\[
+v_1\prec v_2\prec v_3.
+\]
+For each triple and each pattern in the fixed family \(\mathcal P\), we can
+check the edge and non-edge conditions in constant time when \(G\) is
+represented by an adjacency matrix. Hence the constraint graph can be
+constructed in \(O(n^3)\) time.
+
+The graph \(R_{\mathcal P}(G,\prec)\) has \(n\) vertices and at most
+\(O(n^2)\) edges, so bipartiteness can be tested in \(O(n^2)\) time using
+BFS or DFS. Therefore the total running time is
+\[
 O(n^3).
-\)
+\]
 \end{proof}
 
 
@@ -1831,40 +1843,9 @@ families of forbidden colored patterns with color sets of size two.
 
 
 
-\begin{algorithm}[h]
-\caption{\textsc{Two parts given order}}
-\label{alg:two-parts-given-order}
-\begin{algorithmic}[1]
-\Require A graph \(G\), a total order \(\prec\) of \(V(G)\), and a finite
-family \(\mathcal P\) of patterns such that every pattern has a color set
-of size \(2\).
-\Ensure \textbf{YES} if there exists a partition \(\mathcal Q\) of \(V(G)\)
-into at most two parts such that \((\prec,\mathcal Q)\) avoids
-\(\mathcal P\) in \(G\); otherwise \textbf{NO}.
 
-\State Construct a graph \(R\) with
-\[
-V(R)\gets V(G),
-\qquad
-E(R)\gets\varnothing.
-\]
-
-\ForAll{ordered triples \(v_1\prec v_2\prec v_3\)}
-    \ForAll{\(P'=(A',N',\{a,b\})\in\mathcal P\)}
-        \If{neither the \edgecondition{} nor the \nonedgecondition{}
-        holds for \(P'\) on \((v_1,v_2,v_3)\)}
-            \State \(E(R)\gets E(R)\cup\{\{v_a,v_b\}\}\)
-        \EndIf
-    \EndFor
-\EndFor
-\If{\(R\) is bipartite}
-    \State \Return \textbf{YES}
-\Else
-    \State \Return \textbf{NO}
-\EndIf
-\end{algorithmic}
-\end{algorithm}
-
+With these general tools in place, we now turn to specific families of
+patterns. We begin with the colored versions of the bipartite pattern.
 
 
 
@@ -1907,11 +1888,13 @@ N_{\biplabel}=\varnothing.
 \end{figure}
 
 
+The graph class associated with \(\bipname\) is the class of bipartite
+graphs. Hence, the colored versions of \(\bipname\) extend this classical
+graph class.
+
 \subsection{\texorpdfstring{\(\bipparam{12}\)}{bip12}}
 \label{subsec:bip12}
 
-We use the notation of
-Definition~\ref{def:colored-versions-and-families}.
 The pattern \(\bipparam{12}\) is depicted below.
 
 \begin{center}
@@ -1939,6 +1922,9 @@ The pattern \(\bipparam{12}\) is depicted below.
 
 
 \eric{Este es un resultado ya conocido en el paper de patrones. Si querés lo podemos dejar en la tesis, por ejemplo en un apéndice, para decir que lo probaste de nuevo. En el paper definitivamente no iría.}
+
+\german{ok, lo borro de aca y dsps vemos si lo pongo en un apendix de la tesis}
+
 \begin{theorem}\label{thm:seg1-bip}
 Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si \(\segone(G)=1\).
 \end{theorem}
@@ -2007,22 +1993,12 @@ Luego obtuvimos una partición de \(V\) en dos conjuntos independientes, y por l
 
 
 
-Un posible algoritmo de backtracking para decidir si \(\segone(G)\le k\) consiste en construir
-incrementalmente un orden \(v_1\prec\cdots\prec v_n\) y una partición
-\[
-V \;=\; V_1\,\dot\cup\,\cdots\,\dot\cup\,V_k.
-\]
-En cada paso se elige un vértice no ubicado, se lo agrega al final del orden parcial y se le asigna
-una de las \(k\) clases.
-\german{esto podria ser en general un algoritmo de bt para cualquier parametro}
-Tras cada asignación se verifica la condición correspondiente a \(\segone\) en lo ya construido:
-si el nuevo vértice queda en la posición \(t\), se chequea que no existan \(r<s<t\) tales que
-\(v_r\) y \(v_s\) estén en la misma clase, \(v_r\sim v_s\) y \(v_s\sim v_t\).
-Si se detecta una violación, se descarta la rama y se retrocede; si no, se continúa.
-
-
-El procedimiento utilizado fue probar grafos conocidos y asi poder conjeturar y demostrar lo siguiente:
-
+We first explored the behavior of \(\bipparam{12}\) computationally.
+A simple backtracking procedure was used to search over orders and
+partitions and to compute the parameter on small graphs. Comparing the
+resulting values with standard graph parameters suggested a particularly
+simple relation with the chromatic number, leading to the following
+conjecture, which we now prove.
 
 
 
@@ -2340,19 +2316,19 @@ Combining both inequalities, we conclude that
 
 
 
+The case \(\bipparam{13}\) follows naturally from the general results for
+the color pair \(\{1,3\}\). By
+Corollary~\ref{cor:13-colored-partition-equality}, determining
+\(\bipparam{13}(G)\) reduces to computing the chromatic parameter associated
+with the bipartite graph class. We therefore begin by determining this
+parameter.
 
-\begin{theorem}[
-\texorpdfstring{\(\chi_P(G)=\left\lceil\chi(G)/2\right\rceil\) for \(P=\bipname\)}
-{P-chromatic number of the bipartite pattern}
-]
+
+\begin{theorem}[The \(P\)-chromatic number of the bipartite pattern]
 \label{thm:bip-P-chromatic-number}
-Let
+For every graph \(G\),
 \[
-P=\bipname
-\]
-be the uncolored bipartite pattern. Then, for every graph \(G\),
-\[
-\chi_P(G)
+\chi_{\bipname}(G)
 =
 \left\lceil\frac{\chi(G)}{2}\right\rceil.
 \]
@@ -2458,6 +2434,10 @@ Combining both inequalities, we conclude that
 
 
 
+Combining this with the general equality for the color pair
+\(\{1,3\}\) gives the value of \(\bipparam{13}\).
+
+
 
 \begin{corollary}[
 \texorpdfstring{\(\bipparam{13}(G)=\left\lceil\chi(G)/2\right\rceil\)}
@@ -2507,9 +2487,8 @@ Therefore,
 \label{subsec:bip12-13}
 
 
-We use the notation of
-Definition~\ref{def:colored-versions-and-families}.
-The family \(\bipparam{12\text{-}13}\) is depicted below.
+We now consider the family \(\bipparam{12\text{-}13}\) which is depicted below.. 
+
 
 
 
@@ -2545,6 +2524,18 @@ The family \(\bipparam{12\text{-}13}\) is depicted below.
 \end{remark}
 
 
+
+
+Although avoiding
+this family imposes an additional constraint with respect to
+\(\bipparam{12}\), the next result shows that the value of the parameter
+does not increase.
+
+
+
+
+
+
 \begin{theorem}[
 \texorpdfstring{\(\bipparam{12\text{-}13}(G)=\chi(G)-1\)}
 {bip12-13(G) = chi(G) - 1}
@@ -2560,20 +2551,28 @@ Let \(G\) be a graph with \(\chi(G)\ge 2\). Then
 \end{theorem}
 
 \begin{proof}
+
+
 By Theorem~\ref{thm:bip12-chi},
 \[
 \bipparam{12}(G)=\chi(G)-1.
 \]
-
-Moreover, since every solution avoiding \bipparam{12\text{-}13} also avoids \bipparam{12}, 
-by Lemma~\ref{lem:monotone-patterns} (monotonicity under inclusion) gives
-\(
+Since
+\[
+\{\bipparam{12}\}
+\subseteq
+\bipparam{12\text{-}13},
+\]
+Lemma~\ref{lem:monotone-patterns} (monotonicity under inclusion)  gives
+\[
 \bipparam{12\text{-}13}(G)
 \ge
 \bipparam{12}(G)
 =
-\chi(G)-1
-\).
+\chi(G)-1.
+\]
+
+
 
 For the upper bound, 
 we use the same block-order strategy as in Theorem~\ref{thm:bip12-chi}, but now merge the last two color classes.
@@ -2754,10 +2753,7 @@ Together with the lower bound, this gives
 \subsection{\texorpdfstring{\(\bipparam{12\text{-}23}\)}{bip12-23}}
 \label{subsec:bip12-23}
 
-We use the notation of
-Definition~\ref{def:colored-versions-and-families}.
-The family \(\bipparam{12\text{-}23}\) is depicted below.
-
+We next consider the family \(\bipparam{12\text{-}23}\) which is depicted below.
 
 % --- bip12-23 ---
 \begin{center}
@@ -2785,6 +2781,15 @@ The family \(\bipparam{12\text{-}23}\) is depicted below.
 \(\bipparam{12\text{-}23}\)
 \end{center}
 
+The same partition and block order used for \(\bipparam{12}\) also avoid
+\(\bipparam{23}\). Therefore, adding the second pattern does not increase
+the value of the parameter.
+
+
+
+
+
+
 \begin{theorem}[\(\bipparam{12\text{-}23}(G)=\chi(G)-1\)]
 \label{thm:bip12-23-chi}
 Let \(G\) be a graph with \(\chi(G)\ge 2\). Then
@@ -2802,16 +2807,23 @@ By Theorem~\ref{thm:bip12-chi},
 \[
 \bipparam{12}(G)=\chi(G)-1.
 \]
-
-Moreover, since every solution avoiding \bipparam{12\text{-}23} also avoids \bipparam{12}, 
-by Lemma~\ref{lem:monotone-patterns} (monotonicity under inclusion) gives
-\(
-\bipparam{12\text{-}23}(G)
-\ge
+Since
+\[
+\bipparam{12}\in\bipparam{12\text{-}23},
+\]
+Lemma~\ref{lem:monotone-patterns} gives
+\[
 \bipparam{12}(G)
-=
+\le
+\bipparam{12\text{-}23}(G).
+\]
+Hence
+\[
 \chi(G)-1
-\).
+\le
+\bipparam{12\text{-}23}(G).
+\]
+
 
 For the upper bound, Let
 \(
@@ -2908,9 +2920,11 @@ Combining this inequality with the lower bound gives
 \end{proof}
 
 
+
 \subsection{\texorpdfstring{\(\bipparam{12\text{-}23\text{-}13}\)}{bip12-23-13}}
 \label{subsec:bip12-23-13}
 
+\german{por aca en comments}
 We use the notation of
 Definition~\ref{def:colored-versions-and-families}.
 The family \(\bipparam{12\text{-}23\text{-}13}\) is depicted below.
