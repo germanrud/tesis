@@ -548,6 +548,41 @@ When \(C=\varnothing\), we call \(P\) an \emph{uncolored pattern}.
 
 
 
+\label{subsec:solutions-avoidance}
+\begin{definition}[Solution and value]
+Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
+and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
+The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
+\end{definition}
+
+
+Throughout the paper, we will often construct total orders by arranging
+groups of vertices consecutively. We use the following convention for such
+block orders.
+
+\paragraph{Block orders.}
+Let
+\[
+V(G)=B_1\,\dot\cup\,B_2\,\dot\cup\,\cdots\,\dot\cup\,B_t
+\]
+be a partition of \(V(G)\), and let \(\prec_i\) be a total order on
+\(B_i\) for every \(i\).
+
+By the block order
+\[
+B_1\prec B_2\prec\cdots\prec B_t
+\]
+we mean the total order \(\prec\) on \(V(G)\) in which every vertex of
+\(B_i\) precedes every vertex of \(B_j\) whenever \(i<j\), and the order
+inside each block \(B_i\) is given by \(\prec_i\).
+
+When the internal order of a block is irrelevant, we simply say that an
+arbitrary order is taken inside that block.
+
+
+The blocks used to define the order need not coincide with the parts of the
+partition \(\mathcal Q\) of a solution.
+
 
 \begin{definition}[Avoiding a colored pattern]\label{def:avoiding-colored-pattern}
 Fix a graph \(G\), a solution
@@ -600,12 +635,6 @@ In all the colored patterns studied in this work, \(N=\varnothing\). Therefore, 
 
 
 
-\label{subsec:solutions-avoidance}
-\begin{definition}[Solution and value]
-Let \(G\) be a graph. A \emph{solution} for $G$ is a pair \(S=(\prec,\mathcal Q)\), where \(\prec\) is a total order on \(V(G)\)
-and \(\mathcal Q=\{V_1,\dots,V_k\}\) is a partition of \(V(G)\) into \(k\) parts.
-The \emph{value} of \(S\) is \(|\mathcal Q|=k\).
-\end{definition}
 
 
 \subsection{Associated graph classes and induced parameters}
@@ -856,19 +885,7 @@ the following three decision problems.
 \]
 \end{problem}
 
-\german{creo que lo correcto es la de arriba, no se si son lo mismo o no, creeeeo que no son =}
 
-\begin{problem}[\(\mathcal P\)-Avoidance]
-\textbf{Input:} A graph \(G\) and an integer \(k\).
-
-\textbf{Question:} Does there exist a solution
-\[
-S=(\prec,\mathcal Q),
-\qquad
-\mathcal Q=\{V_1,\dots,V_k\},
-\]
-for \(G\) such that \(S\) avoids every colored pattern in \(\mathcal P\)?
-\end{problem}
 
 \begin{problem}[\(\mathcal P\)-Avoidance with a given order]
 \textbf{Input:} A graph \(G\), a total order \(\prec\) of \(V(G)\), and an integer \(k\).
@@ -905,8 +922,8 @@ When \(\mathcal P=\{P\}\) consists of a single colored pattern, we simply write 
 \textsc{\(\{P\}\)-Avoidance}.
 
 \german{que opinas de esta? hace un poco mas cortos los enunciados de los lemas}
-For a fixed integer \(k\ge1\), we use the prefix \(k\)- to denote the
-restriction of an avoidance problem to solutions with at most \(k\) parts.
+We use the prefix \(k\)- to denote the
+restriction of an avoidance problem to inputs with a fixed \(k\ge1\).
 For example, \(k\)-\(\mathcal P\)-Avoidance with a given order asks whether,
 for a given graph \(G\) and order \(\prec\), there exists a partition into at
 most \(k\) parts such that the resulting solution avoids \(\mathcal P\).
@@ -1770,7 +1787,7 @@ The previous characterization and algorithm immediately give a polynomial-time
 solution for the case of two parts.
 
 
-\german{ACA tengo duda de si tengo que definir un problema nuevo tipo k-avoidance}
+
 
 \begin{theorem}[Polynomial-time solvability for two parts]
 The \(2\)-\(\mathcal P\)-Avoidance problem with a given order can be solved
@@ -1892,6 +1909,8 @@ The graph class associated with \(\bipname\) is the class of bipartite
 graphs. Hence, the colored versions of \(\bipname\) extend this classical
 graph class.
 
+\german{citar}
+
 \subsection{\texorpdfstring{\(\bipparam{12}\)}{bip12}}
 \label{subsec:bip12}
 
@@ -1928,6 +1947,9 @@ The pattern \(\bipparam{12}\) is depicted below.
 \begin{theorem}\label{thm:seg1-bip}
 Sea \(G=(V,E)\) un grafo. Entonces \(G\) es bipartito si y solo si \(\segone(G)=1\).
 \end{theorem}
+
+this result was proved in cita, but we proved it again cause it might give some insight 
+to this kind of proofs
 
 
 \begin{proof}
@@ -2921,13 +2943,15 @@ Combining this inequality with the lower bound gives
 
 
 
-\subsection{\texorpdfstring{\(\bipparam{12\text{-}23\text{-}13}\)}{bip12-23-13}}
-\label{subsec:bip12-23-13}
+\subsection{
+\texorpdfstring{\(\bipparam{12\text{-}13\text{-}23}\)}
+{bip12-13-23}
+}
+\label{subsec:bip12-13-23}
 
-\german{por aca en comments}
-We use the notation of
-Definition~\ref{def:colored-versions-and-families}.
-The family \(\bipparam{12\text{-}23\text{-}13}\) is depicted below.
+
+
+The family \(\bipparam{12\text{-}13\text{-}23}\) is depicted below.
 
 \medskip
 % --- bip12-13-23 ---
@@ -2960,29 +2984,48 @@ The family \(\bipparam{12\text{-}23\text{-}13}\) is depicted below.
 \end{tikzpicture}
 
 \smallskip
-\(\bipparam{12\text{-}23\text{-}13}\)
+\(\bipparam{12\text{-}13\text{-}23}\)
 \end{center}
 
 
+We finally consider the family containing all three pair-colored versions
+of the bipartite pattern. Unlike the previous two families, the behavior of
+the parameter is no longer captured by the same construction used for
+\(\bipparam{12}\).
 
-\subsubsection{Structural results}
+We study both its computational complexity and its relation with the
+chromatic number.
 
 
-
-
-
-
-\paragraph{Intuition.}
-The following reduction is designed by first considering the reverse implication.
-For each edge \(xy\in E(X)\) as always, we ask: "How can we force the endpoints of every edge of a graph \(X\) to lie in different parts", we add a vertex \(w_{xy}\) so that \(x,y,w_{xy}\) form a triangle.
-Since the solution must avoid the three patterns
-\(\operatorname{bip}_{12}\), \(\operatorname{bip}_{23}\), and \(\operatorname{bip}_{13}\),
-the three vertices of this triangle must lie in pairwise different parts, regardless of their relative order.\eric{Considerar poner estas cosas de intuitions en un lemma u observation.}
-In particular, \(x\) and \(y\) are forced to lie in different parts.
+\subsubsection{Computational complexity}
 
 
 
 
+We prove NP-hardness by reduction from \(k\)-\textsc{Coloring}. The main
+idea is to force the endpoints of every edge of the original graph to lie
+in different parts.
+
+For each edge \(xy\), we add a vertex \(w_{xy}\) so that
+\(x,y,w_{xy}\) form a triangle. Since a valid solution must avoid
+\(\bipparam{12}\), \(\bipparam{13}\), and \(\bipparam{23}\), the three
+vertices of this triangle must lie in pairwise different parts, regardless
+of their relative order. In particular, \(x\) and \(y\) must lie in
+different parts.
+
+
+\begin{theorem}[
+NP-completeness of
+\texorpdfstring{\(k\)-\(\bipparam{12\text{-}13\text{-}23}\)-Avoidance}
+{k-bip12-13-23-Avoidance}
+]
+\label{thm:bip12-13-23-np-complete}
+
+For every fixed integer \(k\ge3\),
+\(k\)-\(\bipparam{12\text{-}13\text{-}23}\)-Avoidance is NP-complete.
+\end{theorem}
+
+\german{no se cual es mejor y si el de abajo es correcto o no}
 
 \begin{theorem}\label{thm:bip12-23-13-np-complete}
 For every fixed integer \(k\ge 3\), deciding whether
@@ -2993,27 +3036,18 @@ is NP-complete.
 \end{theorem}
 
 \begin{proof}
-  % Si no está inmedietamente abajo: [Proof of \cref{thm:bip12-23-13-np-complete}]
-The problem belongs to NP:\eric{Poner esto al principio de todo, que vale para todos los problemas.}\german{done} a certificate consists of a total order \(\prec\) of \(V(G)\) and a partition
-\[
-\mathcal Q=\{V_1,\dots,V_q\},
-\qquad q\le k,
-\]
-and one can verify in polynomial time whether the corresponding solution avoids
-\[
-\mathcal B_{12\text{-}23\text{-}13}
-=
-\{\operatorname{bip}_{12},
-  \operatorname{bip}_{23},
-  \operatorname{bip}_{13}\}.
-\]
+For NP-hardness, we reduce from \(k\)-\textsc{Coloring}.
+Let \(X\) be an instance of \(k\)-\textsc{Coloring}.
 
-We prove NP-hardness by reducing from \(k\)-\textsc{Coloring}. Let
+For every edge
 \[
-X=(V(X),E(X))
+xy\in E(X),
 \]
-be an instance of \(k\)-\textsc{Coloring}. For every edge \(xy\in E(X)\), we add a new vertex \(w_{xy}\) and make
-\(x,y,w_{xy}\) induce a triangle. Thus,
+we add a new vertex \(w_{xy}\) and make
+\[
+x,y,w_{xy}
+\]
+induce a triangle. Thus,
 \[
 V(G)
 =
@@ -3027,625 +3061,684 @@ E(X)\cup
 \{xw_{xy},yw_{xy}:xy\in E(X)\}.
 \]
 
-We claim that
+We show that
 \[
 X\text{ is \(k\)-colorable}
 \quad\Longleftrightarrow\quad
-\operatorname{bip}_{12\text{-}23\text{-}13}(G)\le k.
+G\text{ admits a solution with at most \(k\) parts avoiding }
+\bipparam{12\text{-}13\text{-}23}.
 \]
 
 \medskip
 \noindent\textbf{(\(\Rightarrow\))}
-Suppose that \(X\) admits a proper \(k\)-coloring
+Suppose that \(X\) is \(k\)-colorable, and let
 \[
-\varphi:V(X)\to\{1,\dots,k\}.
+V(X)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
 \]
-For every edge \(xy\in E(X)\), choose a color
+be a proper \(k\)-coloring of \(X\), where each \(C_i\) is independent.
+
+For every edge
 \[
-\varphi(w_{xy})
-\notin
-\{\varphi(x),\varphi(y)\}.
+xy\in E(X),
 \]
-Such a color exists because \(k\ge 3\). This extends \(\varphi\) to a proper \(k\)-coloring of \(G\).
+suppose that
+\[
+x\in C_i,
+\qquad
+y\in C_j.
+\]
+Since the coloring is proper,
+\[
+i\neq j.
+\]
+Because \(k\ge3\), we can choose an index
+\[
+h\notin\{i,j\}
+\]
+and assign \(w_{xy}\) to \(C_h\).
+
+In this way, the coloring of \(X\) extends to a proper \(k\)-coloring
+\[
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+\]
+of \(G\).
 
 Let
 \[
-\mathcal Q=\{V_1,\dots,V_k\}
+\mathcal Q=\{C_1,\dots,C_k\},
 \]
-be the corresponding partition into color classes. We define an order \(\prec\) by blocks:
+and define a total order \(\prec\) by blocks:
 \[
-V_1\prec V_2\prec\cdots\prec V_k,
+C_1\prec C_2\prec\cdots\prec C_k,
 \]
-taking an arbitrary order inside each block.
+with an arbitrary order inside each block.
 
 We show that
 \[
 S=(\prec,\mathcal Q)
 \]
-avoids the three colored patterns. Let
+avoids \(\bipparam{12\text{-}13\text{-}23}\).
+
+Let
 \[
 v_1\prec v_2\prec v_3
 \]
-be an ordered triple. If either \(v_1v_2\notin E(G)\) or \(v_2v_3\notin E(G)\), then the triple avoids every
-bipartite colored pattern by \edgecondition.
+be an ordered triple. If the \edgecondition{} holds, then the triple avoids
+all three patterns.
 
-Suppose instead that
+Suppose therefore that the \edgecondition{} does not hold. Since the three
+colored versions have the same required edges,
 \[
 v_1v_2\in E(G)
 \qquad\text{and}\qquad
 v_2v_3\in E(G).
 \]
-Since the coloring of \(G\) is proper,
+
+Since each \(C_i\) is independent, \(v_1\) and \(v_2\) lie in different
+parts of \(\mathcal Q\), and the same holds for \(v_2\) and \(v_3\).
+
+We claim that \(v_1\) and \(v_3\) also lie in different parts. Suppose,
+towards a contradiction, that
 \[
-\varphi(v_1)\neq\varphi(v_2)
-\qquad\text{and}\qquad
-\varphi(v_2)\neq\varphi(v_3).
+v_1,v_3\in C_i
 \]
-Moreover, \(\varphi(v_1)\neq\varphi(v_3)\). Indeed, if
-\(\varphi(v_1)=\varphi(v_3)\), then \(v_1\) and \(v_3\) would lie in the same color block\eric{que es un color block? ahh es un block?}. Since
+for some \(i\). Since the order is defined by blocks and
 \[
 v_1\prec v_2\prec v_3,
 \]
-the vertex \(v_2\) would lie in that same block, contradicting
-\(\varphi(v_1)\neq\varphi(v_2)\).
+we must also have
+\[
+v_2\in C_i.
+\]
+But then
+\[
+v_1v_2\in E(G)
+\]
+contradicts the fact that \(C_i\) is independent.
 
-Thus \(v_1,v_2,v_3\) lie in pairwise distinct parts of \(\mathcal Q\). Therefore the triple satisfies
-\colorcondition{} for each of the colored pairs
+Thus \(v_1,v_2,v_3\) lie in pairwise distinct parts of \(\mathcal Q\).
+Therefore the \colorcondition{} holds for each of
 \[
-\{1,2\},\qquad
-\{2,3\},\qquad
-\{1,3\}.
+\bipparam{12},
+\qquad
+\bipparam{13},
+\qquad
+\bipparam{23}.
 \]
-Hence \(S\) avoids \(\mathcal B_{12\text{-}23\text{-}13}\), and consequently
-\[
-\operatorname{bip}_{12\text{-}23\text{-}13}(G)\le k.
-\]
+Hence \(S\) avoids
+\(\bipparam{12\text{-}13\text{-}23}\).
 
 \medskip
 \noindent\textbf{(\(\Leftarrow\))}
-Suppose that \(G\) admits a solution
+Suppose now that \(G\) admits a solution
 \[
 S=(\prec,\mathcal Q),
 \qquad
 |\mathcal Q|\le k,
 \]
 that avoids
-\(\mathcal B_{12\text{-}23\text{-}13}\).
+\(\bipparam{12\text{-}13\text{-}23}\).
 
-We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of \(X\). Let
+We show that the restriction of \(\mathcal Q\) to \(V(X)\) is a proper
+coloring of \(X\). Let
 \[
 xy\in E(X).
 \]
-By construction, the vertices
-\(
-x, y, w_{xy}
-\)
-induce a triangle in \(G\). Write them in their relative order as
+By construction,
+\[
+x,y,w_{xy}
+\]
+induce a triangle in \(G\). Write these three vertices in their relative
+order as
 \[
 v_1\prec v_2\prec v_3.
 \]
+
 Since they induce a triangle,
+\[
+v_1v_2\in E(G)
+\qquad\text{and}\qquad
+v_2v_3\in E(G),
+\]
+so the \edgecondition{} does not hold for any of
+\[
+\bipparam{12},
+\qquad
+\bipparam{13},
+\qquad
+\bipparam{23}.
+\]
+
+Since \(S\) avoids \(\bipparam{12}\), the vertices \(v_1\) and \(v_2\)
+must lie in different parts of \(\mathcal Q\). Similarly, avoiding
+\(\bipparam{13}\) forces \(v_1\) and \(v_3\) to lie in different parts,
+while avoiding \(\bipparam{23}\) forces \(v_2\) and \(v_3\) to lie in
+different parts.
+
+Thus
+\[
+x,y,w_{xy}
+\]
+lie in three pairwise distinct parts of \(\mathcal Q\). In particular,
+\(x\) and \(y\) lie in different parts.
+
+Since this holds for every edge
+\[
+xy\in E(X),
+\]
+the restriction of \(\mathcal Q\) to \(V(X)\) is a proper coloring of
+\(X\) with at most \(k\) colors. Hence \(X\) is \(k\)-colorable.
+
+The construction is polynomial, so the problem is NP-hard. By
+Observation~\ref{obs:avoidance-in-NP}, the problem belongs to NP.
+Hence it is NP-complete.
+\end{proof}
+
+
+
+\subsubsection{Structural bounds}
+
+We now compare \(\bipparam{12\text{-}13\text{-}23}(G)\) with the
+chromatic number. The previous results for \(\bipparam{12}\) immediately
+give a lower bound, while a proper coloring of \(G\) provides a natural
+upper bound.
+
+
+\begin{theorem}[
+\texorpdfstring{
+\(\chi(G)-1\le\bipparam{12\text{-}13\text{-}23}(G)\le\chi(G)\)}
+{Bounds for bip12-13-23}
+]
+\label{thm:bip12-13-23-bounds}
+
+Let \(G\) be a graph with \(\chi(G)\ge2\). Then
+\[
+\chi(G)-1
+\le
+\bipparam{12\text{-}13\text{-}23}(G)
+\le
+\chi(G).
+\]
+\end{theorem}
+
+\begin{proof}
+For the lower bound, since
+\[
+\bipparam{12}\in\bipparam{12\text{-}13\text{-}23},
+\]
+Lemma~\ref{lem:monotone-patterns} gives
+\[
+\bipparam{12}(G)
+\le
+\bipparam{12\text{-}13\text{-}23}(G).
+\]
+By Theorem~\ref{thm:bip12-chi},
+\[
+\bipparam{12}(G)=\chi(G)-1,
+\]
+and therefore
+\[
+\chi(G)-1
+\le
+\bipparam{12\text{-}13\text{-}23}(G).
+\]
+
+For the upper bound, let
+\[
+k:=\chi(G),
+\]
+and let
+\[
+V(G)=C_1\,\dot\cup\,\cdots\,\dot\cup\,C_k
+\]
+be a proper \(k\)-coloring of \(G\). Set
+\[
+\mathcal Q:=\{C_1,\dots,C_k\},
+\]
+and use the block order
+\[
+C_1\prec C_2\prec\cdots\prec C_k.
+\]
+
+Let
+\[
+v_1\prec v_2\prec v_3
+\]
+be an ordered triple. If the \edgecondition{} holds, then the triple avoids
+all three patterns. Suppose therefore that
 \[
 v_1v_2\in E(G)
 \qquad\text{and}\qquad
 v_2v_3\in E(G).
 \]
-Therefore \edgecondition{} does not hold for any of the three bipartite colored patterns.\eric{reescribir esto de alguna forma. Creo que me confunde el does not hold}
 
-Because the solution avoids \(\operatorname{bip}_{12}\), the vertices \(v_1\) and \(v_2\) must lie in different
-parts. Similarly, avoiding \(\operatorname{bip}_{23}\) and \(\operatorname{bip}_{13}\) implies that
-\(v_2,v_3\) and \(v_1,v_3\), respectively, lie in different parts.
+Since the \(C_i\) are independent, \(v_1\) and \(v_2\) lie in different
+parts, and so do \(v_2\) and \(v_3\). Hence the \colorcondition{} holds for
+\(\bipparam{12}\) and \(\bipparam{23}\).
 
-Thus \(x,y,w_{xy}\) lie in pairwise distinct parts of \(\mathcal Q\). In particular, \(x\) and \(y\) lie in
-different parts. Since this holds for every edge \(xy\in E(X)\), the restriction of \(\mathcal Q\) to \(V(X)\)
-is a proper coloring of \(X\) with at most \(k\) colors. Hence \(X\) is \(k\)-colorable.
-
-The construction is polynomial, so the problem is NP-hard. Since it also belongs to NP, it is NP-complete.
-\end{proof}
-
-
-
-
-
-\begin{Claim}\label{cl:seg123-le-chi}
-Para todo grafo \(G\), se cumple
+Suppose that \(v_1\) and \(v_3\) lie in the same part \(C_i\). Since the
+order is defined by blocks and
 \[
-\segonetwothree(G)\le \chi(G).
+v_1\prec v_2\prec v_3,
 \]
-\end{Claim}
+we must also have \(v_2\in C_i\), contradicting
+\[
+v_1v_2\in E(G).
+\]
+Thus \(v_1\) and \(v_3\) lie in different parts, so the
+\colorcondition{} also holds for \(\bipparam{13}\).
 
-\begin{proof}
-Sea \(k=\chi(G)\), consideremos una partición de \(V(G)\) en \(k\) conjuntos independientes,
-\[
-V \;=\; C_1 \,\dot\cup\, C_2 \,\dot\cup\, \cdots \,\dot\cup\, C_k.
-\]
-Se considera la solución \(S=(\prec,\mathcal{Q})\) definida por
-\[
-\mathcal{Q}:=\{V_1,\dots,V_k\}\qquad\text{donde}\qquad V_i:=C_i \ \ \text{para todo } i\in\{1,\dots,k\},
-\]
-y se fija un orden \(\prec\) por bloques imponiendo
-\[
-C_1 \prec C_2 \prec \cdots \prec C_k,
-\]
-con un orden arbitrario dentro de cada bloque.
-
-Veamos que \(S\) evita simultáneamente los patrones \(P_1,P_2,P_3\),
-como cada \(V_i=C_i\) es independiente, para toda terna \(r\prec s\prec t\) se tiene:
-si \(r\) y \(s\) pertenecen a una misma clase, entonces \(r\not\sim s\); y si \(s\) y \(t\) pertenecen
-a una misma clase, entonces \(s\not\sim t\); y si \(r\) y \(t\) pertenecen a una misma clase, entonces
-\(r\not\sim t\).
-En particular, en ninguna terna pueden realizarse simultáneamente las aristas exigidas por el conjunto
-\(A\) del patrón junto con la igualdad de clase exigida por \(C\). Por lo tanto, toda terna evita
-\(P_1\), evita \(P_2\) y evita \(P_3\), luego \(S\) evita \(\{P_1,P_2,P_3\}\).
-
-Con esto, \(G\) admite una solución que evita \(P_1,P_2,P_3\) con \(k\) clases, luego
-\[
-\segonetwothree(G)\le k=\chi(G).
-\]
-\end{proof}
-
-\begin{lemma}[
-\texorpdfstring{\(\bipparam{12\text{-}23\text{-}13}(G)\ge \chi(G)-1\)}
-{bip12-13-23(G) >= chi(G)-1}
-]
-\label{lem:bip12-23-13-lower-bound}
-Let \(G\) be a graph with \(\chi(G)\ge 2\). Then
-\[
-\bipparam{12\text{-}23\text{-}13}(G)
-\ge
-\chi(G)-1.
-\]
-\end{lemma}
-
-\begin{proof}
-Since
-\[
-\{\bipparam{12}\}
-\subseteq
-\bipparam{12\text{-}23\text{-}13},
-\]
-monotonicity under inclusion of pattern families
-(Lemma~\ref{lem:monotone-patterns}) gives
-\[
-\bipparam{12}(G)
-\le
-\bipparam{12\text{-}23\text{-}13}(G).
-\]
-By Theorem~\ref{thm:bip12-chi},
-\[
-\bipparam{12}(G)=\chi(G)-1.
-\]
-Therefore,
-\[
-\bipparam{12\text{-}23\text{-}13}(G)
-\ge
-\chi(G)-1.
-\]
-\end{proof}
-
-
-Pero, para este caso de las tres condiciones juntas, No vale el >=.
-
-\begin{lemma}[The lower bound cannot be improved to \(\chi(G)\)]
-\label{lem:bip12-13-23-not-ge-chi}
-There exists a graph \(G\) such that
+Therefore the solution avoids
+\(\bipparam{12\text{-}13\text{-}23}\), and hence
 \[
 \bipparam{12\text{-}13\text{-}23}(G)
-<
+\le
+k
+=
 \chi(G).
 \]
-In particular, it is not true that
-\[
-\bipparam{12\text{-}13\text{-}23}(G)\ge \chi(G)
-\]
-for every graph \(G\).
-\end{lemma}
+\end{proof}
 
-\begin{proof}
-Consider the Mycielski graph \(M_4\), for which
+The two bounds in Theorem~\ref{thm:bip12-13-23-bounds} differ by one.
+We next show that the lower bound can actually be attained.
+
+
+\subsubsection{Tightness of the lower bound}
+
+
+
+
+
+
+
+
+
+
+We use the Mycielski graph \(M_4\). Starting from
+\[
+M_3=C_5,
+\qquad
+V(M_3)=\{v_0,\dots,v_4\},
+\]
+the graph \(M_4\) is obtained by adding vertices
+\[
+w_0,\dots,w_4,w.
+\]
+The vertices \(v_0,\dots,v_4\) induce \(C_5\); for each \(i\), the vertex
+\(w_i\) is adjacent to the neighbors of \(v_i\) in \(C_5\); and \(w\) is
+adjacent to every \(w_i\).
+
+It is known that
 \[
 \chi(M_4)=4.
 \]
-As shown below, \(M_4\) admits a solution with three parts that avoids
+
+\german{aca falta la cita}
+
+Consider the following total order:
 \[
-\bipparam{12},\qquad
-\bipparam{13},\qquad
-\bipparam{23}.
+\begin{aligned}
+w &\prec w_4 \prec v_4 \prec v_3 \prec v_1
+   \prec w_2 \prec w_0\\
+  &\prec v_2 \prec w_3 \prec w_1 \prec v_0.
+\end{aligned}
 \]
-Therefore,
+
+Together with this order, consider the partition
 \[
-\bipparam{12\text{-}13\text{-}23}(M_4)\le 3.
+\mathcal Q=\{V_0,V_1,V_2\},
 \]
-Consequently,
+where
 \[
-\bipparam{12\text{-}13\text{-}23}(M_4)
-\le 3
-<
-4
-=
-\chi(M_4),
+\begin{aligned}
+V_0&=\{w,w_2,w_0,v_2\},\\
+V_1&=\{w_4,v_4,w_3,w_1\},\\
+V_2&=\{v_3,v_1,v_0\}.
+\end{aligned}
 \]
-which proves the claim.
-\end{proof}
 
 
+\begin{figure}[ht]
+\centering
 
-
-\subsubsection{The Mycielski counterexample}
-
-
-
-\begin{definition}[Paso de Mycielski]
-Sea \(M_j=(V_j,E_j)\) un grafo, con \(V_j=\{v_0,\dots,v_{n-1}\}\).
-Se construye \(M_{j+1}\) introduciendo una copia
-\[
-W_j:=\{w_0,\dots,w_{n-1}\},
-\]
-y un vértice adicional \(w\). Se fija
-\[
-V(M_{j+1}) \;:=\; V_j \,\dot\cup\, W_j \,\dot\cup\, \{w\}.
-\]
-La adyacencia en \(M_{j+1}\) se determina imponiendo, para todo \(i,\ell\in\{0,\dots,n-1\}\),
-\[
-v_i \sim v_\ell \ \text{en } M_{j+1}
-\quad\Longleftrightarrow\quad
-v_i \sim v_\ell \ \text{en } M_j,
-\]
-\[
-w_i \sim v_\ell \ \text{en } M_{j+1}
-\quad\Longleftrightarrow\quad
-v_i \sim v_\ell \ \text{en } M_j,
-\]
-y además
-\[
-w \sim w_i \ \text{en } M_{j+1}\qquad\text{para todo } i=0,\dots,n-1.
-\]
-No se agregan otras aristas.
-\end{definition}
-
-\begin{definition}[Familia \(M_j\)]
-Se fija \(M_2:=K_2\) y, para todo \(j\ge 2\), se define \(M_{j+1}\) a partir de \(M_j\)
-mediante el paso anterior.
-\end{definition}
-
-% --- Colores de las clases (sin sombreado: solo borde + texto) ---
 \colorlet{Czero}{red!70!black}
 \colorlet{Cone}{blue!70!black}
 \colorlet{Ctwo}{green!50!black}
 
-\begin{figure}[H]
-\centering
-\begin{subfigure}[t]{0.40\textwidth}
-\centering
 \begin{tikzpicture}[
-  scale=1.65,
-  every node/.style={circle, draw, inner sep=1.2pt, font=\small, fill=white}
-]
-% M3 = C5
-\foreach \i/\ang in {0/90,1/18,2/-54,3/-126,4/162}{
-  \node (v\i) at (\ang:1.05) {$v_{\i}$};
-}
-\foreach \i/\j in {0/1,1/2,2/3,3/4,4/0}{
-  \draw (v\i) -- (v\j);
-}
-\end{tikzpicture}
-\caption{\(M_3 \cong C_5\).}
-\label{fig:M3}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.58\textwidth}
-\centering
-\begin{tikzpicture}[
-  scale=1.55,
-  every node/.style={circle, inner sep=1.2pt, font=\small, fill=white},
-  V0/.style={draw=Czero, text=Czero, line width=0.7pt},
-  V1/.style={draw=Cone,  text=Cone,  line width=0.7pt},
-  V2/.style={draw=Ctwo,  text=Ctwo,  line width=0.7pt}
+  scale=1.7,
+  every node/.style={
+    circle,
+    inner sep=1.2pt,
+    font=\small,
+    fill=white
+  },
+  V0/.style={
+    draw=Czero,
+    text=Czero,
+    line width=0.7pt
+  },
+  V1/.style={
+    draw=Cone,
+    text=Cone,
+    line width=0.7pt
+  },
+  V2/.style={
+    draw=Ctwo,
+    text=Ctwo,
+    line width=0.7pt
+  }
 ]
 
-% v0..v4 (pentágono exterior)
+% Original vertices
 \node[V2] (v0) at ( 90:1.10) {$v_0$};
 \node[V2] (v1) at ( 18:1.10) {$v_1$};
 \node[V0] (v2) at (-54:1.10) {$v_2$};
 \node[V2] (v3) at (-126:1.10) {$v_3$};
 \node[V1] (v4) at (162:1.10) {$v_4$};
 
-% w0..w4 (copias, pentágono interior)
+% Copy vertices
 \node[V0] (w0) at ( 90:0.62) {$w_0$};
 \node[V1] (w1) at ( 18:0.62) {$w_1$};
 \node[V0] (w2) at (-54:0.62) {$w_2$};
 \node[V1] (w3) at (-126:0.62) {$w_3$};
 \node[V1] (w4) at (162:0.62) {$w_4$};
 
-% vértice extra w
+% Central vertex
 \node[V0] (w) at (0,0) {$w$};
 
-% aristas del C5: v_i v_{i+1}
-\draw (v0)--(v1)--(v2)--(v3)--(v4)--(v0);
+% Edges of the original C_5
+\draw
+(v0)--(v1)--(v2)--(v3)--(v4)--(v0);
 
-% aristas w_i a vecinos de v_i (en M3=C5)
+% Each w_i is adjacent to the neighbors of v_i in C_5
 \draw (w0)--(v1) (w0)--(v4);
 \draw (w1)--(v0) (w1)--(v2);
 \draw (w2)--(v1) (w2)--(v3);
 \draw (w3)--(v2) (w3)--(v4);
 \draw (w4)--(v0) (w4)--(v3);
 
-% aristas w - w_i
-\draw (w)--(w0) (w)--(w1) (w)--(w2) (w)--(w3) (w)--(w4);
+% Central vertex adjacent to all copies
+\draw
+(w)--(w0)
+(w)--(w1)
+(w)--(w2)
+(w)--(w3)
+(w)--(w4);
 
 \end{tikzpicture}
-\caption{\(M_4\) (con la 3-partición indicada por colores).}
-\label{fig:M4}
-\end{subfigure}
 
-\caption{Los grafos \(M_3\) y \(M_4\).}
-\label{fig:M3M4}
+\caption{
+The Mycielski graph \(M_4\), with the three parts
+\(V_0,V_1,V_2\) indicated by colors.
+}
+\label{fig:M4}
 \end{figure}
 
-Recordemos que el grafo de Mycielski \(M_4\) satisface \(\chi(M_4)=4\).
-En lo que sigue se trabaja con el etiquetado
-\[
-V(M_4)=\{v_0,\dots,v_4,w_0,\dots,w_4,w\}.
-\]
 
 
-\noindent\textbf{Orden.}
-\[
-\begin{aligned}
-w &\prec w_4 \prec v_4 \prec v_3 \prec v_1 \prec w_2 \prec w_0\\
-  &\prec v_2 \prec w_3 \prec w_1 \prec v_0.
-\end{aligned}
-\]
+The same solution can be represented by placing each vertex according to
+its position in the order and the part to which it belongs.
 
-\noindent\textbf{3-partición.}
-\[
-\begin{aligned}
-V_0&=\{w,\,w_2,\,w_0,\,v_2\},\\
-V_1&=\{w_4,\,v_4,\,w_3,\,w_1\},\\
-V_2&=\{v_3,\,v_1,\,v_0\}.
-\end{aligned}
-\]
-
-\medskip
-
-
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
+
+\colorlet{Czero}{red!70!black}
+\colorlet{Cone}{blue!70!black}
+\colorlet{Ctwo}{green!50!black}
+
 \begin{tikzpicture}[
-  x=0.85cm, y=0.95cm,
-  every node/.style={circle, inner sep=1.2pt, font=\small, fill=white},
-  V0/.style={draw=red!70!black,  text=red!70!black,  line width=0.7pt},
-  V1/.style={draw=blue!70!black, text=blue!70!black, line width=0.7pt},
-  V2/.style={draw=green!50!black,text=green!50!black,line width=0.7pt}
+  x=0.85cm,
+  y=0.95cm,
+  every node/.style={
+    circle,
+    inner sep=1.2pt,
+    font=\small,
+    fill=white
+  },
+  V0/.style={
+    draw=Czero,
+    text=Czero,
+    line width=0.7pt
+  },
+  V1/.style={
+    draw=Cone,
+    text=Cone,
+    line width=0.7pt
+  },
+  V2/.style={
+    draw=Ctwo,
+    text=Ctwo,
+    line width=0.7pt
+  }
 ]
 
-% Etiquetas de filas
-\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,2) {$V_0$};
-\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,1) {$V_1$};
-\node[draw=none, circle=none, fill=none, anchor=east, font=\small] at (0.2,0) {$V_2$};
+% Part labels
+\node[draw=none, fill=none, rectangle, anchor=east] at (0.2,2) {$V_0$};
+\node[draw=none, fill=none, rectangle, anchor=east] at (0.2,1) {$V_1$};
+\node[draw=none, fill=none, rectangle, anchor=east] at (0.2,0) {$V_2$};
 
-% (Opcional) marcas de posición del orden
+% Order positions
 \foreach \x in {1,...,11}{
-  \draw[gray!25] (\x, -0.35) -- (\x, 2.35);
+  \draw[gray!25] (\x,-0.35) -- (\x,2.35);
 }
 
-% Orden: [10, 9, 4, 3, 1, 7, 5, 2, 8, 6, 0]
-% En notación: 10=w, 9=w_4, 4=v_4, 3=v_3, 1=v_1, 7=w_2, 5=w_0, 2=v_2, 8=w_3, 6=w_1, 0=v_0
-
-% Fila V0 = {w, w2, w0, v2} en posiciones 1,6,7,8
+% V_0
 \node[V0] at (1,2) {$w$};
 \node[V0] at (6,2) {$w_2$};
 \node[V0] at (7,2) {$w_0$};
 \node[V0] at (8,2) {$v_2$};
 
-% Fila V1 = {w4, v4, w3, w1} en posiciones 2,3,9,10
+% V_1
 \node[V1] at (2,1) {$w_4$};
 \node[V1] at (3,1) {$v_4$};
 \node[V1] at (9,1) {$w_3$};
 \node[V1] at (10,1) {$w_1$};
 
-% Fila V2 = {v3, v1, v0} en posiciones 4,5,11
+% V_2
 \node[V2] at (4,0) {$v_3$};
 \node[V2] at (5,0) {$v_1$};
 \node[V2] at (11,0) {$v_0$};
 
-% (Opcional) flecha del orden
+% Direction of the order
 \draw[->, line width=0.6pt] (1,2.55) -- (11,2.55);
-\node[draw=none, circle=none, fill=none, font=\small] at (6,2.75) {orden \(\prec\)};
+\node[draw=none, fill=none, rectangle] at (6,2.78) {order \(\prec\)};
 
 \end{tikzpicture}
-\caption{Orden fijado y 3-partición de \(V(M_4)\) (cada vértice en la fila de su clase).}
-\label{fig:M4-order-rows}
+
+\caption{The order and three-part partition used for \(M_4\).}
+\label{fig:M4-order-partition}
 \end{figure}
 
 
-A continuación verifiquemos que la solucion anterior evita simultáneamente \(P_1,P_2,P_3\).
+We now verify that this solution avoids all three colored versions of the
+bipartite pattern.
 
 
-
-
-\begin{lemma}\label{lem:M4-avoid-P1}
-El orden \(\prec\) y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
-evitan el patrón \(P_1\).
+\begin{lemma}
+\label{lem:M4-bip12-13-23}
+The solution
+\[
+S=(\prec,\mathcal Q)
+\]
+defined above avoids
+\[
+\bipparam{12\text{-}13\text{-}23}.
+\]
+Consequently,
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)\le3.
+\]
 \end{lemma}
 
-\begin{proof}
-Sea \(r\prec s\prec t\) una terna de vértices.
-Recordemos que una terna \((r,s,t)\) \emph{no} evita \(P_1\) sólo si se cumplen simultáneamente:
-\[
-r \text{ y } s \text{ están en una misma clase},\qquad r\sim s,\qquad s\sim t.
-\]
-Mostremos que esto es imposible, es decir, que toda terna satisface al menos una de las condiciones
-de evitación.
-
-De la lista de adyacencias y la partición fijada, las aristas internas de las clases son:
-\[
-\text{en }V_0:\ w\sim w_2,\ w\sim w_0,\qquad
-\text{en }V_1:\ v_4\sim w_3,\qquad
-\text{en }V_2:\ v_1\sim v_0.
-\]
-En particular, si \(r\) y \(s\) están en una misma clase y además \(r\sim s\), entonces necesariamente
-\(s\) es uno de los vértices
-\[
-s\in\{w_2,\ w_0,\ w_3,\ v_0\}.
-\]
-Verifiquemos en cada caso que \(s\) no tiene vecinos a la derecha; esto fuerza \(s\not\sim t\) y por lo
-tanto \((r,s,t)\) evita \(P_1\) (por la condición (1) de evitación, con la arista \(\{2,3\}\)).
-
-\smallskip
-\noindent\textbf{(1) \(s=w_2\).}
-Se tiene \(N(w_2)=\{v_1,v_3,w\}\), y en el orden fijado
-\[
-w \prec v_3 \prec v_1 \prec w_2.
-\]
-Luego todo vecino de \(w_2\) queda a la izquierda de \(w_2\), por lo que \(w_2\not\sim t\).
-
-\smallskip
-\noindent\textbf{(2) \(s=w_0\).}
-Se tiene \(N(w_0)=\{v_1,v_4,w\}\), y en el orden fijado
-\[
-w \prec v_4 \prec v_1 \prec w_0.
-\]
-Luego todo vecino de \(w_0\) queda a la izquierda de \(w_0\), por lo que \(w_0\not\sim t\).
-
-\smallskip
-\noindent\textbf{(3) \(s=w_3\).}
-Se tiene \(N(w_3)=\{v_2,v_4,w\}\), y en el orden fijado
-\[
-w \prec v_4 \prec v_2 \prec w_3.
-\]
-Luego todo vecino de \(w_3\) queda a la izquierda de \(w_3\), por lo que \(w_3\not\sim t\).
-
-\smallskip
-\noindent\textbf{(4) \(s=v_0\).}
-En el orden fijado, \(v_0\) es el último vértice. Por lo tanto no existe \(t\) con \(s\prec t\), y la
-configuración requerida por \(P_1\) es imposible.
-
-En todos los casos, la terna \((r,s,t)\) evita \(P_1\). Esto prueba que la solución dada evita \(P_1\).
-\end{proof}
 
 
-\begin{lemma}\label{lem:M4-avoid-P2}
-El orden \(\prec\) y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
-evitan el patrón \(P_2\).
-\end{lemma}
 
 \begin{proof}
-Sea \(r\prec s\prec t\) una terna de vértices.
-Recordemos que una terna \((r,s,t)\) \emph{no} evita \(P_2\) sólo si se cumplen simultáneamente:
+We verify separately that \(S\) avoids
+\(\bipparam{12}\), \(\bipparam{13}\), and \(\bipparam{23}\).
+
+\medskip
+\noindent\textbf{Avoiding \(\bipparam{12}\).}
+
+Let
 \[
-s \text{ y } t \text{ están en una misma clase},\qquad s\sim t,\qquad r\sim s.
+r\prec s\prec t
 \]
-Mostremos que esto es imposible.
+be an ordered triple. Suppose that the \colorcondition{} does not hold for
+\(\bipparam{12}\), so \(r\) and \(s\) lie in the same part of
+\(\mathcal Q\).
 
-De la lista de adyacencias y la partición fijada, las aristas internas de las clases son:
+The only edges whose endpoints lie in the same part are
 \[
-\text{en }V_0:\ w\sim w_2,\ w\sim w_0,\qquad
-\text{en }V_1:\ v_4\sim w_3,\qquad
-\text{en }V_2:\ v_1\sim v_0.
+ww_2,\qquad
+ww_0,\qquad
+v_4w_3,\qquad
+v_1v_0.
 \]
-En particular, si \(s\) y \(t\) están en una misma clase y además \(s\sim t\), entonces necesariamente
-\(s\) es el extremo izquierdo de una arista interna de su clase, es decir,
+Therefore, if
 \[
-s\in\{w,\ v_4,\ v_1\}.
+rs\in E(M_4),
 \]
-Verifiquemos en cada caso que \(s\) no tiene vecinos a la izquierda; esto fuerza \(r\not\sim s\) y por lo
-tanto \((r,s,t)\) evita \(P_2\) (por la condición (1) de evitación, con la arista \(\{1,2\}\)).
-
-\smallskip
-\noindent\textbf{(1) \(s=w\).}
-En el orden fijado, \(w\) es el primer vértice. Por lo tanto no existe \(r\) con \(r\prec s\), y la
-configuración requerida por \(P_2\) es imposible.
-
-\smallskip
-\noindent\textbf{(2) \(s=v_4\).}
-Se tiene \(N(v_4)=\{v_0,v_3,w_0,w_3\}\), y en el orden fijado
+then necessarily
 \[
-w \prec v_4 \prec v_3,\qquad
-v_4 \prec w_0,\qquad
-v_4 \prec v_2 \prec w_3,\qquad
-v_4 \prec v_0.
+s\in\{w_2,w_0,w_3,v_0\}.
 \]
-Luego todo vecino de \(v_4\) queda a la derecha de \(v_4\), por lo que \(r\not\sim v_4\).
 
-\smallskip
-\noindent\textbf{(3) \(s=v_1\).}
-Se tiene \(N(v_1)=\{v_0,v_2,w_0,w_2\}\), y en el orden fijado
+All neighbors of \(w_2\), \(w_0\), and \(w_3\) appear before them in the
+chosen order, while \(v_0\) is the last vertex. Hence, in every case,
 \[
-w \prec v_4 \prec v_3 \prec v_1 \prec w_2,\qquad
-v_1 \prec w_0,\qquad
-v_1 \prec v_2,\qquad
-v_1 \prec v_0.
+st\notin E(M_4).
 \]
-Luego todo vecino de \(v_1\) queda a la derecha de \(v_1\), por lo que \(r\not\sim v_1\).
+Thus the \edgecondition{} holds, and the triple avoids
+\(\bipparam{12}\).
 
-En todos los casos, la terna \((r,s,t)\) evita \(P_2\). Esto prueba que la solución dada evita \(P_2\).
-\end{proof}
+\medskip
+\noindent\textbf{Avoiding \(\bipparam{13}\).}
 
-
-\begin{lemma}\label{lem:M4-seg3}
-El orden y la partición \(V(M_4)=V_0 \,\dot\cup\, V_1 \,\dot\cup\, V_2\) definidos arriba
-evitan el patrón \(P_3\).
-\end{lemma}
-
-\begin{proof}
-Recordemos que \(P_3=(A,N,C)\) viene dado por
+A triple
 \[
-A=\bigl\{\{1,2\},\{2,3\}\bigr\},\qquad N=\varnothing,\qquad C=\{1,3\}.
+r\prec s\prec t
 \]
-Luego, una terna \(r\prec s\prec t\) \emph{no} evita \(P_3\) si y solo si se cumple
+can fail to avoid \(\bipparam{13}\) only if
 \[
-r\sim s,\quad s\sim t,\quad\text{y}\quad r,t\text{ pertenecen a una misma clase }V_i.
+rs\in E(M_4),
+\qquad
+st\in E(M_4),
 \]
-En otras palabras, alcanza con verificar que para todo vértice \(s\) las clases de sus vecinos a la izquierda
-son disjuntas de las clases de sus vecinos a la derecha.
+and \(r\) and \(t\) lie in the same part of \(\mathcal Q\).
 
-En los extremos \(w\) y \(v_0\) no hay, respectivamente, vecinos a la izquierda ni a la derecha, y no hay nada que verificar.
-Para los otros vértices tenemos:
+It is therefore enough to consider vertices \(s\) having neighbors on both
+sides of the order. These are
+\[
+w_4,\qquad v_3,\qquad v_2,\qquad w_1.
+\]
 
-\smallskip
-\noindent\textbf{(1) \(w_4\).}
-A la izquierda sólo aparece \(w\in V_0\), mientras que a la derecha aparecen \(v_3,v_0\in V_2\).
+For \(s=w_4\), its earlier neighbor is \(w\in V_0\), while its later
+neighbors \(v_3\) and \(v_0\) lie in \(V_2\).
 
-\smallskip
-\noindent\textbf{(2) \(v_4\).}
-No tiene vecinos a la izquierda.
+For \(s=v_3\), its earlier neighbors \(w_4\) and \(v_4\) lie in \(V_1\),
+while its later neighbors \(w_2\) and \(v_2\) lie in \(V_0\).
 
-\smallskip
-\noindent\textbf{(3) \(v_3\).}
-A la izquierda aparecen \(w_4,v_4\in V_1\), y a la derecha aparecen \(w_2,v_2\in V_0\).
+For \(s=v_2\), its earlier neighbors \(v_3\) and \(v_1\) lie in \(V_2\),
+while its later neighbors \(w_3\) and \(w_1\) lie in \(V_1\).
 
-\smallskip
-\noindent\textbf{(4) \(v_1\).}
-No tiene vecinos a la izquierda.
+Finally, for \(s=w_1\), its earlier neighbors \(w\) and \(v_2\) lie in
+\(V_0\), while its later neighbor \(v_0\) lies in \(V_2\).
 
-\smallskip
-\noindent\textbf{(5) \(w_2\).}
-No tiene vecinos a la derecha.
+Thus, whenever
+\[
+r\prec s\prec t,
+\qquad
+rs,st\in E(M_4),
+\]
+the vertices \(r\) and \(t\) lie in different parts of \(\mathcal Q\).
+Hence the \colorcondition{} holds, and the triple avoids
+\(\bipparam{13}\).
 
-\smallskip
-\noindent\textbf{(6) \(w_0\).}
-No tiene vecinos a la derecha.
+\medskip
+\noindent\textbf{Avoiding \(\bipparam{23}\).}
 
-\smallskip
-\noindent\textbf{(7) \(v_2\).}
-A la izquierda aparecen \(v_3,v_1\in V_2\), y a la derecha aparecen \(w_3,w_1\in V_1\).
+Let
+\[
+r\prec s\prec t
+\]
+be an ordered triple. Suppose that the \colorcondition{} does not hold for
+\(\bipparam{23}\), so \(s\) and \(t\) lie in the same part.
 
-\smallskip
-\noindent\textbf{(8) \(w_3\).}
-No tiene vecinos a la derecha.
+Again, the only edges whose endpoints lie in the same part are
+\[
+ww_2,\qquad
+ww_0,\qquad
+v_4w_3,\qquad
+v_1v_0.
+\]
+Therefore, if
+\[
+st\in E(M_4),
+\]
+then necessarily
+\[
+s\in\{w,v_4,v_1\}.
+\]
 
-\smallskip
-\noindent\textbf{(9) \(w_1\).}
-A la izquierda aparecen \(w,v_2\in V_0\), y a la derecha aparece \(v_0\in V_2\).
+The vertex \(w\) is the first vertex of the order, and all neighbors of
+\(v_4\) and \(v_1\) appear after them. Hence, in every case,
+\[
+rs\notin E(M_4).
+\]
+Thus the \edgecondition{} holds, and the triple avoids
+\(\bipparam{23}\).
+
+Therefore \(S\) avoids all three patterns, and hence
+\[
+S
+\text{ avoids }
+\bipparam{12\text{-}13\text{-}23}.
+\]
+Since \(|\mathcal Q|=3\),
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)\le3.
+\]
 \end{proof}
 
 
 
 
+\begin{corollary}[Tightness of the lower bound]
+\label{cor:bip12-13-23-lower-bound-tight}
+For the Mycielski graph \(M_4\),
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)=3=\chi(M_4)-1.
+\]
+Hence the lower bound in
+Theorem~\ref{thm:bip12-13-23-bounds} is tight.
+\end{corollary}
+
+\begin{proof}
+The solution constructed above shows that
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)\le3.
+\]
+On the other hand, since \(\chi(M_4)=4\),
+Theorem~\ref{thm:bip12-13-23-bounds} gives
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)
+\ge
+\chi(M_4)-1
+=
+3.
+\]
+Therefore,
+\[
+\bipparam{12\text{-}13\text{-}23}(M_4)=3.
+\]
+\end{proof}
 
 
 
+
+\german{por aca en comments}
 \section{Star patterns}
 \label{sec:star-patterns}
 
